@@ -1,6 +1,7 @@
 # APEX LOGIC — Master Execution Plan
-> Paste this file into any new chat as the first message to give the agent full context instantly.
-> Status: Updated after Session 1.
+> **Do not paste this manually anymore.** Cursor rules in `.cursor/rules/` auto-inject this context into every agent.
+> For live status, read `memory-bank/ACTIVE_CONTEXT.md`. For build progress, read `memory-bank/PROGRESS.md`.
+> Status: Updated after Session 2 — Memory Bank system installed.
 
 ---
 
@@ -116,7 +117,18 @@ Step 10 → Test interactions: Approve & Sign / Reject & Kill / Emergency Stop /
 
 ## The Build Prompt (Use in New Chat After Decisions)
 
-> "Read APEX_LOGIC_PLAN.md first. All decisions are now resolved. Using component-specs.md, lean-prd.md, mockLedgerData.json, and theme.js, build the full Dashboard following the Build Sequence in the plan. Start with AppContext.jsx and work through every step. The aesthetic is Cyberpunk Bloomberg Terminal — bg-neutral-950, font-mono, rounded-none, thin borders. Do not skip any component."
+> "Read `memory-bank/ACTIVE_CONTEXT.md` and `memory-bank/PROGRESS.md` first. All 4 decisions are now resolved and logged in `memory-bank/DECISIONS.md`. Using `component-specs.md`, `lean-prd.md`, `mockLedgerData.json`, and `theme.js`, build the full Dashboard following the Build Sequence. Start with `AppContext.jsx` and work through every step. The aesthetic is Cyberpunk Bloomberg Terminal — bg-neutral-950, font-mono, rounded-none, thin borders. Do not skip any component. Update `memory-bank/ACTIVE_CONTEXT.md` after each step."
+
+## Memory Bank System (Installed Session 2)
+
+| File | Purpose |
+|---|---|
+| `.cursor/rules/apex-context.mdc` | Auto-injected into every chat — forces agents to read context first |
+| `.cursor/rules/change-protocol.mdc` | Cascade awareness — agents update memory-bank after every change |
+| `memory-bank/ACTIVE_CONTEXT.md` | What is being worked on RIGHT NOW |
+| `memory-bank/DECISIONS.md` | Immutable log of all decisions with rationale and downstream impact |
+| `memory-bank/COMPONENT_MAP.md` | What depends on what — change cascade tracker |
+| `memory-bank/PROGRESS.md` | Full build status — done / blocked / not started |
 
 ---
 

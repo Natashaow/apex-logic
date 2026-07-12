@@ -1,5 +1,7 @@
 # Color Palette: Apex Logic
-> Engineering + brand reference. Decisions marked [LOCKED] or [PENDING DECISION].
+> Engineering + brand reference.
+> Status: ALL DECISIONS LOCKED — Session 2, 2026-07-12
+> Upstream: `src/docs/branding/BRAND_STRATEGY.md`
 
 ---
 
@@ -7,9 +9,33 @@
 Color appears on the canvas ONLY when it communicates:
 - Immediate systemic risk (Amber, Crimson)
 - Positive operational health (Emerald)
-- Brand anchor (Accent — see below)
+- Live interactive state (Cyan accent)
 
-Everything else is Neutral.
+Everything else is Neutral. Color is not decoration. Color is signal.
+
+---
+
+## [LOCKED] — Interactive Accent: Cyan
+
+**Decision rationale:** Cyan is the phosphor of a live terminal — the Cyberpunk register of the brand. It reads subconsciously as "live system signal." Blue would be pure Bloomberg (authoritative but static). Cyan adds the living edge. The Bloomberg structural grid *contains* the cyberpunk energy.
+
+| Token | Value | Used for |
+|---|---|---|
+| Accent text | `text-cyan-400` | Hover states, selected row highlight, focus indicators |
+| Accent border | `border-cyan-500` | Active column border, selected card edge |
+| Accent bg | `bg-cyan-950/30` | Selected row background tint |
+
+**Status: LOCKED. Do not reopen.**
+
+---
+
+## [LOCKED] — Logo Mark Color: White
+
+The `▲` is the Ruler's mark. White on near-black is absolute institutional weight. The logo mark sits above the color system, not within it.
+
+- `text-neutral-100` — always, with no exceptions
+
+**Status: LOCKED. Do not reopen.**
 
 ---
 
@@ -18,7 +44,7 @@ Everything else is Neutral.
 | Token Name | Tailwind Class | Purpose |
 |---|---|---|
 | Canvas | `bg-neutral-950` | The base. All content sits on this. |
-| Surface | `bg-neutral-900` | Slightly elevated panels (header, column headers) |
+| Surface | `bg-neutral-900` | Elevated panels (header, column headers) |
 | Surface Elevated | `bg-neutral-800/60` | Cards, active rows |
 
 ---
@@ -26,7 +52,7 @@ Everything else is Neutral.
 ## [LOCKED] — Semantic Status Colors
 
 ### Emerald — Stable Autonomy
-> Used for: healthy agent streams, active processing, positive financials, approved ledger commits.
+> Healthy agent streams, active processing, positive financials, approved ledger commits.
 
 | Usage | Class |
 |---|---|
@@ -46,7 +72,7 @@ Everything else is Neutral.
 | Dot indicator | `bg-amber-400` (+ `animate-pulse`) |
 
 ### Crimson — Critical Halt
-> Used for: [Reject & Kill] button, CRITICAL_HALT events, terminated threads. Permanent, non-reversible.
+> [Reject & Kill] button, CRITICAL_HALT events, terminated threads. Permanent, non-reversible.
 
 | Usage | Class |
 |---|---|
@@ -61,7 +87,7 @@ Everything else is Neutral.
 
 | Role | Class | Used for |
 |---|---|---|
-| Brightest | `text-neutral-100` | Logo, primary KPI values |
+| Brightest | `text-neutral-100` | Logo mark, primary KPI values |
 | Primary body | `text-neutral-300` | Human intent text, readable copy |
 | Secondary data | `text-neutral-400` | Log lines, machine assumption text |
 | Micro-labels | `text-neutral-500` | Column headers, metric labels |
@@ -69,32 +95,7 @@ Everything else is Neutral.
 
 ---
 
-## [PENDING DECISION] — Interactive Accent Color
-
-**What it drives:** hover states, selected ledger row highlight, active column indicator, button focus rings, the `▲` logo mark (optional).
-
-**Options:**
-- **Cyan** — `text-cyan-400` — classic terminal hacker feel, pairs perfectly with neutral-950
-- **Violet** — `text-violet-400` — premium, distinct from status colors, strong brand recall
-- **Blue** — `text-blue-400` — professional, enterprise-grade, Bloomberg-adjacent
-- **None** — pure monochrome, use `neutral-700` borders for interactive states only
-
-> ⚠️ Decide this in the next session. This decision gates the logo mark color and button hover system.
-
----
-
-## [PENDING DECISION] — Logo Triangle Mark Color
-
-**What it drives:** The `▲` in the top-left logo and any brand accent repetitions.
-
-**Options:**
-- Accent color (whichever is chosen above) — makes `▲` the only persistent brand color
-- `text-neutral-100` white — maximum restraint, Bloomberg-accurate
-- `text-emerald-400` — ties the mark to "system active / stable" semantic
-
----
-
-## Severity → Color Mapping (for AnomalyCards)
+## [LOCKED] — Severity → Color Mapping
 
 | Severity | Token |
 |---|---|

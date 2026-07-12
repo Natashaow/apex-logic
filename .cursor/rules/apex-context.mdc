@@ -1,0 +1,42 @@
+---
+description: APEX LOGIC project context — read before every task
+alwaysApply: true
+---
+
+# APEX LOGIC — Context Protocol
+
+**Before doing anything**, read these files in order:
+
+1. `APEX_LOGIC_PLAN.md` — master plan, stack, file map, design constraints, build sequence
+2. `memory-bank/ACTIVE_CONTEXT.md` — what is being worked on RIGHT NOW, recent decisions, current blockers
+3. `memory-bank/PROGRESS.md` — what is done, what is not started, what is blocked
+
+If you are making ANY code change, also read:
+4. `memory-bank/COMPONENT_MAP.md` — to understand what other files your change may break
+
+If you are making a decision (brand, color, font, layout, component behavior):
+5. `memory-bank/DECISIONS.md` — to see if this was already decided and what it downstream affects
+
+## Non-Negotiable Design Constraints (from the plan — always enforce)
+- `rounded-none` everywhere — no consumer rounded corners
+- `tabular-nums` on all numeric columns
+- `font-mono` — monospace throughout
+- `humanIntent-always-visible` — Human Intent never hidden behind a click
+- `terminal-continuous-scroll` — Terminal log animates continuously
+- `paused-state-must-pulse` — Amber PAUSED badge uses `animate-pulse`
+- `plainenglish-before-diff` — Business risk summary always above code diff
+- Aesthetic: **Cyberpunk Bloomberg Terminal** — `bg-neutral-950`, thin borders, no softness
+
+## Stack (never deviate)
+- React 19 + Vite
+- Tailwind CSS 4
+- Lucide React (icons)
+- react-countup (animated counters)
+- React Context + useState (no backend, no database)
+
+## After completing any task
+Update `memory-bank/ACTIVE_CONTEXT.md` with:
+- What you just did
+- Any decisions made
+- What the next step is
+- Any new blockers discovered

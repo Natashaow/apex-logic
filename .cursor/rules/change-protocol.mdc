@@ -1,0 +1,51 @@
+---
+description: How to handle changes in APEX LOGIC — cascade awareness and update protocol
+alwaysApply: true
+---
+
+# APEX LOGIC — Change Protocol
+
+## Before Making Any Change
+
+1. Check `memory-bank/COMPONENT_MAP.md` — identify all files that depend on the thing you are changing
+2. If changing a token or design decision, check `memory-bank/DECISIONS.md` — do not contradict locked decisions
+3. If the change affects a pending decision (from `APEX_LOGIC_PLAN.md`), resolve it explicitly and log it
+
+## When Making a Change
+
+- **Token changes** (`src/tokens/theme.js`): every component that imports theme.js is affected — list them
+- **Data shape changes** (`src/data/*.js` or `mockLedgerData.json`): every component that reads that data is affected
+- **Context changes** (`src/components/AppContext.jsx`): every component that uses `useContext` is affected
+- **Layout changes** (`ThreeColumnLayout.jsx`, `SystemHeader.jsx`): visual regression risk — note it
+
+## After Making Any Change
+
+Update `memory-bank/ACTIVE_CONTEXT.md`:
+```
+## Last Action
+- What: [describe change]
+- Files modified: [list]
+- Downstream impact: [what else may need updating]
+- Decision logged: [yes/no — if yes, add to DECISIONS.md]
+
+## Next Step
+[explicit next action]
+```
+
+If you resolved a pending decision, add an entry to `memory-bank/DECISIONS.md`:
+```
+### DECISION-[N] — [Decision Title]
+- Date: [date]
+- Resolved: [what was chosen]
+- Rationale: [why]
+- Files updated: [list]
+- Downstream: [what this unlocks or gates]
+- Status: LOCKED
+```
+
+## Never Do These
+- Do not skip updating ACTIVE_CONTEXT.md after completing a task
+- Do not make a design decision (color, font, layout) without logging it in DECISIONS.md
+- Do not modify `src/docs/` files — these are reference only, not editable during build
+- Do not add `rounded-*` utility classes (except `rounded-none` is fine and preferred)
+- Do not add a database, backend, or state library not already in the stack

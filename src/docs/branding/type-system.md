@@ -1,5 +1,7 @@
 # Type System: Apex Logic
 > Typography specification — engineering reference.
+> Status: ALL DECISIONS LOCKED — Session 2, 2026-07-12
+> Upstream: `src/docs/branding/BRAND_STRATEGY.md`
 
 ---
 
@@ -7,35 +9,66 @@
 
 The entire interface uses exactly two font families. No exceptions.
 
-| Family | Role | Tailwind |
-|---|---|---|
-| **Monospace** | All data, numbers, logs, code, metrics | `font-mono` |
-| **Sans-serif** | All readable copy, headings, alerts, plain-English summaries | `font-sans` |
+| Family | Font | Role | Tailwind |
+|---|---|---|---|
+| **Monospace** | JetBrains Mono | All data, numbers, logs, code, metrics, logo | `font-mono` |
+| **Sans-serif** | Space Grotesk | All readable copy, headings, alerts, plain-English summaries | `font-sans` |
 
-**Why:** Monospace signals machine output. Sans-serif signals human language. The visual switch between the two IS the product — it is the translation layer made visible.
+**Why this split matters:** Monospace signals machine output. Sans-serif signals human language. The visual switch between the two IS the product — it is the translation layer between machine and human made visible in typography.
+
+**Why JetBrains Mono:** Technical authority with terminal intelligence. Reads cleanly at 10px (micro-label size). The standard for engineering command tools. Carries the Cyberpunk Bloomberg aesthetic without feeling like a bank (IBM Plex Mono) or a startup (Geist Mono).
+
+**Why Space Grotesk:** Geometric and slightly angular — just enough technical edge to sit in the Cyberpunk Bloomberg space without consumer warmth. Signals "designed for people who think in systems." Pairs strongly with JetBrains Mono.
 
 ---
 
-## [PENDING DECISION] — Monospace Font Import
+## [LOCKED] — Monospace Font: JetBrains Mono
 
-The current `font-mono` defaults to system fonts: Menlo (macOS), Consolas (Windows), monospace (fallback). These are sharp and acceptable.
+**Import method:** Google Fonts  
+**Weights:** 400 (Regular) + 600 (SemiBold)  
+**HTML link tag:**
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+```
 
-**Options to upgrade:**
+**Tailwind config:**
+```js
+fontFamily: {
+  mono: ["JetBrains Mono", "Menlo", "monospace"],
+}
+```
 
-| Font | Feel | Import method |
-|---|---|---|
-| **JetBrains Mono** | Industry standard for dev tools, very readable at 10px | Google Fonts |
-| **IBM Plex Mono** | Corporate/institutional, strong for compliance positioning | Google Fonts |
-| **Geist Mono** | Modern, tech-forward (Vercel's font) | npm package |
-| **System default** | No import, fastest load, sharp on macOS | None needed |
+**Status: LOCKED.**
 
-> ⚠️ Decide this in the next session. If choosing a Google Font, add one `<link>` to `index.html` and extend `tailwind.config.js`.
+---
+
+## [LOCKED] — Sans-serif Font: Space Grotesk
+
+**Import method:** Google Fonts  
+**Weights:** 400 (Regular) + 500 (Medium) + 600 (SemiBold)  
+**HTML link tag (combine into one request with JetBrains Mono):**
+```html
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+```
+
+**Tailwind config:**
+```js
+fontFamily: {
+  sans: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"],
+  mono: ["JetBrains Mono", "Menlo", "monospace"],
+}
+```
+
+**Status: LOCKED.**
 
 ---
 
 ## [LOCKED] — Named Type Scale
 
-Every component references these named roles. Never use raw Tailwind size classes directly in components.
+Every component references these named roles from `src/tokens/theme.js`.  
+Never use raw Tailwind size classes directly in components.
 
 | Role name | Classes | Used for |
 |---|---|---|
@@ -56,14 +89,16 @@ Reading order must be visually enforced in every component:
 
 ```
 1. Alert title / Heading     ← largest visual weight (font-semibold, neutral-100)
-2. Human Intent copy         ← most important readable content (body, neutral-300)
-3. Machine Assumption        ← supporting readable content (body, neutral-400)
-4. Data metrics strip        ← monospace numbers (data, tabular-nums)
-5. Micro-labels              ← column identifiers (micro, neutral-500)
+2. Human Intent copy         ← most important readable content (font-sans body, neutral-300)
+3. Machine Assumption        ← supporting readable content (font-sans body, neutral-400)
+4. Data metrics strip        ← monospace numbers (font-mono data, tabular-nums)
+5. Micro-labels              ← column identifiers (font-mono micro, neutral-500)
 ```
+
+The font switch from sans (human copy) to mono (data) is visible and intentional. It communicates the translation.
 
 ---
 
 ## Tabular Numbers Rule
 
-All numeric values that stack vertically (COGS columns, latency columns, AER columns) MUST use `tabular-nums` to ensure decimal points align. This is non-negotiable for a Bloomberg terminal feel.
+All numeric values that stack vertically (COGS columns, latency columns, AER columns) MUST use `tabular-nums` to ensure decimal points align. This is non-negotiable for Bloomberg terminal feel and financial data credibility.

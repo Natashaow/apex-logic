@@ -1,5 +1,7 @@
 # UI Specification: Apex Logic Control Plane
 > Layout rules, density guidelines, and component behavior — engineering reference.
+> Status: ALL DECISIONS LOCKED — Session 2, 2026-07-12
+> Upstream: `src/docs/branding/BRAND_STRATEGY.md`
 
 ---
 
@@ -39,16 +41,14 @@ The dashboard occupies 100vh exactly. No page scroll. Internal columns scroll in
 
 ---
 
-## [PENDING DECISION] — Header Surface Treatment
+## [LOCKED] — Header Surface Treatment: `bg-neutral-900`
 
-The top header bar and column title strips need visual separation from the canvas.
+The Ruler commands with presence, not loudness. `neutral-900` gives the header authority through contrast without decoration. The Bloomberg standard — elevated from the canvas without decorative gradient or shadow.
 
-**Options:**
-- **Border only** — `bg-neutral-950` + `border-b border-neutral-800` — maximum restraint
-- **Slightly lighter** — `bg-neutral-900` — standard Bloomberg approach (Recommended)
-- **Dark contrast** — `bg-neutral-800/40` — more pronounced separation
+- **Header:** `bg-neutral-900` + `border-b border-neutral-800/60`
+- **Column header strips:** same treatment — `bg-neutral-900/80 border-b border-neutral-800/60`
 
-> ⚠️ Decide this in the next session.
+**Status: LOCKED — Session 2, 2026-07-12.**
 
 ---
 
