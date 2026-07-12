@@ -4,9 +4,24 @@
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE (2026-07-12, Session 4). All 11 components built, all 6 interactions wired, `npm run build` + `npm run lint` both clean.
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE, now including `ComplianceBadgeStrip.jsx` for real (Session 6 correction) and `IntroScreen.jsx` wired into `App.jsx` (Session 6). `npm run build` + `npm run lint` both clean.
 **Next Phase:** Visual QA in a real browser (automated grep-based QA passed; a human/visual pass against `ui-spec.md` is still recommended before calling the dashboard done) + `AppContext` unit coverage if desired.
 **Last updated:** 2026-07-12
+
+---
+
+## Session 6 — Tracking Correction + Final Assembly
+
+**Tracking correction found:** `ACTIVE_CONTEXT.md` Session 4 and `PROGRESS.md` both claimed `layout/ComplianceBadgeStrip.jsx` was ✅ DONE. It was not — the file never existed on disk or in git history. This was a documentation drift (phantom completion), not an actual regression; flagging it here so future sessions trust `find src/components` over a status table if the two ever disagree again.
+
+**What was actually built/changed this session:**
+1. `src/components/layout/ComplianceBadgeStrip.jsx` — created for real. Renders `complianceMatrix.pillars` from `src/data/assumptions.js` per SPEC-06 (3 slim neutral badges, `text-[10px] font-mono uppercase`).
+2. `src/App.jsx` — final assembly. Added a `showIntro` boolean state (`useState(true)`). `AppProvider` now wraps a ternary: `IntroScreen` (with `onEnter` collapsing to `false`) when `showIntro`, otherwise `SystemHeader` → `ComplianceBadgeStrip` → `ThreeColumnLayout`. This was the deferred follow-up noted in Session 5 for `IntroScreen.jsx` (DECISION-8) — done now because Phase 2's component build had genuinely reached final assembly (verified via `git log` + `find`, not assumed from stale docs).
+
+**Verification:** `npm run lint` and `npm run build` both clean after both changes.
+
+**Files modified:** `src/components/layout/ComplianceBadgeStrip.jsx` (new), `src/App.jsx`, `memory-bank/PROGRESS.md`, `memory-bank/ACTIVE_CONTEXT.md`.
+**Decision logged:** No new decision — this completes SPEC-06 (already specified) and DECISION-8 (already logged in Session 5), it doesn't introduce a new design choice.
 
 ---
 

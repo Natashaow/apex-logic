@@ -81,7 +81,7 @@
 |---|---|---|
 | `main.jsx` | ✅ UNTOUCHED | Entry point — do not modify |
 | `index.css` | ✅ DONE | Retroactively verified 2026-07-12 — `@theme` block sets `--font-sans` (Space Grotesk) and `--font-mono` (JetBrains Mono), no conflicting imports. Fonts load via `index.html` Google Fonts link tag. |
-| `App.jsx` | 🔄 IN PROGRESS | Root component — Phase 2 build underway |
+| `App.jsx` | ✅ DONE | Session 6 — now wires `showIntro` state: renders `IntroScreen` first, then `SystemHeader` + `ComplianceBadgeStrip` + `ThreeColumnLayout` on Enter. All under one `AppProvider`. |
 
 ---
 
@@ -93,7 +93,7 @@ Build order is enforced — do not skip steps.
 |---|---|---|---|
 | `AppContext.jsx` | 1st | ✅ DONE | Full state + 3 action handlers per `app-context-contract.md`. Background effects (terminal interval, expiry auto-abort wiring) still pending. |
 | `layout/SystemHeader.jsx` | 2nd | ✅ DONE | Logo, system state badge, 4 metrics (static values), Emergency Stop wired. Animated counters (`react-countup`) pending. |
-| `layout/ComplianceBadgeStrip.jsx` | 3rd | ✅ DONE | 3 IMDA pillar badges from `assumptions.js`, below header |
+| `layout/ComplianceBadgeStrip.jsx` | 3rd | ✅ DONE | **Correction, Session 6:** this row previously said DONE but the file did not actually exist in the repo — a tracking error, not a real build. Actually built now: 3 IMDA pillar badges from `assumptions.js`, below header. Verified present on disk and wired into `App.jsx` this session. |
 | `layout/ThreeColumnLayout.jsx` | 4th | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
 | `sections/AuditStream.jsx` | 5th | ✅ DONE | Renders `AgentBlock` stack + `TerminalLog` |
 | `sections/IntentLedger.jsx` | 6th | ✅ DONE | Renders full `LedgerRow` stack (Zone A + Zone B) |
@@ -109,7 +109,7 @@ Build order is enforced — do not skip steps.
 
 | Component | Status | Notes |
 |---|---|---|
-| `IntroScreen.jsx` | ✅ DONE (standalone) | NEW — Brand-forward logo + locked tagline + new descriptor line, animated boot-sequence fade-in, `[Enter Control Plane]` CTA. See DECISION-8. Not yet imported into `App.jsx` — deliberately isolated from the active Phase 2 build sequence. **Follow-up:** wire in via `showIntro` state once `App.jsx` reaches final assembly. |
+| `IntroScreen.jsx` | ✅ DONE | Brand-forward logo + locked tagline + new descriptor line, animated boot-sequence fade-in, `[Enter Control Plane]` CTA. See DECISION-8. **Session 6:** wired into `App.jsx` via `showIntro` state — now the first thing rendered on load. |
 
 ---
 

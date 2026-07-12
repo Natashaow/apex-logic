@@ -70,13 +70,14 @@ App.jsx
 
 ---
 
-## Screens Layer (New — Parallel Track, Not Yet Wired)
+## Screens Layer
 
 | If you change... | It affects... | Severity |
 |---|---|---|
-| `src/components/screens/IntroScreen.jsx` | Nothing yet — standalone, not imported by `App.jsx`. Deliberately isolated from the active Phase 2 component build. | 🟡 LOW — zero current dependents |
+| `src/components/screens/IntroScreen.jsx` | `App.jsx` — rendered when `showIntro` is `true`; `onEnter` prop flips it to `false`, unmounting `IntroScreen` and mounting the dashboard tree. | 🟡 LOW — single consumer |
+| `src/components/layout/ComplianceBadgeStrip.jsx` | `App.jsx` only — renders between `SystemHeader` and `ThreeColumnLayout`. Reads `complianceMatrix` from `src/data/assumptions.js`. | 🟡 LOW — single consumer |
 
-**Integration note:** When Phase 2's `App.jsx` build reaches final assembly, add a `showIntro` boolean state and conditionally render `<IntroScreen onEnter={() => setShowIntro(false)} />` before the dashboard tree. See `memory-bank/DECISIONS.md` DECISION-8.
+**Session 6 note:** Both are now wired into `App.jsx`. Previously `IntroScreen` was built standalone (DECISION-8) and `ComplianceBadgeStrip` was incorrectly marked done in `PROGRESS.md` without actually existing — both gaps closed this session.
 
 ---
 
