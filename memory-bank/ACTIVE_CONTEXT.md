@@ -3,6 +3,16 @@
 
 ---
 
+## In Progress (session markers)
+<!-- Concurrent-session collision safety — see CLAUDE.md §6 and Session 6 note below. -->
+<!-- Before editing a file, add a marker: -->
+<!--   - [YYYY-MM-DD HH:MM] <agent> — editing <file paths> — <1-line intent> -->
+<!-- Remove your marker when done. Empty is the default state. -->
+
+- [2026-07-12 16:10] codex — editing `src/components/AppContext.jsx`, `src/components/layout/SystemHeader.jsx`, `src/components/ui/AnomalyCard.jsx` — audit fixes for halt and action race safety
+
+---
+
 ## Current Status
 **Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. `npm run build` + `npm run lint` both clean.
 **Next Phase:** Visual QA in a real browser (automated grep-based QA passed; a human/visual pass against `ui-spec.md` is still recommended before calling the dashboard done) + `AppContext` unit coverage if desired.
