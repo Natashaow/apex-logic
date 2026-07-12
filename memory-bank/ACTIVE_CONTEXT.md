@@ -4,8 +4,8 @@
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE — Brand Foundation locked. Phase 1 COMPLETE (retroactively verified, see Session 4 note below). UX reasoning layer (Session 3) also complete.
-**Next Phase:** Phase 2 — Component Build (in progress)
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE (2026-07-12, Session 4). All 11 components built, all 6 interactions wired, `npm run build` + `npm run lint` both clean.
+**Next Phase:** Visual QA in a real browser (automated grep-based QA passed; a human/visual pass against `ui-spec.md` is still recommended before calling the dashboard done) + `AppContext` unit coverage if desired.
 **Last updated:** 2026-07-12
 
 ---
@@ -27,7 +27,15 @@
 
 **New reference doc added:** `src/docs/app-context-contract.md` — the state/action contract for `AppContext.jsx` (state shape, derived `highestActiveSeverity`, and the three action handlers), written before any component code so the first file in the build order has an explicit spec rather than an improvised one.
 
-**Phase 2 build proceeding** per the sequence below, but content is layered in by **Tier** (per `dashboard-information-architecture.md`) rather than strictly by component: empty 3-column shell first, then Tier 0/1 fields across all columns, then Tier 2, then Tier 3, then interaction wiring, then QA.
+**Phase 2 build proceeded** per the sequence below, content layered in by **Tier** (per `dashboard-information-architecture.md`) rather than strictly by component: empty 3-column shell first, then Tier 0/1 fields across all columns, then Tier 2, then Tier 3, then interaction wiring, then QA. **All steps complete.**
+
+**Pre-existing bug found and fixed:** `postcss.config.js` used Tailwind v3's PostCSS plugin syntax, incompatible with the Tailwind v4 already installed — this would have broken `npm run build` regardless of any dashboard work. Fixed by adding `@tailwindcss/vite` to `vite.config.js` and deleting the now-unnecessary `postcss.config.js`.
+
+**What got built (all 11 components in `src/components/`):** `AppContext.jsx` (full state + 3 action handlers + terminal-scroll effect), `layout/SystemHeader.jsx` (animated `react-countup` metrics + Emergency Stop), `layout/ComplianceBadgeStrip.jsx`, `layout/ThreeColumnLayout.jsx` (25/45/30 shell), `sections/AuditStream.jsx`, `sections/IntentLedger.jsx`, `sections/CircuitBreakerGate.jsx` (SPEC-07 escalation), `ui/AgentBlock.jsx`, `ui/TerminalLog.jsx`, `ui/LedgerRow.jsx`, `ui/AnomalyCard.jsx` (live countdown + auto-abort + collapsible diff drawer). `App.jsx` wires all of it under `AppProvider`.
+
+**QA pass:** `npm run build` and `npm run lint` both clean. Grepped for Thin-Lines rule violations (rounded corners beyond `rounded-full` on status dots, shadows, gradients) — none found. Full detail in `memory-bank/PROGRESS.md` QA Pass Results section.
+
+**Not yet done — flagged, not forgotten:** no human has looked at this in an actual browser yet. A dev server was run and confirmed serving without server-side errors, but this is not a substitute for a real visual pass (spacing feel, does the countdown/terminal scroll actually read correctly at a glance, etc.).
 
 ---
 
@@ -100,7 +108,8 @@
 ```
 [✅ DONE]   Phase 0 → Brand Foundation (archetype, theme, all visual decisions)
 [✅ DONE]   Phase 1 → Token Resolution (retroactively verified, Session 4)
-[🔄 NOW]    Phase 2 → Component Build
+[✅ DONE]   Phase 2 → Component Build (Session 4 — all 11 components, all 6 interactions)
+[ ]         Phase 3 → Human visual QA in a real browser (not yet done — see Session 4 note above)
 ```
 
 ### Phase 1 Checklist (Retroactively Verified Complete)
@@ -124,10 +133,10 @@ Step 7  → QA pass against `ui-spec.md` Thin-Lines rule + `rationale-void-revie
 ---
 
 ## Open Decisions
-**None.** All visual, brand, UX-framing, and information-architecture decisions are locked (including `DECISION-6`). Phase 2 build is in progress — see Session 4 note above.
+**None.** All visual, brand, UX-framing, and information-architecture decisions are locked (including `DECISION-6` and `DECISION-8`). Phase 2 build is complete — see Session 4 note above. `IntroScreen.jsx` (Session 5, DECISION-8) is intentionally not yet wired into `App.jsx` — that's a deliberate follow-up, not an open decision.
 
 ---
 
-## Next Step Prompt (Use This to Resume Phase 2)
+## Next Step Prompt (Use This to Start Phase 3 — Human Visual QA)
 
-> "Read `memory-bank/ACTIVE_CONTEXT.md`, `src/docs/app-context-contract.md`, and `memory-bank/PROGRESS.md` first to see the exact current build step. Continue the Phase 2 Tier-Layered build sequence from wherever `PROGRESS.md`'s Components table shows the first non-DONE row. Do not skip the shell-before-content ordering, and do not reopen any decision marked LOCKED in `memory-bank/DECISIONS.md` without explicit founder sign-off."
+> "Read `memory-bank/ACTIVE_CONTEXT.md` and `memory-bank/PROGRESS.md` first. Phase 2 (Component Build) is complete — all 11 components exist and `npm run build` / `npm run lint` are both clean. Run `npm run dev`, open the dashboard in a real browser, and visually verify against `src/docs/branding/ui-spec.md`: column proportions feel right at 25/45/30, the countdown timers and terminal scroll are legible at a glance, the SPEC-07 column-header escalation is visually obvious when anomalies are trapped, and nothing violates the Thin-Lines rule. Log findings as new entries, not silent edits, if anything requires a design decision rather than a straightforward bug fix."

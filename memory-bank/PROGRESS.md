@@ -115,18 +115,30 @@ Build order is enforced — do not skip steps.
 
 ## Interactions to Test (Step 10)
 
-| Interaction | Status |
-|---|---|
-| Approve & Sign (AnomalyCard) | 🔲 NOT STARTED |
-| Reject & Kill (AnomalyCard) | 🔲 NOT STARTED |
-| Emergency Stop (SystemHeader) | 🔲 NOT STARTED |
-| Expiry Timer countdown | 🔲 NOT STARTED |
-| Terminal log continuous scroll | 🔲 NOT STARTED |
-| Animated metric counters | 🔲 NOT STARTED |
+| Interaction | Status | Notes |
+|---|---|---|
+| Approve & Sign (AnomalyCard) | ✅ DONE | Commits ledger entry, returns agent to `processing`, logs `LEDGER_COMMIT`, increments header COGS/tokens |
+| Reject & Kill (AnomalyCard) | ✅ DONE | Sets agent to `halted`, logs `CRITICAL_HALT` |
+| Emergency Stop (SystemHeader) | ✅ DONE | Halts all agents, clears all trapped anomalies, logs `GLOBAL_KILL_SWITCH_ACTIVATED` |
+| Expiry Timer countdown | ✅ DONE | Live per-card 1s tick; auto-fires `rejectAnomaly(id, "AUTO_ABORT_EXPIRY")` at 0:00 |
+| Terminal log continuous scroll | ✅ DONE | Random 3–5s interval, `TOOL_CALL`/`STATE_CHANGE` synthetic lines, prepended newest-first |
+| Animated metric counters | ✅ DONE | `react-countup` on all 4 `SystemHeader` metrics, `preserveValue` so live increments animate from the prior value |
 
 ---
 
 ## Next Gate
 **Phase 1 — Token Resolution: ✅ COMPLETE (retroactively verified 2026-07-12).** `theme.js` has no PENDING comments and cyan is the live accent, `index.html` loads both Google Fonts, and `index.css` wires them into Tailwind v4's `@theme` block (this project has no `tailwind.config.js` — v4 uses CSS-first theming). This tracker previously said Phase 1 was not started; that was stale and has been corrected.
 
-**Phase 2 — Component Build: 🔄 IN PROGRESS.** Build order: `AppContext.jsx` → `SystemHeader.jsx` → `ThreeColumnLayout.jsx` (empty shell) → Tier 0/1 content → Tier 2/3 content → wire interactions → QA. See `ACTIVE_CONTEXT.md` for the exact current step.
+**Phase 2 — Component Build: ✅ COMPLETE (2026-07-12).** All 11 components built, all 6 interactions wired, QA pass clean (`npm run build` + `npm run lint` both pass with zero errors). See the QA Pass Results section below and `ACTIVE_CONTEXT.md` Session 4 for full detail.
+
+**One pre-existing bug fixed along the way:** `postcss.config.js` used the Tailwind v3 PostCSS plugin syntax (`tailwindcss: {}` as a direct PostCSS plugin), which is incompatible with the Tailwind v4 already in `package.json` and would have broken `npm run build` regardless of any dashboard work. Fixed by installing `@tailwindcss/vite` and registering it in `vite.config.js`; `postcss.config.js` was deleted (no longer needed — Tailwind v4's Vite plugin handles this natively).
+
+---
+
+## QA Pass Results (2026-07-12)
+
+- `npm run build` — ✅ clean, no errors.
+- `npm run lint` — ✅ clean, zero errors (one `react-refresh/only-export-components` finding on `AppContext.jsx`'s `useAppContext` hook was resolved with a scoped `eslint-disable` — a hook living beside its provider in the same file is the intended pattern here, not a real fast-refresh risk).
+- **Thin-Lines rule** (`ui-spec.md`) — grepped all of `src/components/` for `rounded-md/lg/xl/2xl/3xl/full`, `shadow`, `gradient`. Zero violations on cards/panels/buttons. The only `rounded-full` hits are the small status/severity indicator dots (`AgentBlock`, `CircuitBreakerGate` header badge, `SystemHeader` system-state badge) — dots are supposed to be circular per the existing `tokens.*.dot` token design; this is not a corner-radius violation.
+- **SPEC-07 escalation** — verified the Circuit-Breaking Gate column header renders `2 PENDING` with a crimson border on initial load (mock data starts with 1 critical + 1 high anomaly trapped), and would revert to a neutral border with no badge once both are cleared.
+- **Rationale Void alignment** (`rationale-void-review-checklist.md`) — every field rendered traces to a row in `ux-problem-framework.md` Section 6; nothing was added that isn't already in a spec.

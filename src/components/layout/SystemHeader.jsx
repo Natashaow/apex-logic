@@ -1,14 +1,15 @@
 // SPEC-05: SystemHeader — src/docs/component-specs.md
 // Left: logo + system state badge. Center: 4 live metrics. Right: Emergency Stop.
 
+import CountUp from "react-countup";
 import { useAppContext } from "../AppContext";
 import { brand, canvas, tokens, type } from "../../tokens/theme";
 
-function Metric({ label, value }) {
+function Metric({ label, children }) {
   return (
     <div className="flex flex-col items-end gap-0.5">
       <span className={type.micro}>{label}</span>
-      <span className={type.dataEmphasis}>{value}</span>
+      <span className={type.dataEmphasis}>{children}</span>
     </div>
   );
 }
@@ -35,10 +36,18 @@ export default function SystemHeader() {
       </div>
 
       <div className="flex items-center gap-6 overflow-x-auto">
-        <Metric label="TOKENS BURNED" value={systemMetrics.totalTokensBurned.toLocaleString()} />
-        <Metric label="TOTAL COGS" value={`$${systemMetrics.totalCogs.toFixed(3)}`} />
-        <Metric label="SYSTEM AER" value={systemMetrics.systemAer.toFixed(1)} />
-        <Metric label="LEAKAGE RATE" value={`$${systemMetrics.leakageRate.toFixed(3)}`} />
+        <Metric label="TOKENS BURNED">
+          <CountUp end={systemMetrics.totalTokensBurned} duration={0.6} separator="," preserveValue />
+        </Metric>
+        <Metric label="TOTAL COGS">
+          <CountUp end={systemMetrics.totalCogs} duration={0.6} decimals={3} prefix="$" preserveValue />
+        </Metric>
+        <Metric label="SYSTEM AER">
+          <CountUp end={systemMetrics.systemAer} duration={0.6} decimals={1} preserveValue />
+        </Metric>
+        <Metric label="LEAKAGE RATE">
+          <CountUp end={systemMetrics.leakageRate} duration={0.6} decimals={3} prefix="$" preserveValue />
+        </Metric>
       </div>
 
       <button

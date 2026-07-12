@@ -43,6 +43,46 @@ export function AppProvider({ children }) {
     setTerminalLogs((prev) => [entry, ...prev]);
   }, []);
 
+  // app-context-contract.md Section 4 — terminal continuous scroll (SPEC-04 /
+  // `terminal-continuous-scroll`). Steady-state noise only (TOOL_CALL / STATE_CHANGE) —
+  // real CIRCUIT_BREAK / CRITICAL_HALT / LEDGER_COMMIT lines come from the action
+  // handlers above, never manufactured here. Reads agents via a ref so this
+  // effect runs once on mount rather than restarting every time agents change.
+  const agentsRef = useRef(agents);
+  useEffect(() => {
+    agentsRef.current = agents;
+  }, [agents]);
+
+  useEffect(() => {
+    let timeoutId;
+
+    const scheduleNext = () => {
+      const delay = 3000 + Math.random() * 2000; // 3–5s, randomized per SPEC-04
+      timeoutId = setTimeout(() => {
+        const pool = agentsRef.current;
+        const agent = pool[Math.floor(Math.random() * pool.length)];
+        const latency = Math.floor(30 + Math.random() * 120);
+        const tokensIn = Math.floor(100 + Math.random() * 500);
+        const tokensOut = Math.floor(50 + Math.random() * 200);
+        const isToolCall = Math.random() > 0.4;
+
+        prependLog({
+          ts: timestampNow(),
+          agentId: agent.id,
+          event: isToolCall ? "TOOL_CALL" : "STATE_CHANGE",
+          detail: isToolCall
+            ? `${agent.role.split(" ")[0].toLowerCase()}.probe() → latency: ${latency}ms | tokens: ${tokensIn} in / ${tokensOut} out`
+            : `status: ${agent.status} → ${agent.status} | heartbeat: routine_scan`,
+        });
+
+        scheduleNext();
+      }, delay);
+    };
+
+    scheduleNext();
+    return () => clearTimeout(timeoutId);
+  }, [prependLog]);
+
   // app-context-contract.md Section 3 — approveAnomaly
   const approveAnomaly = useCallback(
     (anomalyId) => {
