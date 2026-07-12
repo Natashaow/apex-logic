@@ -75,9 +75,8 @@ App.jsx
 | If you change... | It affects... | Severity |
 |---|---|---|
 | `src/components/screens/IntroScreen.jsx` | `App.jsx` — rendered when `showIntro` is `true`; `onEnter` prop flips it to `false`, unmounting `IntroScreen` and mounting the dashboard tree. | 🟡 LOW — single consumer |
-| `src/components/layout/ComplianceBadgeStrip.jsx` | `App.jsx` only — renders between `SystemHeader` and `ThreeColumnLayout`. Reads `complianceMatrix` from `src/data/assumptions.js`. | 🟡 LOW — single consumer |
 
-**Session 6 note:** Both are now wired into `App.jsx`. Previously `IntroScreen` was built standalone (DECISION-8) and `ComplianceBadgeStrip` was incorrectly marked done in `PROGRESS.md` without actually existing — both gaps closed this session.
+**Session 6 note:** `IntroScreen` is now wired into `App.jsx` (previously built standalone per DECISION-8; that gap is closed this session). `ComplianceBadgeStrip.jsx` does **not** exist in this codebase and should not be re-added — it was deliberately cut from the dashboard (see `ACTIVE_CONTEXT.md` Session 6 and `component-specs.md` SPEC-06, which is retired). A concurrent session briefly rebuilt it under a mistaken "tracking error" theory; that's been reverted.
 
 ---
 

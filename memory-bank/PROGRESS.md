@@ -81,7 +81,7 @@
 |---|---|---|
 | `main.jsx` | ✅ UNTOUCHED | Entry point — do not modify |
 | `index.css` | ✅ DONE | Retroactively verified 2026-07-12 — `@theme` block sets `--font-sans` (Space Grotesk) and `--font-mono` (JetBrains Mono), no conflicting imports. Fonts load via `index.html` Google Fonts link tag. |
-| `App.jsx` | ✅ DONE | Session 6 — now wires `showIntro` state: renders `IntroScreen` first, then `SystemHeader` + `ComplianceBadgeStrip` + `ThreeColumnLayout` on Enter. All under one `AppProvider`. |
+| `App.jsx` | ✅ DONE | Session 6 — now wires `showIntro` state: renders `IntroScreen` first, then `SystemHeader` + `ThreeColumnLayout` on Enter. All under one `AppProvider`. `ComplianceBadgeStrip` is NOT part of this tree — retired, see Session 6 note in `ACTIVE_CONTEXT.md`. |
 
 ---
 
@@ -93,15 +93,16 @@ Build order is enforced — do not skip steps.
 |---|---|---|---|
 | `AppContext.jsx` | 1st | ✅ DONE | Full state + 3 action handlers per `app-context-contract.md`. Background effects (terminal interval, expiry auto-abort wiring) still pending. |
 | `layout/SystemHeader.jsx` | 2nd | ✅ DONE | Logo, system state badge, 4 metrics (static values), Emergency Stop wired. Animated counters (`react-countup`) pending. |
-| `layout/ComplianceBadgeStrip.jsx` | 3rd | ✅ DONE | **Correction, Session 6:** this row previously said DONE but the file did not actually exist in the repo — a tracking error, not a real build. Actually built now: 3 IMDA pillar badges from `assumptions.js`, below header. Verified present on disk and wired into `App.jsx` this session. |
-| `layout/ThreeColumnLayout.jsx` | 4th | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
-| `sections/AuditStream.jsx` | 5th | ✅ DONE | Renders `AgentBlock` stack + `TerminalLog` |
-| `sections/IntentLedger.jsx` | 6th | ✅ DONE | Renders full `LedgerRow` stack (Zone A + Zone B) |
-| `sections/CircuitBreakerGate.jsx` | 7th | ✅ DONE | Renders `AnomalyCard` stack + SPEC-07 column header escalation |
-| `ui/AgentBlock.jsx` | 8th | ✅ DONE | Full — name, status badge, role, model/latency/token velocity |
-| `ui/TerminalLog.jsx` | 9th | ✅ DONE | Color-coded by event type. Continuous-scroll interval (SPEC-04) still pending in AppContext. |
-| `ui/LedgerRow.jsx` | 10th | ✅ DONE | Full — Zone A + Zone B metrics strip with amber/crimson drift + context thresholds |
-| `ui/AnomalyCard.jsx` | 11th | ✅ DONE | Full — Zone 1 + live buttons + Zone 2 collapsible diff drawer. Live countdown ticking + auto-abort trigger still pending. |
+| `layout/ThreeColumnLayout.jsx` | 3rd | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
+| `sections/AuditStream.jsx` | 4th | ✅ DONE | Renders `AgentBlock` stack + `TerminalLog` |
+| `sections/IntentLedger.jsx` | 5th | ✅ DONE | Renders full `LedgerRow` stack (Zone A + Zone B) |
+| `sections/CircuitBreakerGate.jsx` | 6th | ✅ DONE | Renders `AnomalyCard` stack + SPEC-07 column header escalation |
+| `ui/AgentBlock.jsx` | 7th | ✅ DONE | Full — name, status badge, role, model/latency/token velocity |
+| `ui/TerminalLog.jsx` | 8th | ✅ DONE | Color-coded by event type. Continuous-scroll interval (SPEC-04) still pending in AppContext. |
+| `ui/LedgerRow.jsx` | 9th | ✅ DONE | Full — Zone A + Zone B metrics strip with amber/crimson drift + context thresholds |
+| `ui/AnomalyCard.jsx` | 10th | ✅ DONE | Full — Zone 1 + live buttons + Zone 2 collapsible diff drawer. Live countdown ticking + auto-abort trigger still pending. |
+
+**`layout/ComplianceBadgeStrip.jsx` — retired, not in this list on purpose.** Cut from the live dashboard per an explicit product decision (see `ACTIVE_CONTEXT.md` Session 6 and `component-specs.md` SPEC-06). A concurrent session briefly rebuilt it under the impression its absence was a tracking bug — it was not; do not re-add without a new entry in `memory-bank/DECISIONS.md`.
 
 ---
 

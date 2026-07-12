@@ -4,24 +4,26 @@
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE, now including `ComplianceBadgeStrip.jsx` for real (Session 6 correction) and `IntroScreen.jsx` wired into `App.jsx` (Session 6). `npm run build` + `npm run lint` both clean.
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. `npm run build` + `npm run lint` both clean.
 **Next Phase:** Visual QA in a real browser (automated grep-based QA passed; a human/visual pass against `ui-spec.md` is still recommended before calling the dashboard done) + `AppContext` unit coverage if desired.
 **Last updated:** 2026-07-12
 
 ---
 
-## Session 6 — Tracking Correction + Final Assembly
+## Session 6 — Concurrent-Session Collision on ComplianceBadgeStrip (Important — read before touching App.jsx)
 
-**Tracking correction found:** `ACTIVE_CONTEXT.md` Session 4 and `PROGRESS.md` both claimed `layout/ComplianceBadgeStrip.jsx` was ✅ DONE. It was not — the file never existed on disk or in git history. This was a documentation drift (phantom completion), not an actual regression; flagging it here so future sessions trust `find src/components` over a status table if the two ever disagree again.
+**What happened:** Two sessions were working on this repo at the same time. One session (with the founder, in a UX-coaching capacity) made a deliberate product decision to cut `ComplianceBadgeStrip` from the live dashboard entirely — it competed with the header for attention without earning it visually, and the IMDA regulatory framing was reclassified as pitch/docs narrative (`product-strategy.md`, `strategic-assumptions.md`), not a rendered component. That session retired `SPEC-06` in `component-specs.md`, updated `dashboard-information-architecture.md`, `ux-problem-framework.md`, `APEX_LOGIC_PLAN.md`, and `COMPONENT_MAP.md`, deleted `ComplianceBadgeStrip.jsx`, and removed it from `App.jsx`.
 
-**What was actually built/changed this session:**
-1. `src/components/layout/ComplianceBadgeStrip.jsx` — created for real. Renders `complianceMatrix.pillars` from `src/data/assumptions.js` per SPEC-06 (3 slim neutral badges, `text-[10px] font-mono uppercase`).
-2. `src/App.jsx` — final assembly. Added a `showIntro` boolean state (`useState(true)`). `AppProvider` now wraps a ternary: `IntroScreen` (with `onEnter` collapsing to `false`) when `showIntro`, otherwise `SystemHeader` → `ComplianceBadgeStrip` → `ThreeColumnLayout`. This was the deferred follow-up noted in Session 5 for `IntroScreen.jsx` (DECISION-8) — done now because Phase 2's component build had genuinely reached final assembly (verified via `git log` + `find`, not assumed from stale docs).
+A second, concurrent session was independently continuing the *original* Phase 2 build sequence, working from state that predated that decision. It rebuilt `ComplianceBadgeStrip.jsx` from scratch, re-added it to `App.jsx`, and — reasonably, from its own vantage point — logged the cut as a "tracking error" and marked it done again in `PROGRESS.md` / `COMPONENT_MAP.md`.
 
-**Verification:** `npm run lint` and `npm run build` both clean after both changes.
+**Resolution:** The founder's decision stands. `ComplianceBadgeStrip.jsx` has been deleted again and removed from `App.jsx` a second time. **Do not rebuild it** without a new decision entry in `memory-bank/DECISIONS.md` explicitly reversing this. If a status table anywhere says this component is DONE or pending, that table is wrong — trust `component-specs.md` SPEC-06 (marked retired) and the absence of the file in `src/components/layout/`.
 
-**Files modified:** `src/components/layout/ComplianceBadgeStrip.jsx` (new), `src/App.jsx`, `memory-bank/PROGRESS.md`, `memory-bank/ACTIVE_CONTEXT.md`.
-**Decision logged:** No new decision — this completes SPEC-06 (already specified) and DECISION-8 (already logged in Session 5), it doesn't introduce a new design choice.
+**What legitimately shipped this session (kept):** `src/App.jsx` final assembly — added a `showIntro` boolean state (`useState(true)`). `AppProvider` now wraps a ternary: `IntroScreen` (with `onEnter` collapsing to `false`) when `showIntro`, otherwise `SystemHeader` → `ThreeColumnLayout`. This was the deferred follow-up noted in Session 5 for `IntroScreen.jsx` (DECISION-8).
+
+**Verification:** `npm run lint` and `npm run build` both clean.
+
+**Files modified:** `src/App.jsx`, `memory-bank/PROGRESS.md`, `memory-bank/COMPONENT_MAP.md`, `memory-bank/ACTIVE_CONTEXT.md`. `src/components/layout/ComplianceBadgeStrip.jsx` created then deleted again — net no file.
+**Decision logged:** No new decision needed for `IntroScreen` wiring (completes DECISION-8, already logged Session 5). The `ComplianceBadgeStrip` cut is the founder's existing decision, not a new one — see the other session's notes in `component-specs.md` for the rationale.
 
 ---
 
