@@ -1,5 +1,8 @@
 # User Architecture, Persona Profiles & Journey Matrix
 > Unified reference — three source documents merged into one canonical file.
+> **Companion doc:** `ux-problem-framework.md` expands every friction point below into a formal POV/HMW problem statement (`PS-01`–`PS-06`) and chains it to the exact component spec that resolves it. This file stays the canonical source for personas and journey; the framework doc is the derived reasoning layer — update here first, then reconcile IDs there.
+> **The one-line version of all of it:** every friction point below is a different facet of the same absence — **The Rationale Void**. Autonomous agents act, and no record of why is ever created. Apex Logic closes that void with **The Intent Ledger**, gated by **The Apex Checkpoint**. See "The Rationale Void — Umbrella Frame" in `ux-problem-framework.md` for the full mapping.
+> **Pitch script:** `pitch-narrative.md` stages this exact journey as a sub-5-minute pitch — the `Pitch Beat` row in the Journey Matrix below maps each phase to its beat (Hook / Pivot / Turn + Walkthrough).
 
 ---
 
@@ -20,12 +23,12 @@
 
 #### The Core Friction: The Agentic Accountability Gap
 
-| Friction Point | Description |
-|---|---|
-| **Rationale Void & Memory Tax** | Traditional repos (GitHub) record *what* changed but provide zero record of *why*. Under pressure, the Tech Lead lacks time to reverse-engineer the bot's logic path. |
-| **Vanishing Runtime Context** | Multi-agent loops generate massive streams of transient runtime data and chat memories that vanish from standard text log aggregates. |
-| **Shadow Execution Risk** | AI agents completely bypass human pull-request reviews, altering system routes and burning compute resources without a deterministic audit trail. |
-| **Language Barrier** | Tech Lead lacks visual monitoring systems to explain complex agent failures or token spikes to non-technical stakeholders. |
+| Friction Point | Description | Problem Statement |
+|---|---|---|
+| **Rationale Void & Memory Tax** | Traditional repos (GitHub) record *what* changed but provide zero record of *why*. Under pressure, the Tech Lead lacks time to reverse-engineer the bot's logic path. | `PS-01` |
+| **Vanishing Runtime Context** | Multi-agent loops generate massive streams of transient runtime data and chat memories that vanish from standard text log aggregates. | `PS-02` |
+| **Shadow Execution Risk** | AI agents completely bypass human pull-request reviews, altering system routes and burning compute resources without a deterministic audit trail. | `PS-03` |
+| **Language Barrier** | Tech Lead lacks visual monitoring systems to explain complex agent failures or token spikes to non-technical stakeholders. | `PS-04` |
 
 #### UI Solutions Mapped to Friction
 
@@ -42,14 +45,14 @@ Utilizes the Traceable Audit Stream and the Human Gate Circuit Breaker to instan
 
 ### Persona 2: The Sovereign Operator (Secondary)
 - **Role:** Hyper-Scalable Solo Founder / Digital Agency Owner
-- **Core Friction:** Financial vulnerability to unmonitored token burn and infinite execution loops draining limited operational capital. No corporate treasury to absorb mistakes.
+- **Core Friction:** Financial vulnerability to unmonitored token burn and infinite execution loops draining limited operational capital. No corporate treasury to absorb mistakes. — **Problem Statement:** `PS-05`
 - **Dashboard Value:** Relies on the Machine P&L Ledger to analyze real-time Agent Efficiency Ratios (AER) to protect cash flow margins and verify that their automated workforce is actually driving profitability.
 
 ---
 
 ### Persona 3: The Compliance Controller (Tertiary)
 - **Role:** Head of AI Operations / Corporate Finance Director
-- **Core Friction:** Deep anxiety regarding "Shadow AI" deployment. Needs to tie volatile compute costs (Tokens/COGS) directly to business outcomes for corporate reporting and accountability.
+- **Core Friction:** Deep anxiety regarding "Shadow AI" deployment. Needs to tie volatile compute costs (Tokens/COGS) directly to business outcomes for corporate reporting and accountability. — **Problem Statement:** `PS-06`
 - **Dashboard Value:** Uses the plain-English translation layer of the Intent-to-Asset Ledger to audit corporate compliance and approve operational expenses without reading raw backend code.
 
 ---
@@ -63,3 +66,5 @@ Utilizes the Traceable Audit Stream and the Human Gate Circuit Breaker to instan
 | **Emotional State** | ⚡ Optimistic / Relieved — "The automation tool is handling it." | 🔍 Uneasy / Anxious — "I hope the routing loops aren't introducing hidden vulnerabilities." | 🤬 Frustrated / Overwhelmed — "GitHub says 'auto-update.' I don't remember what I typed." | 😌 In Control / Validated — "The narrative is perfectly clear. I see the trace and financial justification instantly." |
 | **UX Pain Point** | False sense of security; no visibility into initial multi-agent path choices. | Total lack of real-time visibility; agents bypass code-review gates completely. | **The Rationale Void:** Code changes without human context or recorded business intent. | High cognitive friction if metrics are layout-heavy or confusing to read quickly. |
 | **UX Design Opportunity** | **Passive Rationale Stamping:** Capture prompt context right at the input interface. | **The Amber Circuit Breaker:** Trap high-variance code paths in a frozen state before deployment. | **The Living System Story:** Convert raw token streams into a scannable, plain-English chronological narrative. | **Unified Card Integration:** Bracket technical data points directly alongside business cost calculations. |
+| **Problem Statement** | `PS-01` | `PS-03` primary, `PS-02` secondary | `PS-01` primary, `PS-02` secondary | `PS-04` |
+| **Pitch Beat** | Hook (agents already act alone) | Pivot — "Inside the Rationale Void" | Pivot — "Inside the Rationale Void" (same beat, continued) | Turn + Walkthrough — "Inside the Intent Ledger" |

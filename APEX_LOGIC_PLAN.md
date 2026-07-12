@@ -25,7 +25,11 @@
 | `lean-prd.md` | ✅ COMPLETE | 3-column architecture, feature specs, scope guardrails |
 | `user-architecture.md` | ✅ COMPLETE | 3 personas, friction points, journey matrix (4 phases) |
 | `ledger-spec.md` | ✅ COMPLETE | Intent Ledger business rationale, 6 vectors, 3 intercept controls |
-| `component-specs.md` | ✅ COMPLETE | SPEC-01 through SPEC-06 — exact layout, data fields, behavior rules |
+| `component-specs.md` | ✅ COMPLETE | SPEC-01 through SPEC-07 — exact layout, data fields, behavior rules |
+| `ux-problem-framework.md` | ✅ COMPLETE | POV/HMW problem statements (PS-01–06), persona snapshots, journey-problem overlay, traceability matrix to component specs |
+| `dashboard-information-architecture.md` | ✅ COMPLETE | Visual hierarchy tiers (0–3), cross-column attention model, progressive disclosure matrix — feeds SPEC-07 |
+| `rationale-void-review-checklist.md` | ✅ COMPLETE | 6-question standing rubric to test any new decision against the Rationale Void → Intent Ledger problem |
+| `pitch-narrative.md` | ✅ COMPLETE | Sub-5-minute pitch script (Hook/Pivot/Turn/Walkthrough/Close) built on The Rationale Void → The Intent Ledger, with live prototype screen map |
 
 ### 📁 src/docs/branding/ — Branding Decisions
 | File | Status | Contents |

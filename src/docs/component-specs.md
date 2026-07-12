@@ -133,3 +133,31 @@ Zone 2 — Technical Drawer (EXPANDABLE, collapsed by default)
 **Purpose:** Renders the three IMDA compliance pillars from `complianceMatrix` in `assumptions.js`.
 
 **Format:** Horizontal strip of three slim badges, neutral styling, `text-[10px] font-mono uppercase`.
+
+---
+
+## SPEC-07: ColumnAttentionState (Right Column Header — New)
+
+**Purpose:** Escalates the Circuit-Breaking Gate column header when one or more anomalies are trapped, so the Right column visually out-ranks the Center column's normal review cadence. Defined in full in `dashboard-information-architecture.md` Section 2.
+
+**Derived value required from `AppContext.jsx`:**
+```
+highestActiveSeverity =
+  trappedAnomalies.some(a => a.severity === "critical") ? "critical"
+  : trappedAnomalies.length > 0 ? "high"
+  : null
+```
+
+**Applies to:** the column header strip of `sections/CircuitBreakerGate.jsx` only (not the whole column body, not other columns).
+
+**Behavior:**
+- `highestActiveSeverity === "critical"` → header border becomes `tokens.crimson.border`; badge uses `tokens.crimson.badge` + `tokens.crimson.dot` (`animate-pulse`)
+- `highestActiveSeverity === "high"` → header border becomes `tokens.amber.border`; badge uses `tokens.amber.badge` + `tokens.amber.dot` (`animate-pulse`)
+- `highestActiveSeverity === null` (i.e. `trappedAnomalies.length === 0`) → header border reverts to `border-neutral-800/60`; badge is not rendered
+
+**Badge content:** `● {trappedAnomalies.length} PENDING` — count updates live as anomalies are approved, rejected, or newly trapped.
+
+**Design Constraints:**
+- No new color tokens — reuses `tokens.amber` / `tokens.crimson` from `theme.js` exactly as defined for `AnomalyCard` severity.
+- No shadows or gradients — border-color and `animate-pulse` only, per the Thin-Lines rule in `ui-spec.md`.
+- This is additive to, not a replacement for, the per-card `paused-state-must-pulse` rule on individual `AgentBlock`s (SPEC-02).

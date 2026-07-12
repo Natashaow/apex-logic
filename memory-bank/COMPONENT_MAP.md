@@ -24,6 +24,7 @@
 | `src/data/mockLedgerData.json` → `agents[]` shape | `AgentBlock.jsx`, `AuditStream.jsx`, `AppContext.jsx` | 🔴 HIGH |
 | `src/data/mockLedgerData.json` → `ledgerEntries[]` shape | `LedgerRow.jsx`, `IntentLedger.jsx`, `AppContext.jsx` | 🔴 HIGH |
 | `src/data/mockLedgerData.json` → `trappedAnomalies[]` shape | `AnomalyCard.jsx`, `CircuitBreakerGate.jsx`, `AppContext.jsx` | 🔴 HIGH |
+| `src/data/mockLedgerData.json` → `trappedAnomalies[]` volume (length, severity mix) | Also drives `sections/CircuitBreakerGate.jsx` column header styling (SPEC-07 `ColumnAttentionState`) — not just `AnomalyCard.jsx` | 🟠 MEDIUM |
 | `src/data/mockLedgerData.json` → `terminalLogs[]` shape | `TerminalLog.jsx`, `AuditStream.jsx`, `AppContext.jsx` | 🟠 MEDIUM |
 | `src/data/mockLedgerData.json` → `systemMetrics{}` | `SystemHeader.jsx` (4 metric counters) | 🟡 LOW |
 | `src/data/strategy.js` | Any component rendering brand/persona data | 🟡 LOW |
@@ -82,6 +83,7 @@ App.jsx
 | SPEC-04 | `ui/TerminalLog.jsx` | Rolling terminal, continuous scroll |
 | SPEC-05 | `layout/SystemHeader.jsx` | Logo, 4 metrics, Emergency Stop |
 | SPEC-06 | `layout/ComplianceBadgeStrip.jsx` | IMDA compliance pillars |
+| SPEC-07 | `sections/CircuitBreakerGate.jsx` (column header) | Cross-column attention escalation — border + pending-count badge |
 
 ---
 
@@ -99,3 +101,5 @@ App.jsx
 | `src/docs/branding/color-palette.md` | Color decisions (partial) | theme.js updates |
 | `src/docs/branding/type-system.md` | Type scale, font decisions | theme.js, index.css |
 | `src/docs/branding/ui-spec.md` | Layout behavior decisions (partial) | ThreeColumnLayout |
+| `src/docs/ux-problem-framework.md` | POV/HMW problem statements, journey-problem overlay, traceability matrix | Design decision rationale |
+| `src/docs/dashboard-information-architecture.md` | Visual hierarchy tiers, cross-column attention model, progressive disclosure matrix | `ThreeColumnLayout.jsx`, `AppContext.jsx`, `CircuitBreakerGate.jsx` |

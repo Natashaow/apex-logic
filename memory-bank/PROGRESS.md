@@ -34,7 +34,11 @@
 | `lean-prd.md` | ✅ DONE | 3-column architecture, feature specs, scope guardrails |
 | `user-architecture.md` | ✅ DONE | 3 personas, friction points, journey matrix |
 | `ledger-spec.md` | ✅ DONE | Intent Ledger rationale, 6 vectors, 3 intercept controls |
-| `component-specs.md` | ✅ DONE | SPEC-01 through SPEC-06 |
+| `component-specs.md` | ✅ DONE | SPEC-01 through SPEC-07 (SPEC-07 added for cross-column attention state) |
+| `ux-problem-framework.md` | ✅ DONE | NEW — POV/HMW problem statements (PS-01–06), persona snapshots, journey-problem overlay, traceability matrix to component specs |
+| `dashboard-information-architecture.md` | ✅ DONE | NEW — visual hierarchy tiers (0–3), cross-column attention model, progressive disclosure matrix — feeds SPEC-07 |
+| `rationale-void-review-checklist.md` | ✅ DONE | NEW — 6-question standing rubric to test decisions against the Rationale Void → Intent Ledger problem |
+| `pitch-narrative.md` | ✅ DONE | NEW — sub-5-minute pitch script (Hook/Pivot/Turn/Walkthrough/Close), The Rationale Void → The Intent Ledger symbolism, live screen map |
 
 ---
 
@@ -46,7 +50,7 @@
 | `brand-identity.md` | ✅ DONE | Updated: archetype, personality stack, Only We, vocabulary |
 | `color-palette.md` | ✅ DONE | All decisions LOCKED including D-1 (cyan) |
 | `type-system.md` | ✅ DONE | D-3 (JetBrains Mono) + D-5 (Space Grotesk) LOCKED with import instructions |
-| `ui-spec.md` | ✅ DONE | D-4 (neutral-900) LOCKED |
+| `ui-spec.md` | ✅ DONE | D-4 (neutral-900) LOCKED + DECISION-6 Cross-Column Attention State added |
 | `visual-identity.md` | ✅ DONE | Expanded with full brand strategy + all visual decision summary |
 
 ---

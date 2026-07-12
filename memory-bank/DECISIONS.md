@@ -5,6 +5,26 @@
 
 ---
 
+## Session 3 — 2026-07-12 (UX Problem Framework & Information Architecture Session)
+
+### DECISION-7 — The Rationale Void as Core Narrative Symbol
+- **Date:** 2026-07-12
+- **Resolved:** The umbrella narrative symbol for the pitch and the UX problem framework is **The Rationale Void → The Intent Ledger** (gated by The Apex Checkpoint), not "Black Box → Command Centre." All PS-01–PS-06 problem statements are framed as facets of the Rationale Void.
+- **Rationale:** "The Rationale Void" was already a locked brand vocabulary term (`brand-identity.md`, `BRAND_STRATEGY.md`) — this decision reuses existing, founder-approved vocabulary rather than introducing new box/window/glass imagery. It is also a more precise product claim: Apex Logic captures a permanently bound record of intent, assumption, and cost — it does not attempt model interpretability. "Black Box" is industry-standard shorthand for the latter (unrelated, much harder problem), so it risked implying a claim Apex Logic doesn't make. A "Black Box → Command Centre" framing was drafted earlier in this session but never logged as a decision; this entry supersedes that draft outright.
+- **Files updated:** `src/docs/ux-problem-framework.md` (Umbrella Frame section renamed and reworded), `src/docs/user-architecture.md` (companion note, Pitch Beat row), `src/docs/pitch-narrative.md` (full rewrite), `src/docs/rationale-void-review-checklist.md` (new — replaces deleted `black-box-review-checklist.md`), `APEX_LOGIC_PLAN.md`, `memory-bank/PROGRESS.md`, `memory-bank/ACTIVE_CONTEXT.md`
+- **Downstream:** Any future pitch deck, copy, or component naming should draw on The Rationale Void / The Intent Ledger / The Apex Checkpoint vocabulary — not box/window/glass language.
+- **Status:** LOCKED
+
+### DECISION-6 — Cross-Column Attention Model
+- **Date:** 2026-07-12
+- **Resolved:** The Circuit-Breaking Gate column header escalates when `trappedAnomalies.length > 0` — border swaps to `tokens.crimson.border` (any `critical` anomaly) or `tokens.amber.border` (otherwise), plus a pulsing `● N PENDING` count badge using the same severity token. Reverts to neutral border with no badge when zero anomalies are trapped.
+- **Rationale:** This is a circuit-breaker monitoring tool, not a static report. When something is trapped, the Right column must out-rank the Center column's normal review cadence rather than wait its turn in a static left-to-right scan. Reuses existing severity tokens and the existing `animate-pulse` utility — no new colors, shadows, or gradients, staying inside the locked Thin-Lines rule.
+- **Files updated:** `src/docs/dashboard-information-architecture.md` (new, Section 2), `src/docs/branding/ui-spec.md` (new "Cross-Column Attention State" section), `src/docs/component-specs.md` (new `SPEC-07: ColumnAttentionState`), `memory-bank/COMPONENT_MAP.md` (new cascade row)
+- **Downstream:** `AppContext.jsx` must expose a derived `highestActiveSeverity` value; `sections/CircuitBreakerGate.jsx` column header consumes it. Not yet built — Phase 2 is still blocked on Phase 1 token resolution, so no component code is affected yet.
+- **Status:** LOCKED
+
+---
+
 ## Session 2 — 2026-07-12 (Brand Strategy Session)
 
 ### DECISION-5 — Sans-serif Font

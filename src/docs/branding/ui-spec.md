@@ -88,6 +88,26 @@ The Ruler commands with presence, not loudness. `neutral-900` gives the header a
 
 ---
 
+## Cross-Column Attention State (New — see `dashboard-information-architecture.md`)
+
+The three columns are not equally urgent at all times. This tool is a circuit-breaker monitor, not a static report — when the Right column has a trapped anomaly, it must visually out-rank the Center column's normal review cadence.
+
+**Trigger:** `trappedAnomalies.length > 0`
+
+**Treatment (Circuit-Breaking Gate column header only):**
+- Border swaps from `border-neutral-800/60` to the highest active severity token already defined in `theme.js`:
+  - Any `critical` anomaly present → `tokens.crimson.border`
+  - Otherwise → `tokens.amber.border`
+- Column header renders a small pulsing count badge (e.g. `● 2 PENDING`) using that same severity token's `.dot` and `.badge` classes.
+- No new colors, shadows, or gradients — escalation is border-color + `animate-pulse` only, staying inside the Thin-Lines rule above.
+- This layers on top of (does not replace) the per-card `paused-state-must-pulse` rule.
+
+**Reverts** to the neutral border and removes the badge the moment `trappedAnomalies.length === 0`.
+
+**Full engineering spec:** `SPEC-07: ColumnAttentionState` in `component-specs.md`.
+
+---
+
 ## Interactive States
 
 | State | Treatment |
