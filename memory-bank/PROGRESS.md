@@ -39,6 +39,7 @@
 | `dashboard-information-architecture.md` | ✅ DONE | NEW — visual hierarchy tiers (0–3), cross-column attention model, progressive disclosure matrix — feeds SPEC-07 |
 | `rationale-void-review-checklist.md` | ✅ DONE | NEW — 6-question standing rubric to test decisions against the Rationale Void → Intent Ledger problem |
 | `pitch-narrative.md` | ✅ DONE | NEW — sub-5-minute pitch script (Hook/Pivot/Turn/Walkthrough/Close), The Rationale Void → The Intent Ledger symbolism, live screen map |
+| `app-context-contract.md` | ✅ DONE | NEW — Session 4 — state shape, derived `highestActiveSeverity`, 3 action handlers, and background effects for `AppContext.jsx`, written before the component itself |
 
 ---
 
@@ -70,7 +71,7 @@
 
 | File | Status | Notes |
 |---|---|---|
-| `theme.js` | 🔲 PHASE 1 | Remove PENDING comments, confirm accent = cyan. Fonts need tailwind.config.js update. |
+| `theme.js` | ✅ DONE | Retroactively verified 2026-07-12 — no PENDING comments remain, cyan accent live. Project uses Tailwind v4 (CSS-first `@theme`), so there is no `tailwind.config.js` — font family vars live in `index.css` instead. |
 
 ---
 
@@ -79,8 +80,8 @@
 | File | Status | Notes |
 |---|---|---|
 | `main.jsx` | ✅ UNTOUCHED | Entry point — do not modify |
-| `index.css` | 🔲 PHASE 1 | Verify no conflicting font imports (fonts load via index.html link tag) |
-| `App.jsx` | 🚫 BLOCKED | Root component — blocked on AppContext + layout |
+| `index.css` | ✅ DONE | Retroactively verified 2026-07-12 — `@theme` block sets `--font-sans` (Space Grotesk) and `--font-mono` (JetBrains Mono), no conflicting imports. Fonts load via `index.html` Google Fonts link tag. |
+| `App.jsx` | 🔄 IN PROGRESS | Root component — Phase 2 build underway |
 
 ---
 
@@ -90,17 +91,25 @@ Build order is enforced — do not skip steps.
 
 | Component | Priority | Status | Blocked By |
 |---|---|---|---|
-| `AppContext.jsx` | 1st | 🚫 BLOCKED | D-1, D-2, D-3, D-4 (theme must be final first) |
-| `layout/SystemHeader.jsx` | 2nd | 🚫 BLOCKED | AppContext.jsx |
-| `layout/ComplianceBadgeStrip.jsx` | 3rd | 🚫 BLOCKED | SystemHeader.jsx |
-| `layout/ThreeColumnLayout.jsx` | 4th | 🚫 BLOCKED | ComplianceBadgeStrip.jsx |
-| `sections/AuditStream.jsx` | 5th | 🚫 BLOCKED | ThreeColumnLayout.jsx |
-| `sections/IntentLedger.jsx` | 6th | 🚫 BLOCKED | ThreeColumnLayout.jsx |
-| `sections/CircuitBreakerGate.jsx` | 7th | 🚫 BLOCKED | ThreeColumnLayout.jsx |
-| `ui/AgentBlock.jsx` | 8th | 🚫 BLOCKED | AuditStream.jsx |
-| `ui/TerminalLog.jsx` | 9th | 🚫 BLOCKED | AuditStream.jsx |
-| `ui/LedgerRow.jsx` | 10th | 🚫 BLOCKED | IntentLedger.jsx |
-| `ui/AnomalyCard.jsx` | 11th | 🚫 BLOCKED | CircuitBreakerGate.jsx |
+| `AppContext.jsx` | 1st | ✅ DONE | Full state + 3 action handlers per `app-context-contract.md`. Background effects (terminal interval, expiry auto-abort wiring) still pending. |
+| `layout/SystemHeader.jsx` | 2nd | ✅ DONE | Logo, system state badge, 4 metrics (static values), Emergency Stop wired. Animated counters (`react-countup`) pending. |
+| `layout/ComplianceBadgeStrip.jsx` | 3rd | 🔲 NOT STARTED | SystemHeader.jsx |
+| `layout/ThreeColumnLayout.jsx` | 4th | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
+| `sections/AuditStream.jsx` | 5th | ✅ DONE | Renders `AgentBlock` stack. `TerminalLog` pending. |
+| `sections/IntentLedger.jsx` | 6th | ✅ DONE | Renders `LedgerRow` stack (Zone A only — Zone B pending) |
+| `sections/CircuitBreakerGate.jsx` | 7th | ✅ DONE | Renders `AnomalyCard` stack + SPEC-07 column header escalation |
+| `ui/AgentBlock.jsx` | 8th | ✅ DONE | Tier 0/1 pass — name + status badge. Role/metrics (Tier 2) pending. |
+| `ui/TerminalLog.jsx` | 9th | 🔲 NOT STARTED | AuditStream.jsx |
+| `ui/LedgerRow.jsx` | 10th | ✅ DONE | Tier 0/1 pass — Zone A only. Zone B metrics strip (Tier 2) pending. |
+| `ui/AnomalyCard.jsx` | 11th | ✅ DONE | Tier 0/1 pass — Zone 1 + live buttons + static countdown display. Zone 2 diff drawer (Tier 3) + live ticking pending. |
+
+---
+
+## Screens (`src/components/screens/`) — Parallel Track
+
+| Component | Status | Notes |
+|---|---|---|
+| `IntroScreen.jsx` | ✅ DONE (standalone) | NEW — Brand-forward logo + locked tagline + new descriptor line, animated boot-sequence fade-in, `[Enter Control Plane]` CTA. See DECISION-8. Not yet imported into `App.jsx` — deliberately isolated from the active Phase 2 build sequence. **Follow-up:** wire in via `showIntro` state once `App.jsx` reaches final assembly. |
 
 ---
 
@@ -118,10 +127,6 @@ Build order is enforced — do not skip steps.
 ---
 
 ## Next Gate
-**Phase 1 — Token Resolution** (all brand decisions are locked):
-1. Clean `src/tokens/theme.js` (remove PENDING comments, confirm cyan accent)
-2. Add Google Fonts link to `index.html` (JetBrains Mono + Space Grotesk)
-3. Extend `tailwind.config.js` fontFamily (mono + sans)
-4. Verify `src/index.css` clean
+**Phase 1 — Token Resolution: ✅ COMPLETE (retroactively verified 2026-07-12).** `theme.js` has no PENDING comments and cyan is the live accent, `index.html` loads both Google Fonts, and `index.css` wires them into Tailwind v4's `@theme` block (this project has no `tailwind.config.js` — v4 uses CSS-first theming). This tracker previously said Phase 1 was not started; that was stale and has been corrected.
 
-After Phase 1 → entire component build chain unblocks.
+**Phase 2 — Component Build: 🔄 IN PROGRESS.** Build order: `AppContext.jsx` → `SystemHeader.jsx` → `ThreeColumnLayout.jsx` (empty shell) → Tier 0/1 content → Tier 2/3 content → wire interactions → QA. See `ACTIVE_CONTEXT.md` for the exact current step.

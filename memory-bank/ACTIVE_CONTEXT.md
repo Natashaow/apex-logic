@@ -4,9 +4,30 @@
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE — Brand Foundation locked. UX reasoning layer (Session 3) also complete, in parallel — does not block or unblock Phase 1.  
-**Next Phase:** Phase 1 — Token Resolution (~30 min technical session)  
+**Phase:** Phase 0 COMPLETE — Brand Foundation locked. Phase 1 COMPLETE (retroactively verified, see Session 4 note below). UX reasoning layer (Session 3) also complete.
+**Next Phase:** Phase 2 — Component Build (in progress)
 **Last updated:** 2026-07-12
+
+---
+
+## Session 5 — Intro Screen (Parallel Track)
+
+**What:** Built `src/components/screens/IntroScreen.jsx` — a standalone intro/splash screen (logo mark + locked `brand.tagline` + new plain-English descriptor + animated boot-sequence fade-in + `[Enter Control Plane]` CTA).
+**Files modified:** `src/components/screens/IntroScreen.jsx` (new), `memory-bank/DECISIONS.md` (DECISION-8), `memory-bank/COMPONENT_MAP.md`, `memory-bank/PROGRESS.md`.
+**Downstream impact:** None yet — deliberately NOT wired into `App.jsx`, since Phase 2's component build (`AppContext.jsx` → `SystemHeader.jsx` → `ThreeColumnLayout.jsx`) is actively in progress on that file. This was worked as an explicitly parallel, non-blocking track per founder request ("let's work on other things while Phase 2 builds").
+**Decision logged:** Yes — DECISION-8 in `memory-bank/DECISIONS.md`.
+
+**Next step for this track:** When Phase 2's `App.jsx` reaches final assembly (Step 9 in the Build Sequence), add a `showIntro` boolean state and conditionally render `<IntroScreen onEnter={() => setShowIntro(false)} />` before the dashboard tree. Do not do this preemptively — wait until `App.jsx` is no longer mid-build to avoid merge conflicts with the active Phase 2 session.
+
+---
+
+## Session 4 — Correction + Phase 2 Kickoff
+
+**Tracker correction:** This file and `PROGRESS.md` previously said Phase 1 — Token Resolution was not started. That was stale. On inspection, the code already had it done: `src/tokens/theme.js` has no PENDING comments and cyan is the live accent; `index.html` already loads the combined JetBrains Mono + Space Grotesk Google Fonts link; `src/index.css` already defines `--font-sans` / `--font-mono` in a Tailwind v4 `@theme` block. **Note:** this project uses Tailwind v4's CSS-first theming — there is no `tailwind.config.js`, so the old Phase 1 checklist item to "extend `tailwind.config.js` fontFamily" does not apply; the equivalent work already lives in `index.css`.
+
+**New reference doc added:** `src/docs/app-context-contract.md` — the state/action contract for `AppContext.jsx` (state shape, derived `highestActiveSeverity`, and the three action handlers), written before any component code so the first file in the build order has an explicit spec rather than an improvised one.
+
+**Phase 2 build proceeding** per the sequence below, but content is layered in by **Tier** (per `dashboard-information-architecture.md`) rather than strictly by component: empty 3-column shell first, then Tier 0/1 fields across all columns, then Tier 2, then Tier 3, then interaction wiring, then QA.
 
 ---
 
@@ -78,44 +99,36 @@
 
 ```
 [✅ DONE]   Phase 0 → Brand Foundation (archetype, theme, all visual decisions)
-[🔲 NEXT]   Phase 1 → Token Resolution (~30 min)
-[ ]         Phase 2 → Component Build (fully unblocked after Phase 1)
+[✅ DONE]   Phase 1 → Token Resolution (retroactively verified, Session 4)
+[🔄 NOW]    Phase 2 → Component Build
 ```
 
-### Phase 1 Checklist (Exact Steps)
-All of these must complete before any component is built:
+### Phase 1 Checklist (Retroactively Verified Complete)
+1. `src/tokens/theme.js` — ✅ no PENDING comments, accent is `text-cyan-400`
+2. `index.html` — ✅ combined Google Fonts link present (JetBrains Mono 400+600 + Space Grotesk 400+500+600)
+3. `src/index.css` — ✅ `@theme` block sets `--font-sans` / `--font-mono` (Tailwind v4 CSS-first theming — no `tailwind.config.js` exists or is needed in this project)
+4. All 4 branding docs — ✅ locked, no PENDING flags remain
 
-1. `src/tokens/theme.js` — remove PENDING comments, confirm accent is `text-cyan-400`
-2. `index.html` — add combined Google Fonts link (JetBrains Mono 400+600 + Space Grotesk 400+500+600)
-3. `tailwind.config.js` — extend `fontFamily.mono` and `fontFamily.sans`
-4. `src/index.css` — verify font stack is clean (no conflicting @imports)
-5. Lock all 4 branding docs (done — just verify no PENDING flags remain)
-
-### Phase 2 Build Sequence (After Phase 1)
+### Phase 2 Build Sequence (Tier-Layered — Current)
 ```
-Step 2  → AppContext.jsx (React state engine — must expose highestActiveSeverity, see DECISION-6)
-Step 3  → SystemHeader.jsx
-Step 4  → ThreeColumnLayout.jsx
-Step 5  → AgentBlock.jsx + TerminalLog.jsx → AuditStream.jsx
-Step 6  → LedgerRow.jsx → IntentLedger.jsx
-Step 7  → AnomalyCard.jsx → CircuitBreakerGate.jsx (column header consumes highestActiveSeverity per SPEC-07)
-Step 8  → ComplianceBadgeStrip.jsx
-Step 9  → App.jsx (wire everything)
-Step 10 → Test all interactions (add: column header attention escalation on trapped anomaly)
+Step 1  → src/docs/app-context-contract.md (state/action contract — new reference doc)
+Step 2  → AppContext.jsx (React state engine — exposes highestActiveSeverity per DECISION-6)
+Step 3  → SystemHeader.jsx + ThreeColumnLayout.jsx as an EMPTY 25/45/30 shell (no row/card content yet)
+Step 4  → Tier 0/1 content across all 3 columns (status badges, human intent, anomaly titles + actions)
+Step 5  → Tier 2 content (metrics strips, terminal log, agent metrics) then Tier 3 (collapsible diff drawer)
+Step 6  → Wire interactions: Approve & Sign, Reject & Kill, Emergency Stop, expiry countdown, terminal
+          continuous scroll, animated metric counters
+Step 7  → ComplianceBadgeStrip.jsx
+Step 8  → QA pass against `ui-spec.md` Thin-Lines rule + `rationale-void-review-checklist.md`
 ```
 
 ---
 
 ## Open Decisions
-**None.** All visual, brand, UX-framing, and information-architecture decisions are locked (including `DECISION-6`). Build is fully unblocked after Phase 1.
+**None.** All visual, brand, UX-framing, and information-architecture decisions are locked (including `DECISION-6`). Phase 2 build is in progress — see Session 4 note above.
 
 ---
 
-## Next Step Prompt (Use This to Start Phase 1)
+## Next Step Prompt (Use This to Resume Phase 2)
 
-> "Read `memory-bank/ACTIVE_CONTEXT.md` and `src/docs/branding/BRAND_STRATEGY.md` first. All brand decisions are locked. Execute Phase 1 — Token Resolution:
-> 1. Update `src/tokens/theme.js` — remove all PENDING comments, confirm accent is cyan
-> 2. Add the combined Google Fonts link to `index.html` (JetBrains Mono 400+600, Space Grotesk 400+500+600)
-> 3. Extend `tailwind.config.js` with `fontFamily.mono: ['JetBrains Mono', 'monospace']` and `fontFamily.sans: ['Space Grotesk', 'sans-serif']`
-> 4. Verify `src/index.css` has no conflicting font imports
-> After completing all 4 steps, confirm Phase 1 is done and update `memory-bank/ACTIVE_CONTEXT.md`."
+> "Read `memory-bank/ACTIVE_CONTEXT.md`, `src/docs/app-context-contract.md`, and `memory-bank/PROGRESS.md` first to see the exact current build step. Continue the Phase 2 Tier-Layered build sequence from wherever `PROGRESS.md`'s Components table shows the first non-DONE row. Do not skip the shell-before-content ordering, and do not reopen any decision marked LOCKED in `memory-bank/DECISIONS.md` without explicit founder sign-off."

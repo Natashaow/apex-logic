@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Apex Logic — Dashboard Preview (Non-Final)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Space Grotesk', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body { font-family: 'Space Grotesk', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #262626; }
+  .preview-banner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+  }
+</style>
+</head>
+<body class="bg-neutral-950 text-neutral-300 h-screen overflow-hidden flex flex-col">
+
+  <!-- ============ SYSTEM HEADER (SPEC-05) ============ -->
+  <header class="bg-neutral-900 border-b border-neutral-800/60 px-4 py-2.5 flex items-center justify-between shrink-0">
+    <!-- Left: Logo -->
+    <div class="flex items-center gap-3">
+      <span class="font-mono font-bold tracking-[0.25em] text-sm uppercase text-neutral-100">▲ APEX LOGIC</span>
+      <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/30 border border-emerald-800/50 px-2 py-0.5">
+        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+        SYSTEM_STATE: ACTIVE
+      </span>
+    </div>
+
+    <!-- Center: 4 metrics -->
+    <div class="flex items-center gap-8">
+      <div class="text-center">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Tokens Burned</div>
+        <div class="text-sm font-mono text-neutral-100 tabular-nums font-medium">187,420</div>
+      </div>
+      <div class="text-center">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Total COGS</div>
+        <div class="text-sm font-mono text-neutral-100 tabular-nums font-medium">$0.847</div>
+      </div>
+      <div class="text-center">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-neutral-500">System AER</div>
+        <div class="text-sm font-mono text-cyan-400 tabular-nums font-medium">216.6×</div>
+      </div>
+      <div class="text-center">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Leakage Rate</div>
+        <div class="text-sm font-mono text-neutral-100 tabular-nums font-medium">$0.031</div>
+      </div>
+    </div>
+
+    <!-- Right: Emergency Stop -->
+    <button class="text-xs font-mono font-semibold uppercase tracking-widest text-red-400 border border-red-800/50 bg-red-950/30 px-3 py-1.5 hover:bg-red-950/50 transition-colors">
+      ⏻ Emergency Stop
+    </button>
+  </header>
+
+  <!-- ============ THREE COLUMN LAYOUT ============ -->
+  <div class="flex flex-1 gap-px bg-neutral-800/60 overflow-hidden">
+
+    <!-- ================= LEFT 25% — AUDIT STREAM ================= -->
+    <section class="w-[25%] bg-neutral-950 flex flex-col overflow-hidden">
+      <div class="border-b border-neutral-800/60 bg-neutral-900/80 px-4 py-2 shrink-0">
+        <h2 class="text-xs font-sans font-semibold uppercase tracking-widest text-neutral-400">Traceable Audit Stream</h2>
+      </div>
+
+      <!-- Agent Blocks (SPEC-02) -->
+      <div class="divide-y divide-neutral-900 shrink-0">
+
+        <div class="p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-sans font-medium text-neutral-100">DevOps-Bot</span>
+            <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-amber-400 bg-amber-950/40 border border-amber-800/60 px-1.5 py-0.5">
+              <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>PAUSED
+            </span>
+          </div>
+          <div class="text-[11px] text-neutral-500 mt-0.5">Production Infrastructure &amp; Routing</div>
+          <div class="flex gap-3 mt-1.5 text-[11px] font-mono text-neutral-400 tabular-nums">
+            <span>Claude-3.5-Sonnet</span><span>·</span><span>142ms</span><span>·</span><span>4.5k/s</span>
+          </div>
+        </div>
+
+        <div class="p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-sans font-medium text-neutral-100">FinOps-Router</span>
+            <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5">
+              <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>PROCESSING
+            </span>
+          </div>
+          <div class="text-[11px] text-neutral-500 mt-0.5">Token Allocation &amp; Model Optimization</div>
+          <div class="flex gap-3 mt-1.5 text-[11px] font-mono text-neutral-400 tabular-nums">
+            <span>Claude-3.5-Haiku</span><span>·</span><span>45ms</span><span>·</span><span>12.8k/s</span>
+          </div>
+        </div>
+
+        <div class="p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-sans font-medium text-neutral-100">DataSync-Agent</span>
+            <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-1.5 py-0.5">
+              <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>PROCESSING
+            </span>
+          </div>
+          <div class="text-[11px] text-neutral-500 mt-0.5">Pipeline Integrity &amp; Schema Validation</div>
+          <div class="flex gap-3 mt-1.5 text-[11px] font-mono text-neutral-400 tabular-nums">
+            <span>Claude-3.5-Haiku</span><span>·</span><span>38ms</span><span>·</span><span>9.1k/s</span>
+          </div>
+        </div>
+
+        <div class="p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-sans font-medium text-neutral-100">SecAudit-Bot</span>
+            <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-neutral-400 bg-neutral-800/40 border border-neutral-700 px-1.5 py-0.5">
+              <span class="w-1.5 h-1.5 bg-neutral-500 rounded-full"></span>IDLE
+            </span>
+          </div>
+          <div class="text-[11px] text-neutral-500 mt-0.5">Access Control &amp; Compliance Scanning</div>
+          <div class="flex gap-3 mt-1.5 text-[11px] font-mono text-neutral-400 tabular-nums">
+            <span>Claude-3.5-Sonnet</span><span>·</span><span>—</span><span>·</span><span>—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Log (SPEC-04) -->
+      <div class="border-t border-neutral-800/60 bg-neutral-900/40 px-3 py-2 shrink-0">
+        <div class="text-[10px] font-mono uppercase tracking-widest text-neutral-500">Live Terminal</div>
+      </div>
+      <div class="flex-1 overflow-y-auto px-3 py-2 space-y-1.5 text-xs font-mono leading-relaxed">
+        <div><span class="text-neutral-600">11:23:14</span> <span class="text-neutral-400">route_optimizer.classify() → latency: 45ms | tokens: 312 in / 88 out</span></div>
+        <div><span class="text-neutral-600">11:23:01</span> <span class="text-amber-400">CIRCUIT_BREAK: HIGH_VARIANCE detected → thread paused | variance: 42.8%</span></div>
+        <div><span class="text-neutral-600">11:22:48</span> <span class="text-neutral-400">schema_validator.diff() → latency: 38ms | tokens: 540 in / 210 out</span></div>
+        <div><span class="text-neutral-600">11:22:31</span> <span class="text-neutral-400">model_router.score() → tier: Haiku | score: 0.91 | latency: 41ms</span></div>
+        <div><span class="text-neutral-600">11:22:15</span> <span class="text-neutral-400">deploy_runner.probe() → cold_start: 823ms | threshold_exceeded: true</span></div>
+        <div><span class="text-neutral-600">11:22:03</span> <span class="text-neutral-400">status: idle → processing | task: schema_integrity_scan</span></div>
+        <div><span class="text-neutral-600">11:21:44</span> <span class="text-amber-400">CIRCUIT_BREAK: SENSITIVE_DATA_FLAG → thread paused | scope_violation</span></div>
+        <div><span class="text-neutral-600">11:21:22</span> <span class="text-emerald-400">LEDGER_COMMIT: tx-103 committed → AER: 4625.0 | COGS: $0.004</span></div>
+        <div><span class="text-neutral-600">11:19:52</span> <span class="text-emerald-400">LEDGER_COMMIT: tx-102 committed → AER: 15000.0 | COGS: $0.008</span></div>
+        <div><span class="text-neutral-600">11:08:33</span> <span class="text-red-400">CRITICAL_HALT: agent-01 thread terminated | reason: REJECT_AND_KILL</span></div>
+      </div>
+    </section>
+
+    <!-- ================= CENTER 45% — INTENT LEDGER ================= -->
+    <section class="w-[45%] bg-neutral-950 flex flex-col overflow-hidden">
+      <div class="border-b border-neutral-800/60 bg-neutral-900/80 px-4 py-2 shrink-0">
+        <h2 class="text-xs font-sans font-semibold uppercase tracking-widest text-neutral-400">Intent-to-Asset Ledger</h2>
+      </div>
+
+      <div class="flex-1 overflow-y-auto divide-y divide-neutral-900">
+
+        <!-- LedgerRow tx-101 -->
+        <div class="p-4">
+          <div class="flex items-center gap-2 text-[10px] font-mono text-neutral-600 mb-1.5">
+            <span>11:23:14 AM</span><span>·</span><span class="uppercase text-emerald-500">approved</span>
+          </div>
+          <div class="text-sm font-sans text-neutral-200">
+            <span class="text-neutral-500">👤</span> "Optimize landing page conversion pathways"
+          </div>
+          <div class="text-sm font-sans italic text-neutral-500 mt-1">
+            <span class="not-italic">🤖</span> Assuming low-latency fine-tuned models can handle sub-routing queries safely
+          </div>
+          <div class="grid grid-cols-5 gap-2 mt-3 text-[11px] font-mono tabular-nums text-neutral-400 border-t border-neutral-900 pt-2">
+            <div><div class="text-neutral-600 uppercase text-[9px]">Model</div>Haiku</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">COGS / AER</div>$0.012 · 3750×</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Latency Var</div>-12.4%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Drift Var</div>4.2%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Context</div>31%</div>
+          </div>
+        </div>
+
+        <!-- LedgerRow tx-102 -->
+        <div class="p-4">
+          <div class="flex items-center gap-2 text-[10px] font-mono text-neutral-600 mb-1.5">
+            <span>11:19:52 AM</span><span>·</span><span class="uppercase text-emerald-500">approved</span>
+          </div>
+          <div class="text-sm font-sans text-neutral-200">
+            <span class="text-neutral-500">👤</span> "Validate downstream CRM schema integrity before migration window"
+          </div>
+          <div class="text-sm font-sans italic text-neutral-500 mt-1">
+            <span class="not-italic">🤖</span> Assuming field-level delta comparison against v2.3 schema spec is sufficient for pre-migration sign-off
+          </div>
+          <div class="grid grid-cols-5 gap-2 mt-3 text-[11px] font-mono tabular-nums text-neutral-400 border-t border-neutral-900 pt-2">
+            <div><div class="text-neutral-600 uppercase text-[9px]">Model</div>Haiku</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">COGS / AER</div>$0.008 · 15000×</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Latency Var</div>+3.1%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Drift Var</div>7.8%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Context</div>58%</div>
+          </div>
+        </div>
+
+        <!-- LedgerRow tx-103 -->
+        <div class="p-4">
+          <div class="flex items-center gap-2 text-[10px] font-mono text-neutral-600 mb-1.5">
+            <span>11:14:07 AM</span><span>·</span><span class="uppercase text-emerald-500">approved</span>
+          </div>
+          <div class="text-sm font-sans text-neutral-200">
+            <span class="text-neutral-500">👤</span> "Identify redundant model routing paths in the inference queue"
+          </div>
+          <div class="text-sm font-sans italic text-neutral-500 mt-1">
+            <span class="not-italic">🤖</span> Assuming Haiku tier is sufficient for all sub-500ms routing classification tasks
+          </div>
+          <div class="grid grid-cols-5 gap-2 mt-3 text-[11px] font-mono tabular-nums text-neutral-400 border-t border-neutral-900 pt-2">
+            <div><div class="text-neutral-600 uppercase text-[9px]">Model</div>Haiku</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">COGS / AER</div>$0.004 · 4625×</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Latency Var</div>-8.7%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Drift Var</div>2.1%</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Context</div>22%</div>
+          </div>
+        </div>
+
+        <!-- LedgerRow tx-104 (halted, high drift + context → amber/crimson thresholds) -->
+        <div class="p-4">
+          <div class="flex items-center gap-2 text-[10px] font-mono text-neutral-600 mb-1.5">
+            <span>11:08:33 AM</span><span>·</span><span class="uppercase text-red-500">halted</span>
+          </div>
+          <div class="text-sm font-sans text-neutral-200">
+            <span class="text-neutral-500">👤</span> "Audit active serverless function cold-start latency profiles"
+          </div>
+          <div class="text-sm font-sans italic text-neutral-500 mt-1">
+            <span class="not-italic">🤖</span> Assuming 3 consecutive cold-starts above 800ms threshold constitutes a degradation event requiring rerouting
+          </div>
+          <div class="grid grid-cols-5 gap-2 mt-3 text-[11px] font-mono tabular-nums text-neutral-400 border-t border-neutral-900 pt-2">
+            <div><div class="text-neutral-600 uppercase text-[9px]">Model</div>Sonnet</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">COGS / AER</div>$0.031 · 0×</div>
+            <div><div class="text-neutral-600 uppercase text-[9px]">Latency Var</div>+22.1%</div>
+            <div class="text-amber-400"><div class="text-amber-600 uppercase text-[9px]">Drift Var</div>42.8%</div>
+            <div class="text-amber-400"><div class="text-amber-600 uppercase text-[9px]">Context</div>84%</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= RIGHT 30% — CIRCUIT BREAKER GATE (escalated, SPEC-07) ================= -->
+    <section class="w-[30%] bg-neutral-950 flex flex-col overflow-hidden">
+      <div class="border-b border-red-800/50 bg-neutral-900/80 px-4 py-2 shrink-0 flex items-center justify-between">
+        <h2 class="text-xs font-sans font-semibold uppercase tracking-widest text-neutral-400">Circuit-Breaking Gate</h2>
+        <span class="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-red-400 bg-red-950/40 border border-red-800/60 px-1.5 py-0.5">
+          <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>2 PENDING
+        </span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-3 space-y-3">
+
+        <!-- AnomalyCard — critical -->
+        <div class="border border-red-800/50 bg-neutral-900/60">
+          <div class="p-3">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-sans font-semibold text-neutral-100">Unreviewed Production Access Attempt</span>
+              <span class="text-[9px] font-mono uppercase text-red-400 bg-red-950/40 border border-red-800/60 px-1.5 py-0.5 shrink-0 ml-2">Critical</span>
+            </div>
+            <div class="space-y-1.5 text-sm font-sans">
+              <div class="text-neutral-300"><span class="text-neutral-500">👤 Intent:</span> Fix checkout performance degradation</div>
+              <div class="text-neutral-300"><span class="text-neutral-500">⚠ Impact:</span> Potential downtime risk across primary billing routes.</div>
+              <div class="text-neutral-500 italic"><span class="not-italic">🤖 Assumed:</span> Serverless deployment script requires structural index injection to clear bottleneck</div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-2 border-t border-neutral-800/60">
+              <span class="text-xs font-mono font-semibold text-red-400 tabular-nums">⏱ AUTO-ABORTING IN 02:45</span>
+              <button class="text-[10px] font-mono text-neutral-500">▸ Technical Details</button>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="flex-1 text-xs font-mono font-semibold uppercase tracking-wide text-emerald-400 border border-emerald-800/50 bg-emerald-950/30 px-2 py-1.5 hover:bg-emerald-950/50">Approve &amp; Sign</button>
+              <button class="flex-1 text-xs font-mono font-semibold uppercase tracking-wide text-red-400 border border-red-800/50 bg-red-950/30 px-2 py-1.5 hover:bg-red-950/50">Reject &amp; Kill</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AnomalyCard — high -->
+        <div class="border border-amber-800/50 bg-neutral-900/60">
+          <div class="p-3">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-sans font-semibold text-neutral-100">Schema Column Access Outside Approved Scope</span>
+              <span class="text-[9px] font-mono uppercase text-amber-400 bg-amber-950/40 border border-amber-800/60 px-1.5 py-0.5 shrink-0 ml-2">High</span>
+            </div>
+            <div class="space-y-1.5 text-sm font-sans">
+              <div class="text-neutral-300"><span class="text-neutral-500">👤 Intent:</span> Generate weekly revenue attribution report</div>
+              <div class="text-neutral-300"><span class="text-neutral-500">⚠ Impact:</span> PII exposure risk — billing address and card data not approved for this report scope.</div>
+              <div class="text-neutral-500 italic"><span class="not-italic">🤖 Assumed:</span> user_payment_methods table is within read-scope for revenue aggregation query</div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-2 border-t border-neutral-800/60">
+              <span class="text-xs font-mono font-semibold text-amber-400 tabular-nums">⏱ AUTO-ABORTING IN 04:47</span>
+              <button class="text-[10px] font-mono text-neutral-500">▸ Technical Details</button>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="flex-1 text-xs font-mono font-semibold uppercase tracking-wide text-emerald-400 border border-emerald-800/50 bg-emerald-950/30 px-2 py-1.5 hover:bg-emerald-950/50">Approve &amp; Sign</button>
+              <button class="flex-1 text-xs font-mono font-semibold uppercase tracking-wide text-red-400 border border-red-800/50 bg-red-950/30 px-2 py-1.5 hover:bg-red-950/50">Reject &amp; Kill</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <div class="preview-banner bg-cyan-950/90 border-t border-cyan-800/60 text-cyan-300 text-[11px] font-mono text-center py-1.5">
+    NON-FINAL STATIC PREVIEW — built from component-specs.md + mockLedgerData.json — not the live React build
+  </div>
+
+</body>
+</html>

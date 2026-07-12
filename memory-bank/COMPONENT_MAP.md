@@ -73,6 +73,16 @@ App.jsx
 
 ---
 
+## Screens Layer (New — Parallel Track, Not Yet Wired)
+
+| If you change... | It affects... | Severity |
+|---|---|---|
+| `src/components/screens/IntroScreen.jsx` | Nothing yet — standalone, not imported by `App.jsx`. Deliberately isolated from the active Phase 2 component build. | 🟡 LOW — zero current dependents |
+
+**Integration note:** When Phase 2's `App.jsx` build reaches final assembly, add a `showIntro` boolean state and conditionally render `<IntroScreen onEnter={() => setShowIntro(false)} />` before the dashboard tree. See `memory-bank/DECISIONS.md` DECISION-8.
+
+---
+
 ## Spec-to-Component Cross-Reference
 
 | Spec | Component | Key behaviors |
@@ -103,3 +113,4 @@ App.jsx
 | `src/docs/branding/ui-spec.md` | Layout behavior decisions (partial) | ThreeColumnLayout |
 | `src/docs/ux-problem-framework.md` | POV/HMW problem statements, journey-problem overlay, traceability matrix | Design decision rationale |
 | `src/docs/dashboard-information-architecture.md` | Visual hierarchy tiers, cross-column attention model, progressive disclosure matrix | `ThreeColumnLayout.jsx`, `AppContext.jsx`, `CircuitBreakerGate.jsx` |
+| `src/docs/app-context-contract.md` | State shape, derived `highestActiveSeverity`, 3 action handlers, background effects (terminal interval, expiry auto-abort) | `AppContext.jsx` — read this first, before writing the component |

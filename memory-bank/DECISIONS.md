@@ -5,7 +5,16 @@
 
 ---
 
-## Session 3 — 2026-07-12 (UX Problem Framework & Information Architecture Session)
+## Session 5 — 2026-07-12 (Intro Screen — Parallel Track, Independent of Phase 2 Component Build)
+
+### DECISION-8 — Intro Screen Copy & Treatment
+- **Date:** 2026-07-12
+- **Resolved:** Intro screen combo = "Brand-forward": locked logo mark (`▲ APEX LOGIC`, `brand.logoMarkColor`) + the already-LOCKED `brand.tagline` ("Bridging Human Intent and Autonomous Execution.") + one new plain-English descriptor line ("The control plane for autonomous AI agents — audit, cost, and human oversight in one permanent ledger."). Treatment: animated terminal boot-sequence fade-in (staggered opacity stages, no new keyframes/CSS — Tailwind `transition-opacity` + `animate-pulse` only), ending on a `[▸ Enter Control Plane]` cyan CTA button.
+- **Rationale:** Founder picked this over a callback-forward variant (alt tagline "Human Intent. Permanently Bound.") and a problem-forward variant ("The Rationale Void ends here.") specifically because it reuses the actual LOCKED tagline rather than the "alternative candidate" line, and its descriptor is the most literal statement of what the product does. The boot-sequence animation was chosen over a static render to reinforce the Cyberpunk Bloomberg Terminal register established elsewhere (`ui-spec.md`).
+- **Files added:** `src/components/screens/IntroScreen.jsx` (new — standalone, self-contained, accepts an `onEnter` callback)
+- **Files NOT touched (deliberately):** `App.jsx`, `AppContext.jsx`, `ThreeColumnLayout.jsx`, `SystemHeader.jsx` — Phase 2's component build sequence is active on these files; wiring the intro screen in is a one-line follow-up (`showIntro` boolean + conditional render) to be done when that build reaches assembly, not now.
+- **Downstream:** No existing component is affected. Future integration point: `App.jsx` root render.
+- **Status:** LOCKED
 
 ### DECISION-7 — The Rationale Void as Core Narrative Symbol
 - **Date:** 2026-07-12
