@@ -1,9 +1,14 @@
 // SPEC-05: SystemHeader — src/docs/component-specs.md
 // Left: logo + system state badge. Center: 4 live metrics. Right: Emergency Stop.
 
-import CountUp from "react-countup";
+import CountUpModule from "react-countup";
 import { useAppContext } from "../AppContext";
 import { brand, canvas, tokens, type } from "../../tokens/theme";
+
+// `react-countup` is published as CommonJS. Depending on Vite's module
+// interop path, its default import can be either the component itself or an
+// object containing that component under `.default`.
+const CountUp = CountUpModule.default ?? CountUpModule;
 
 function Metric({ label, children }) {
   return (
