@@ -31,6 +31,7 @@ export function AppProvider({ children }) {
   const [trappedAnomalies, setTrappedAnomalies] = useState(mockData.trappedAnomalies);
   const [terminalLogs, setTerminalLogs] = useState(mockData.terminalLogs);
   const [systemMetrics, setSystemMetrics] = useState(mockData.systemMetrics);
+  const anomaliesRef = useRef(mockData.trappedAnomalies);
 
   // SPEC-07 / DECISION-6 — derived, never duplicated into state.
   const highestActiveSeverity = useMemo(() => {
@@ -54,26 +55,33 @@ export function AppProvider({ children }) {
   }, [agents]);
 
   useEffect(() => {
+    anomaliesRef.current = trappedAnomalies;
+  }, [trappedAnomalies]);
+
+  useEffect(() => {
     let timeoutId;
 
     const scheduleNext = () => {
       const delay = 3000 + Math.random() * 2000; // 3–5s, randomized per SPEC-04
       timeoutId = setTimeout(() => {
-        const pool = agentsRef.current;
-        const agent = pool[Math.floor(Math.random() * pool.length)];
-        const latency = Math.floor(30 + Math.random() * 120);
-        const tokensIn = Math.floor(100 + Math.random() * 500);
-        const tokensOut = Math.floor(50 + Math.random() * 200);
-        const isToolCall = Math.random() > 0.4;
+        const pool = agentsRef.current.filter((agent) => agent.status !== "halted");
 
-        prependLog({
-          ts: timestampNow(),
-          agentId: agent.id,
-          event: isToolCall ? "TOOL_CALL" : "STATE_CHANGE",
-          detail: isToolCall
-            ? `${agent.role.split(" ")[0].toLowerCase()}.probe() → latency: ${latency}ms | tokens: ${tokensIn} in / ${tokensOut} out`
-            : `status: ${agent.status} → ${agent.status} | heartbeat: routine_scan`,
-        });
+        if (pool.length > 0) {
+          const agent = pool[Math.floor(Math.random() * pool.length)];
+          const latency = Math.floor(30 + Math.random() * 120);
+          const tokensIn = Math.floor(100 + Math.random() * 500);
+          const tokensOut = Math.floor(50 + Math.random() * 200);
+          const isToolCall = Math.random() > 0.4;
+
+          prependLog({
+            ts: timestampNow(),
+            agentId: agent.id,
+            event: isToolCall ? "TOOL_CALL" : "STATE_CHANGE",
+            detail: isToolCall
+              ? `${agent.role.split(" ")[0].toLowerCase()}.probe() → latency: ${latency}ms | tokens: ${tokensIn} in / ${tokensOut} out`
+              : `status: ${agent.status} → ${agent.status} | heartbeat: routine_scan`,
+          });
+        }
 
         scheduleNext();
       }, delay);
@@ -86,10 +94,11 @@ export function AppProvider({ children }) {
   // app-context-contract.md Section 3 — approveAnomaly
   const approveAnomaly = useCallback(
     (anomalyId) => {
-      const anomaly = trappedAnomalies.find((a) => a.id === anomalyId);
+      const anomaly = anomaliesRef.current.find((a) => a.id === anomalyId);
       if (!anomaly) return;
 
-      setTrappedAnomalies((prev) => prev.filter((a) => a.id !== anomalyId));
+      anomaliesRef.current = anomaliesRef.current.filter((a) => a.id !== anomalyId);
+      setTrappedAnomalies(anomaliesRef.current);
       setAgents((prev) =>
         prev.map((agent) =>
           agent.id === anomaly.agentId ? { ...agent, status: "processing" } : agent
@@ -124,16 +133,17 @@ export function AppProvider({ children }) {
         totalCogs: +(prev.totalCogs + cogs).toFixed(3),
       }));
     },
-    [trappedAnomalies, prependLog]
+    [prependLog]
   );
 
   // app-context-contract.md Section 3 — rejectAnomaly (also the auto-abort-on-expiry path)
   const rejectAnomaly = useCallback(
     (anomalyId, reason = "operator REJECT_AND_KILL") => {
-      const anomaly = trappedAnomalies.find((a) => a.id === anomalyId);
+      const anomaly = anomaliesRef.current.find((a) => a.id === anomalyId);
       if (!anomaly) return;
 
-      setTrappedAnomalies((prev) => prev.filter((a) => a.id !== anomalyId));
+      anomaliesRef.current = anomaliesRef.current.filter((a) => a.id !== anomalyId);
+      setTrappedAnomalies(anomaliesRef.current);
       setAgents((prev) =>
         prev.map((agent) =>
           agent.id === anomaly.agentId ? { ...agent, status: "halted" } : agent
@@ -147,13 +157,14 @@ export function AppProvider({ children }) {
         detail: `${anomaly.agentId} thread terminated | reason: ${reason}`,
       });
     },
-    [trappedAnomalies, prependLog]
+    [prependLog]
   );
 
   // app-context-contract.md Section 3 — emergencyStop
   const emergencyStop = useCallback(() => {
     setAgents((prev) => prev.map((agent) => ({ ...agent, status: "halted" })));
-    setTrappedAnomalies([]);
+    anomaliesRef.current = [];
+    setTrappedAnomalies(anomaliesRef.current);
 
     prependLog({
       ts: timestampNow(),

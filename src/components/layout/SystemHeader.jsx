@@ -58,7 +58,8 @@ export default function SystemHeader() {
       <button
         type="button"
         onClick={emergencyStop}
-        className={`${tokens.crimson.badge} shrink-0 rounded-none px-3 py-1.5 text-xs font-mono font-semibold uppercase tracking-widest transition-colors hover:bg-red-950/60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-red-500`}
+        disabled={allHalted}
+        className={`${tokens.crimson.badge} shrink-0 rounded-none px-3 py-1.5 text-xs font-mono font-semibold uppercase tracking-widest transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-red-500 ${allHalted ? "cursor-not-allowed opacity-50" : "hover:bg-red-950/60"}`}
       >
         ■ EMERGENCY STOP
       </button>

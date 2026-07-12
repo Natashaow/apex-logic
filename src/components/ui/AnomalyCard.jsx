@@ -23,9 +23,9 @@ function DiffBlock({ diff }) {
             ? "text-red-400"
             : "text-neutral-500";
         return (
-          <div key={idx} className={tone}>
+          <span key={idx} className={`block ${tone}`}>
             {line}
-          </div>
+          </span>
         );
       })}
     </pre>
