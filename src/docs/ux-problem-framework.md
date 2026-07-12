@@ -163,7 +163,7 @@ The single artifact to walk a stakeholder through. Every row answers: *this prob
 | **PS-03** Shadow Execution | Architect-Governor | Shadow Shift | The Amber Circuit Breaker | SPEC-02 AgentBlock (`paused` pulsing badge) · SPEC-03 AnomalyCard (gate) |
 | **PS-04** Language Barrier | Architect-Governor | Unified Protocol | Unified Card Integration | SPEC-03 AnomalyCard (plain-English before diff) · SPEC-01 LedgerRow (Zone A before Zone B) |
 | **PS-05** Capital Bleed | Sovereign Operator | Mid-day budget check (no full journey) | — (always-prominent COGS/AER) | SPEC-01 LedgerRow (`financials.cogs` / `financials.aer`) · SPEC-05 SystemHeader (Total COGS, System AER) |
-| **PS-06** Translation Gap | Compliance Controller | Post-escalation review (no full journey) | — (plain-English translation layer) | SPEC-03 AnomalyCard (Business Impact) · SPEC-06 ComplianceBadgeStrip |
+| **PS-06** Translation Gap | Compliance Controller | Post-escalation review (no full journey) | — (plain-English translation layer) | SPEC-03 AnomalyCard (Business Impact) |
 
 If a new component or feature is ever proposed, the first question is: which row does it belong to? If it doesn't belong to any row, either the feature is out of scope, or a new problem statement needs to be written and added here first — not the other way around.
 

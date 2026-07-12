@@ -93,15 +93,15 @@ Build order is enforced — do not skip steps.
 |---|---|---|---|
 | `AppContext.jsx` | 1st | ✅ DONE | Full state + 3 action handlers per `app-context-contract.md`. Background effects (terminal interval, expiry auto-abort wiring) still pending. |
 | `layout/SystemHeader.jsx` | 2nd | ✅ DONE | Logo, system state badge, 4 metrics (static values), Emergency Stop wired. Animated counters (`react-countup`) pending. |
-| `layout/ComplianceBadgeStrip.jsx` | 3rd | 🔲 NOT STARTED | SystemHeader.jsx |
+| `layout/ComplianceBadgeStrip.jsx` | 3rd | ✅ DONE | 3 IMDA pillar badges from `assumptions.js`, below header |
 | `layout/ThreeColumnLayout.jsx` | 4th | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
-| `sections/AuditStream.jsx` | 5th | ✅ DONE | Renders `AgentBlock` stack. `TerminalLog` pending. |
-| `sections/IntentLedger.jsx` | 6th | ✅ DONE | Renders `LedgerRow` stack (Zone A only — Zone B pending) |
+| `sections/AuditStream.jsx` | 5th | ✅ DONE | Renders `AgentBlock` stack + `TerminalLog` |
+| `sections/IntentLedger.jsx` | 6th | ✅ DONE | Renders full `LedgerRow` stack (Zone A + Zone B) |
 | `sections/CircuitBreakerGate.jsx` | 7th | ✅ DONE | Renders `AnomalyCard` stack + SPEC-07 column header escalation |
-| `ui/AgentBlock.jsx` | 8th | ✅ DONE | Tier 0/1 pass — name + status badge. Role/metrics (Tier 2) pending. |
-| `ui/TerminalLog.jsx` | 9th | 🔲 NOT STARTED | AuditStream.jsx |
-| `ui/LedgerRow.jsx` | 10th | ✅ DONE | Tier 0/1 pass — Zone A only. Zone B metrics strip (Tier 2) pending. |
-| `ui/AnomalyCard.jsx` | 11th | ✅ DONE | Tier 0/1 pass — Zone 1 + live buttons + static countdown display. Zone 2 diff drawer (Tier 3) + live ticking pending. |
+| `ui/AgentBlock.jsx` | 8th | ✅ DONE | Full — name, status badge, role, model/latency/token velocity |
+| `ui/TerminalLog.jsx` | 9th | ✅ DONE | Color-coded by event type. Continuous-scroll interval (SPEC-04) still pending in AppContext. |
+| `ui/LedgerRow.jsx` | 10th | ✅ DONE | Full — Zone A + Zone B metrics strip with amber/crimson drift + context thresholds |
+| `ui/AnomalyCard.jsx` | 11th | ✅ DONE | Full — Zone 1 + live buttons + Zone 2 collapsible diff drawer. Live countdown ticking + auto-abort trigger still pending. |
 
 ---
 

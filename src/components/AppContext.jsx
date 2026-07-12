@@ -2,7 +2,7 @@
 // Contract: src/docs/app-context-contract.md — read that first before changing this file.
 // Exposes state + derived values + action handlers to every section/ui component.
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import mockData from "../data/mockLedgerData.json";
 
 const AppContext = createContext(null);

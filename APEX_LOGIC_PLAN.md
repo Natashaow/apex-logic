@@ -64,15 +64,14 @@
 |---|---|---|
 | `AppContext.jsx` | React Context — agents, ledger, anomalies, terminal state | 1st |
 | `layout/SystemHeader.jsx` | SPEC-05 — logo, 4 metrics, Emergency Stop button | 2nd |
-| `layout/ComplianceBadgeStrip.jsx` | SPEC-06 — IMDA compliance pillars | 3rd |
-| `layout/ThreeColumnLayout.jsx` | Three-column flex wrapper | 4th |
-| `sections/AuditStream.jsx` | Left column wrapper | 5th |
-| `sections/IntentLedger.jsx` | Center column wrapper | 6th |
-| `sections/CircuitBreakerGate.jsx` | Right column wrapper | 7th |
-| `ui/AgentBlock.jsx` | SPEC-02 — agent status card | 8th |
-| `ui/TerminalLog.jsx` | SPEC-04 — rolling terminal feed | 9th |
-| `ui/LedgerRow.jsx` | SPEC-01 — intent + metrics row | 10th |
-| `ui/AnomalyCard.jsx` | SPEC-03 — human gate card | 11th |
+| `layout/ThreeColumnLayout.jsx` | Three-column flex wrapper | 3rd |
+| `sections/AuditStream.jsx` | Left column wrapper | 4th |
+| `sections/IntentLedger.jsx` | Center column wrapper | 5th |
+| `sections/CircuitBreakerGate.jsx` | Right column wrapper | 6th |
+| `ui/AgentBlock.jsx` | SPEC-02 — agent status card | 7th |
+| `ui/TerminalLog.jsx` | SPEC-04 — rolling terminal feed | 8th |
+| `ui/LedgerRow.jsx` | SPEC-01 — intent + metrics row | 9th |
+| `ui/AnomalyCard.jsx` | SPEC-03 — human gate card | 10th |
 
 ---
 
@@ -112,9 +111,8 @@ Step 4  → Build ThreeColumnLayout.jsx
 Step 5  → Build AgentBlock.jsx + TerminalLog.jsx → wire into AuditStream.jsx
 Step 6  → Build LedgerRow.jsx → wire into IntentLedger.jsx
 Step 7  → Build AnomalyCard.jsx → wire into CircuitBreakerGate.jsx
-Step 8  → Build ComplianceBadgeStrip.jsx
-Step 9  → Assemble App.jsx — all sections wired together
-Step 10 → Test interactions: Approve & Sign / Reject & Kill / Emergency Stop / Expiry Timer
+Step 8  → Assemble App.jsx — all sections wired together
+Step 9  → Test interactions: Approve & Sign / Reject & Kill / Emergency Stop / Expiry Timer
 ```
 
 ---

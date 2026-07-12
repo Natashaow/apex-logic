@@ -118,8 +118,7 @@ Step 4  → Tier 0/1 content across all 3 columns (status badges, human intent, 
 Step 5  → Tier 2 content (metrics strips, terminal log, agent metrics) then Tier 3 (collapsible diff drawer)
 Step 6  → Wire interactions: Approve & Sign, Reject & Kill, Emergency Stop, expiry countdown, terminal
           continuous scroll, animated metric counters
-Step 7  → ComplianceBadgeStrip.jsx
-Step 8  → QA pass against `ui-spec.md` Thin-Lines rule + `rationale-void-review-checklist.md`
+Step 7  → QA pass against `ui-spec.md` Thin-Lines rule + `rationale-void-review-checklist.md`
 ```
 
 ---

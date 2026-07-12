@@ -11,7 +11,7 @@
 | `src/tokens/theme.js` → `tokens.accent` | Every component with hover states, focus rings, selected rows, active borders. Also gates `brand.logoMarkColor` | 🔴 HIGH — touch all components |
 | `src/tokens/theme.js` → `brand.logoMarkColor` | `SystemHeader.jsx` (logo SVG fill) | 🟡 LOW — single component |
 | `src/tokens/theme.js` → `canvas.*` | `App.jsx` background, `ThreeColumnLayout.jsx`, `SystemHeader.jsx` | 🟠 MEDIUM |
-| `src/tokens/theme.js` → `statusTokenMap` | `AgentBlock.jsx`, `LedgerRow.jsx`, `AnomalyCard.jsx`, `ComplianceBadgeStrip.jsx` | 🔴 HIGH — all status-bearing components |
+| `src/tokens/theme.js` → `statusTokenMap` | `AgentBlock.jsx`, `LedgerRow.jsx`, `AnomalyCard.jsx` | 🔴 HIGH — all status-bearing components |
 | `src/tokens/theme.js` → `type.*` | All components using custom type scale | 🟠 MEDIUM |
 | `src/index.css` → font @import | Entire UI — font rendering changes everywhere | 🟠 MEDIUM |
 
@@ -28,7 +28,7 @@
 | `src/data/mockLedgerData.json` → `terminalLogs[]` shape | `TerminalLog.jsx`, `AuditStream.jsx`, `AppContext.jsx` | 🟠 MEDIUM |
 | `src/data/mockLedgerData.json` → `systemMetrics{}` | `SystemHeader.jsx` (4 metric counters) | 🟡 LOW |
 | `src/data/strategy.js` | Any component rendering brand/persona data | 🟡 LOW |
-| `src/data/assumptions.js` | Any component rendering compliance data | 🟡 LOW |
+| `src/data/assumptions.js` | Not currently consumed by any live component — `ComplianceBadgeStrip.jsx` (its only planned consumer) was cut from the dashboard. Retained as pitch/docs data. | ⚪ NONE (dead data for UI purposes) |
 | `src/data/users.js` | Any component rendering persona/journey data | 🟡 LOW |
 
 ---
@@ -48,7 +48,6 @@
 |---|---|---|
 | `src/components/layout/ThreeColumnLayout.jsx` | Visual position of AuditStream, IntentLedger, CircuitBreakerGate | 🟠 MEDIUM |
 | `src/components/layout/SystemHeader.jsx` | Top-level metrics display, Emergency Stop availability | 🟠 MEDIUM |
-| `src/components/layout/ComplianceBadgeStrip.jsx` | Compliance pillar display only | 🟡 LOW |
 
 ---
 
@@ -59,8 +58,6 @@ App.jsx
 ├── AppContext.jsx (provides state to all below)
 ├── layout/SystemHeader.jsx
 │   └── reads: systemMetrics{} from mockLedgerData via AppContext
-├── layout/ComplianceBadgeStrip.jsx
-│   └── reads: compliance pillars from assumptions.js
 ├── layout/ThreeColumnLayout.jsx
 │   ├── sections/AuditStream.jsx
 │   │   ├── ui/AgentBlock.jsx  ← reads agents[] from AppContext
@@ -92,7 +89,7 @@ App.jsx
 | SPEC-03 | `ui/AnomalyCard.jsx` | Human gate card, approve/reject actions |
 | SPEC-04 | `ui/TerminalLog.jsx` | Rolling terminal, continuous scroll |
 | SPEC-05 | `layout/SystemHeader.jsx` | Logo, 4 metrics, Emergency Stop |
-| SPEC-06 | `layout/ComplianceBadgeStrip.jsx` | IMDA compliance pillars |
+| SPEC-06 | *(retired — see `component-specs.md`)* | Was `ComplianceBadgeStrip.jsx`, cut from dashboard |
 | SPEC-07 | `sections/CircuitBreakerGate.jsx` (column header) | Cross-column attention escalation — border + pending-count badge |
 
 ---
@@ -106,7 +103,7 @@ App.jsx
 | `src/docs/product-strategy.md` | Brand, mission, personas | Brand/copy reference |
 | `src/docs/ledger-spec.md` | Intent Ledger rationale, 6 vectors, 3 intercept controls | LedgerRow + AppContext |
 | `src/docs/user-architecture.md` | Personas, journey matrix | Persona rendering |
-| `src/docs/strategic-assumptions.md` | 5 assumptions, compliance matrix | ComplianceBadgeStrip |
+| `src/docs/strategic-assumptions.md` | 5 assumptions, compliance matrix | Pitch/docs reference only — no live component consumes this |
 | `src/docs/branding/brand-identity.md` | Brand name, tagline, logo mark, voice | SystemHeader, copy |
 | `src/docs/branding/color-palette.md` | Color decisions (partial) | theme.js updates |
 | `src/docs/branding/type-system.md` | Type scale, font decisions | theme.js, index.css |

@@ -128,11 +128,9 @@ Zone 2 — Technical Drawer (EXPANDABLE, collapsed by default)
 
 ---
 
-## SPEC-06: ComplianceBadgeStrip (Below Header or Footer)
+## SPEC-06: (Retired) ComplianceBadgeStrip
 
-**Purpose:** Renders the three IMDA compliance pillars from `complianceMatrix` in `assumptions.js`.
-
-**Format:** Horizontal strip of three slim badges, neutral styling, `text-[10px] font-mono uppercase`.
+Cut from the live dashboard — a full-width strip for the IMDA compliance pillars competed with the header for top-of-viewport attention without earning it (no state changes, no interactivity). The regulatory framing stays in `product-strategy.md` / `strategic-assumptions.md` as pitch narrative rather than a rendered component. Number retired, not reused.
 
 ---
 

@@ -51,7 +51,6 @@ Every field in the product belongs to exactly one tier. Tiers are ordered by how
 | `contextWindowUsage` | SPEC-01 LedgerRow (Zone B) | 2 | amber >80%, crimson >90% |
 | Agent `role`, `metrics` (model/latency/tokenVelocity) | SPEC-02 AgentBlock | 2 | — |
 | Terminal log lines | SPEC-04 TerminalLog | 2 | `terminal-continuous-scroll` (PS-02) |
-| IMDA compliance pillars | SPEC-06 ComplianceBadgeStrip | 2 | — |
 | `technicalTrace.proposedDiff` | SPEC-03 AnomalyCard (Zone 2) | 3 | `plainenglish-before-diff` — collapsed by default |
 | `technicalTrace.promptVariance` | SPEC-03 AnomalyCard (Zone 2) | 3 | — |
 | `technicalTrace.estimatedCost` | SPEC-03 AnomalyCard (Zone 2) | 3 | — |
@@ -120,7 +119,6 @@ One reference table for every field in the product. `Always` = rendered uncondit
 | Terminal log lines | TerminalLog | 2 | Glance, continuous | PS-02 / `terminal-continuous-scroll` |
 | 4 header metrics (tokens, COGS, AER, leakage) | SystemHeader | 1 | Always | — |
 | `[EMERGENCY STOP]` | SystemHeader | 0 | Always | — |
-| IMDA compliance pillars | ComplianceBadgeStrip | 2 | Glance | — |
 | Column header severity escalation | ThreeColumnLayout (new, SPEC-07) | 0 | Always when active | New — see Section 2 |
 
 If a future field doesn't fit a row here, it needs a tier and a visibility rule added to this table before it gets built — not decided ad hoc inside a component.
