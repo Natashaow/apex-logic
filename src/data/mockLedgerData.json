@@ -1,0 +1,182 @@
+{
+  "agents": [
+    {
+      "id": "agent-01",
+      "name": "DevOps-Bot",
+      "role": "Production Infrastructure & Routing",
+      "status": "paused",
+      "metrics": {
+        "model": "Claude-3.5-Sonnet",
+        "latency": "142ms",
+        "tokenVelocity": "4.5k/s"
+      }
+    },
+    {
+      "id": "agent-02",
+      "name": "FinOps-Router",
+      "role": "Token Allocation & Model Optimization",
+      "status": "processing",
+      "metrics": {
+        "model": "Claude-3.5-Haiku",
+        "latency": "45ms",
+        "tokenVelocity": "12.8k/s"
+      }
+    },
+    {
+      "id": "agent-03",
+      "name": "DataSync-Agent",
+      "role": "Pipeline Integrity & Schema Validation",
+      "status": "processing",
+      "metrics": {
+        "model": "Claude-3.5-Haiku",
+        "latency": "38ms",
+        "tokenVelocity": "9.1k/s"
+      }
+    },
+    {
+      "id": "agent-04",
+      "name": "SecAudit-Bot",
+      "role": "Access Control & Compliance Scanning",
+      "status": "idle",
+      "metrics": {
+        "model": "Claude-3.5-Sonnet",
+        "latency": "—",
+        "tokenVelocity": "—"
+      }
+    }
+  ],
+  "ledgerEntries": [
+    {
+      "id": "tx-101",
+      "timestamp": "11:23:14 AM",
+      "agentId": "agent-02",
+      "humanIntent": "Optimize landing page conversion pathways",
+      "machineAssumption": "Assuming low-latency fine-tuned models can handle sub-routing queries safely",
+      "technicalMetrics": {
+        "model": "Claude-3.5-Haiku",
+        "latencyVariance": "-12.4%"
+      },
+      "financials": {
+        "cogs": 0.012,
+        "attributedRevenue": 45.00,
+        "aer": 3750.0
+      },
+      "intentDriftVariance": 4.2,
+      "contextWindowUsage": 31,
+      "status": "approved"
+    },
+    {
+      "id": "tx-102",
+      "timestamp": "11:19:52 AM",
+      "agentId": "agent-03",
+      "humanIntent": "Validate downstream CRM schema integrity before migration window",
+      "machineAssumption": "Assuming field-level delta comparison against v2.3 schema spec is sufficient for pre-migration sign-off",
+      "technicalMetrics": {
+        "model": "Claude-3.5-Haiku",
+        "latencyVariance": "+3.1%"
+      },
+      "financials": {
+        "cogs": 0.008,
+        "attributedRevenue": 120.00,
+        "aer": 15000.0
+      },
+      "intentDriftVariance": 7.8,
+      "contextWindowUsage": 58,
+      "status": "approved"
+    },
+    {
+      "id": "tx-103",
+      "timestamp": "11:14:07 AM",
+      "agentId": "agent-02",
+      "humanIntent": "Identify redundant model routing paths in the inference queue",
+      "machineAssumption": "Assuming Haiku tier is sufficient for all sub-500ms routing classification tasks",
+      "technicalMetrics": {
+        "model": "Claude-3.5-Haiku",
+        "latencyVariance": "-8.7%"
+      },
+      "financials": {
+        "cogs": 0.004,
+        "attributedRevenue": 18.50,
+        "aer": 4625.0
+      },
+      "intentDriftVariance": 2.1,
+      "contextWindowUsage": 22,
+      "status": "approved"
+    },
+    {
+      "id": "tx-104",
+      "timestamp": "11:08:33 AM",
+      "agentId": "agent-01",
+      "humanIntent": "Audit active serverless function cold-start latency profiles",
+      "machineAssumption": "Assuming 3 consecutive cold-starts above 800ms threshold constitutes a degradation event requiring rerouting",
+      "technicalMetrics": {
+        "model": "Claude-3.5-Sonnet",
+        "latencyVariance": "+22.1%"
+      },
+      "financials": {
+        "cogs": 0.031,
+        "attributedRevenue": 0,
+        "aer": 0
+      },
+      "intentDriftVariance": 42.8,
+      "contextWindowUsage": 84,
+      "status": "halted"
+    }
+  ],
+  "trappedAnomalies": [
+    {
+      "id": "anomaly-402",
+      "agentId": "agent-01",
+      "severity": "critical",
+      "title": "Unreviewed Production Access Attempt",
+      "humanIntent": "Fix checkout performance degradation",
+      "machineAssumption": "Assuming serverless deployment script requires structural index injection to clear bottleneck",
+      "technicalTrace": {
+        "proposedDiff": "@@ -4,4 +4,6 @@\n- const route = base;\n+ // Injection trace\n+ const route = proxyOverride;\n+ database.patchIndex();",
+        "promptVariance": "42.8% (Critical Path Flag)",
+        "estimatedCost": "4,500 tokens ($0.09)"
+      },
+      "businessImpact": "Potential downtime risk across primary billing routes.",
+      "timestamp": "11:23:01 AM",
+      "expirySeconds": 165
+    },
+    {
+      "id": "anomaly-403",
+      "agentId": "agent-03",
+      "severity": "high",
+      "title": "Schema Column Access Outside Approved Scope",
+      "humanIntent": "Generate weekly revenue attribution report",
+      "machineAssumption": "Assuming user_payment_methods table is within read-scope for revenue aggregation query",
+      "technicalTrace": {
+        "proposedDiff": "@@ -12,3 +12,5 @@\n- SELECT amount, currency FROM transactions\n+ SELECT amount, currency, card_last4, billing_addr\n+ FROM transactions\n+ LEFT JOIN user_payment_methods ON ...",
+        "promptVariance": "31.4% (Sensitive Data Flag)",
+        "estimatedCost": "2,100 tokens ($0.04)"
+      },
+      "businessImpact": "PII exposure risk — billing address and card data not approved for this report scope.",
+      "timestamp": "11:21:44 AM",
+      "expirySeconds": 287
+    }
+  ],
+  "terminalLogs": [
+    { "ts": "11:23:14", "agentId": "agent-02", "event": "TOOL_CALL", "detail": "route_optimizer.classify() → latency: 45ms | tokens: 312 in / 88 out" },
+    { "ts": "11:23:01", "agentId": "agent-01", "event": "CIRCUIT_BREAK", "detail": "HIGH_VARIANCE detected → thread paused | promptVariance: 42.8%" },
+    { "ts": "11:22:48", "agentId": "agent-03", "event": "TOOL_CALL", "detail": "schema_validator.diff() → latency: 38ms | tokens: 540 in / 210 out" },
+    { "ts": "11:22:31", "agentId": "agent-02", "event": "TOOL_CALL", "detail": "model_router.score() → tier: Haiku | score: 0.91 | latency: 41ms" },
+    { "ts": "11:22:15", "agentId": "agent-01", "event": "TOOL_CALL", "detail": "deploy_runner.probe() → cold_start: 823ms | threshold_exceeded: true" },
+    { "ts": "11:22:03", "agentId": "agent-03", "event": "STATE_CHANGE", "detail": "status: idle → processing | task: schema_integrity_scan" },
+    { "ts": "11:21:44", "agentId": "agent-03", "event": "CIRCUIT_BREAK", "detail": "SENSITIVE_DATA_FLAG → thread paused | scope_violation: user_payment_methods" },
+    { "ts": "11:21:22", "agentId": "agent-02", "event": "LEDGER_COMMIT", "detail": "tx-103 committed → AER: 4625.0 | COGS: $0.004" },
+    { "ts": "11:19:52", "agentId": "agent-03", "event": "LEDGER_COMMIT", "detail": "tx-102 committed → AER: 15000.0 | COGS: $0.008" },
+    { "ts": "11:08:33", "agentId": "agent-01", "event": "CRITICAL_HALT", "detail": "agent-01 thread terminated | reason: operator REJECT_AND_KILL" }
+  ],
+  "systemMetrics": {
+    "totalTokensBurned": 187420,
+    "totalCogs": 0.847,
+    "totalAttributedRevenue": 183.50,
+    "systemAer": 216.6,
+    "activeAgents": 2,
+    "pausedAgents": 1,
+    "idleAgents": 1,
+    "leakageRate": 0.031
+  }
+}
