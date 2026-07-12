@@ -1,8 +1,8 @@
 // Left Column — The Traceable Audit Stream. AgentBlock stack + TerminalLog.
-// TerminalLog (Tier 2) lands in the next build pass.
 
 import { useAppContext } from "../AppContext";
 import AgentBlock from "../ui/AgentBlock";
+import TerminalLog from "../ui/TerminalLog";
 import { layout, type } from "../../tokens/theme";
 
 export default function AuditStream() {
@@ -13,11 +13,12 @@ export default function AuditStream() {
       <div className={layout.columnHeader}>
         <span className={type.heading}>Traceable Audit Stream</span>
       </div>
-      <div className={`min-h-0 flex-1 space-y-2 ${layout.scrollArea} p-3`}>
+      <div className="shrink-0 space-y-2 border-b border-neutral-800/60 p-3">
         {agents.map((agent) => (
           <AgentBlock key={agent.id} agent={agent} />
         ))}
       </div>
+      <TerminalLog />
     </div>
   );
 }
