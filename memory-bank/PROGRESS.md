@@ -40,6 +40,7 @@
 | `rationale-void-review-checklist.md` | ✅ DONE | NEW — 6-question standing rubric to test decisions against the Rationale Void → Intent Ledger problem |
 | `pitch-narrative.md` | ✅ DONE | NEW — sub-5-minute pitch script (Hook/Pivot/Turn/Walkthrough/Close), The Rationale Void → The Intent Ledger symbolism, live screen map |
 | `app-context-contract.md` | ✅ DONE | NEW — Session 4 — state shape, derived `highestActiveSeverity`, 3 action handlers, and background effects for `AppContext.jsx`, written before the component itself |
+| `business-model.md` | ⚠️ DECISIONS PENDING | NEW — revenue streams + sustainability plan drafted for a competition application. Grounded in the locked personas, but tiers/price points are PROPOSED, not founder-locked — see the provenance note in the doc. |
 
 ---
 
