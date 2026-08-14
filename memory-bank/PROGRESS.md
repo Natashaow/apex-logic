@@ -128,6 +128,23 @@ Build order is enforced — do not skip steps.
 
 ---
 
+## Session 7 — 2026-08-15 (Live Agent-Activity Control Plane, DECISION-9)
+
+**What shipped:** Apex Logic's scope pivoted from mock-data-only Play/Sandbox demo to a live control panel for real background/scheduled agent work (see `memory-bank/DECISIONS.md` DECISION-9, and the vault's `02 - Active Projects/Apex Logic/2026-08-15 Action Plan - Apex Logic Live Data Architecture.md`).
+
+- New `scripts/sync-activity-log.mjs` — reads the vault's `work/agent-activity/events.jsonl` (append-only, source of truth), derives the same 5-key shape as `mockLedgerData.json`, writes `public/generated/ledger-state.json` (gitignored — repo is public, real data never committed) and regenerates the vault's `work/agent-activity/Activity Log.md` mirror. Supports `--watch`. Smoke-tested end-to-end (agent_status → anomaly_trapped → resolution event chain) — output verified correct.
+- New `scripts/mediator.mjs` — local-only HTTP listener, `POST /resolve`, records Approve/Reject decisions as resolution events. **Explicitly unimplemented:** actually resuming/aborting a real paused `Workflow`/`CronCreate`/`/loop` run — recording only, flagged as future work.
+- `src/hooks/useLiveLedgerData.js` (new) — polls `/generated/ledger-state.json` every 3s, local dev only (`import.meta.env.DEV` — production build unaffected).
+- `AppContext.jsx` — added `applyLiveSnapshot` callback wired to the new hook (avoids the derived-state-in-effect anti-pattern flagged by `react-hooks/set-state-in-effect` — callback fires from inside the poll, not a downstream effect); `approveAnomaly`/`rejectAnomaly` now fire-and-forget POST to the mediator; synthetic terminal-log generator now skips when `isLive`. `mockLedgerData.json` import unchanged — still the init source and the public deployment's only data source.
+- Amended (per DECISION-9's authorization): `CLAUDE.md` §5, `src/docs/lean-prd.md` §3, `src/docs/app-context-contract.md` (LOCKED banner, §1, §3, §4, §5).
+- `.gitignore` — added `public/generated/ledger-state.json`. Confirmed via `git check-ignore` — not tracked, not staged.
+
+**Verification:** `npm run lint` — clean (after fixing two React Compiler lint violations: derived-state-in-effect, and a ref-write-during-render — both fixed by restructuring `useLiveLedgerData` to take an `onSnapshot` callback rather than returning state for a separate syncing effect). `npm run build` — clean, 99ms.
+
+**Not done this session:** wiring a real `Workflow`/`CronCreate`/`/loop` run to notice and act on a mediator resolution event. Zanshin/`second-brain-preview`'s own internal debt — out of scope, untouched.
+
+---
+
 ## Next Gate
 **Phase 1 — Token Resolution: ✅ COMPLETE (retroactively verified 2026-07-12).** `theme.js` has no PENDING comments and cyan is the live accent, `index.html` loads both Google Fonts, and `index.css` wires them into Tailwind v4's `@theme` block (this project has no `tailwind.config.js` — v4 uses CSS-first theming). This tracker previously said Phase 1 was not started; that was stale and has been corrected.
 

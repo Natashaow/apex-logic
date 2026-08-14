@@ -4,8 +4,25 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import mockData from "../data/mockLedgerData.json";
+import { useLiveLedgerData } from "../hooks/useLiveLedgerData";
 
 const AppContext = createContext(null);
+
+// DECISION-9 (2026-08-15) — fire-and-forget POST to the local mediator.
+// Never awaited by callers, never gates the optimistic local state update —
+// see approveAnomaly/rejectAnomaly below and app-context-contract.md §3.
+const MEDIATOR_URL = "http://localhost:4177/resolve";
+function postResolution(anomalyId, outcome, reason) {
+  if (!import.meta.env.DEV) return;
+  fetch(MEDIATOR_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ anomalyId, outcome, reason }),
+  }).catch(() => {
+    // Mediator not running — expected if `npm run mediator` hasn't been
+    // started locally. Not an error the UI needs to surface.
+  });
+}
 
 function timestampNow() {
   return new Date().toLocaleTimeString("en-US", {
@@ -33,6 +50,21 @@ export function AppProvider({ children }) {
   const [systemMetrics, setSystemMetrics] = useState(mockData.systemMetrics);
   const anomaliesRef = useRef(mockData.trappedAnomalies);
 
+  // DECISION-9 (2026-08-15) — local-only live feed. See app-context-contract.md
+  // §1: mockData remains the init source; once a live poll succeeds, its
+  // payload overwrites state below (no diff/merge — latest poll wins, see
+  // §1's documented v1 rough edge on optimistic-mutation flicker). setState
+  // calls happen inside the hook's fetch callback, not a downstream effect.
+  const applyLiveSnapshot = useCallback((snapshot) => {
+    setAgents(snapshot.agents);
+    setLedgerEntries(snapshot.ledgerEntries);
+    setTrappedAnomalies(snapshot.trappedAnomalies);
+    anomaliesRef.current = snapshot.trappedAnomalies;
+    setTerminalLogs(snapshot.terminalLogs);
+    setSystemMetrics(snapshot.systemMetrics);
+  }, []);
+  const { isLive } = useLiveLedgerData(applyLiveSnapshot);
+
   // SPEC-07 / DECISION-6 — derived, never duplicated into state.
   const highestActiveSeverity = useMemo(() => {
     if (trappedAnomalies.some((a) => a.severity === "critical")) return "critical";
@@ -49,6 +81,8 @@ export function AppProvider({ children }) {
   // real CIRCUIT_BREAK / CRITICAL_HALT / LEDGER_COMMIT lines come from the action
   // handlers above, never manufactured here. Reads agents via a ref so this
   // effect runs once on mount rather than restarting every time agents change.
+  // DECISION-9 (2026-08-15): superseded when isLive — see contract §4. This
+  // generator only runs on mock/public-deployment data.
   const agentsRef = useRef(agents);
   useEffect(() => {
     agentsRef.current = agents;
@@ -59,6 +93,7 @@ export function AppProvider({ children }) {
   }, [trappedAnomalies]);
 
   useEffect(() => {
+    if (isLive) return undefined;
     let timeoutId;
 
     const scheduleNext = () => {
@@ -89,7 +124,7 @@ export function AppProvider({ children }) {
 
     scheduleNext();
     return () => clearTimeout(timeoutId);
-  }, [prependLog]);
+  }, [prependLog, isLive]);
 
   // app-context-contract.md Section 3 — approveAnomaly
   const approveAnomaly = useCallback(
@@ -132,6 +167,9 @@ export function AppProvider({ children }) {
         totalTokensBurned: prev.totalTokensBurned + tokens,
         totalCogs: +(prev.totalCogs + cogs).toFixed(3),
       }));
+
+      // DECISION-9 — fire-and-forget, does not gate the local update above.
+      postResolution(anomalyId, "approved");
     },
     [prependLog]
   );
@@ -156,6 +194,9 @@ export function AppProvider({ children }) {
         event: "CRITICAL_HALT",
         detail: `${anomaly.agentId} thread terminated | reason: ${reason}`,
       });
+
+      // DECISION-9 — fire-and-forget, does not gate the local update above.
+      postResolution(anomalyId, "rejected", reason);
     },
     [prependLog]
   );

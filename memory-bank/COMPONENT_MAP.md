@@ -27,6 +27,8 @@
 | `src/data/mockLedgerData.json` → `trappedAnomalies[]` volume (length, severity mix) | Also drives `sections/CircuitBreakerGate.jsx` column header styling (SPEC-07 `ColumnAttentionState`) — not just `AnomalyCard.jsx` | 🟠 MEDIUM |
 | `src/data/mockLedgerData.json` → `terminalLogs[]` shape | `TerminalLog.jsx`, `AuditStream.jsx`, `AppContext.jsx` | 🟠 MEDIUM |
 | `src/data/mockLedgerData.json` → `systemMetrics{}` | `SystemHeader.jsx` (4 metric counters) | 🟡 LOW |
+| `public/generated/ledger-state.json` shape (DECISION-9, gitignored, local-only) | Same 5 keys, same downstream components as `mockLedgerData.json` above — `scripts/sync-activity-log.mjs` must derive an identical shape or all 4 rows above break silently in local dev | 🔴 HIGH |
+| `scripts/sync-activity-log.mjs` event-schema (`events.jsonl` line types) | `public/generated/ledger-state.json` output, `work/agent-activity/Activity Log.md` mirror in the vault | 🟠 MEDIUM |
 | `src/data/strategy.js` | Any component rendering brand/persona data | 🟡 LOW |
 | `src/data/assumptions.js` | Not currently consumed by any live component — `ComplianceBadgeStrip.jsx` (its only planned consumer) was cut from the dashboard. Retained as pitch/docs data. | ⚪ NONE (dead data for UI purposes) |
 | `src/data/users.js` | Any component rendering persona/journey data | 🟡 LOW |
@@ -39,6 +41,8 @@
 |---|---|---|
 | `src/components/AppContext.jsx` → state shape | Every component using `useContext(AppContext)` — that's all section and ui components | 🔴 HIGH |
 | `src/components/AppContext.jsx` → action handlers (approve/reject/emergency stop) | `AnomalyCard.jsx`, `SystemHeader.jsx` (Emergency Stop button) | 🔴 HIGH |
+| `src/hooks/useLiveLedgerData.js` (DECISION-9) | `AppContext.jsx`'s `applyLiveSnapshot` callback and `isLive` flag — indirectly everything above, only in local dev (`import.meta.env.DEV`) | 🟠 MEDIUM — local-only, no effect on public deployment |
+| External: `scripts/mediator.mjs` running locally on port 4177 | `AppContext.jsx`'s `postResolution()` inside `approveAnomaly`/`rejectAnomaly` — fire-and-forget, failures are silent (mediator not required to be running) | 🟡 LOW |
 
 ---
 

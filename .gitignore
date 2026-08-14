@@ -13,6 +13,11 @@ dist
 dist-ssr
 *.local
 
+# Real agent-activity feed (DECISION-9, 2026-08-15) — this repo is public;
+# never commit real ledger data. mockLedgerData.json stays committed and is
+# what the public deployment shows.
+public/generated/ledger-state.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

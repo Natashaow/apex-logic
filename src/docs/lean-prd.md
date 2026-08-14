@@ -57,6 +57,6 @@ Client-Side State Engine — React + tokenized Cyberpunk Bloomberg Terminal fram
 
 ## 3. Scope Guardrails (Will Not Build)
 
-- **No Live API Integrations** — All logs, entries, and code changes loop from local static JSON. Zero live Anthropic/OpenAI API calls.
-- **No Genuine Cryptographic Signing** — Signature action driven purely by local React state updates. No Web3 wallet or hardware verification.
-- **No Database Architecture** — Dashboard lives entirely in volatile React state (useState). Browser refresh resets to default mock values.
+- **No Live API Integrations — narrowly amended by DECISION-9 (2026-08-15).** Logs, entries, and code changes loop from local static JSON by default. The one exception: a local-only sync script (`scripts/sync-activity-log.mjs`) polls a runtime-generated JSON file, and a local mediator endpoint handles Approve/Reject resolution — both scoped to Natasha's own machine, never the public deployment. Zero live Anthropic/OpenAI API calls, still true; zero hosted third-party integrations, still true.
+- **No Genuine Cryptographic Signing** — Signature action driven purely by local React state updates. No Web3 wallet or hardware verification. Unaffected by DECISION-9.
+- **No Database Architecture** — Dashboard lives entirely in volatile React state (useState). Browser refresh resets to default mock values on the public deployment. Unaffected by DECISION-9 — the local live-data path uses a flat JSON file and an append-only log, not a database.

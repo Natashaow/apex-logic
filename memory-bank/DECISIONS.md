@@ -5,6 +5,19 @@
 
 ---
 
+## Session 7 — 2026-08-15 (Live Agent-Activity Control Plane — Scope Pivot)
+
+### DECISION-9 — Client-Only/No-Backend Constraint Unlocked, Scoped to Local Sync + Mediator
+- **Date:** 2026-08-15
+- **Resolved:** Apex Logic is no longer a mock-data-only Play/Sandbox demo. It becomes a live control panel for Natasha's real background/scheduled agent work (Claude Code's `Workflow` tool, `CronCreate` scheduled agents, `/loop` background loops) — the class of agent activity that runs without her watching in the moment, which The Apex Checkpoint mechanic was actually built to govern. The founding "client-only, no backend, no database, mock data" constraint (this file's original architecture, `CLAUDE.md` §5, `src/docs/lean-prd.md` §3, `src/docs/app-context-contract.md` §5) is unlocked, **narrowly**: only for (a) a local Node sync script reading a real event log from the vault (`work/agent-activity/events.jsonl`, outside this repo) and writing a runtime-polled JSON file, and (b) a local mediator process (`POST /resolve`) that the three action handlers call. The blanket "no backend/no database/no live API" rule otherwise still stands — no hosted server, no database engine, no third-party API calls beyond this scope.
+- **Rationale:** The original constraint was correct for a portfolio demo running on mock data. It's wrong for what Apex Logic is now — a real governance tool needs real data. Scoping the unlock narrowly (local-only, one JSON feed, one mediator endpoint) avoids reopening the constraint further than the actual need, and keeps the public Vercel deployment unaffected (still shows `mockLedgerData.json`, unchanged) since the real feed is `.gitignore`d and never committed — confirmed 2026-08-15 that `github.com/Natashaow/apex-logic` is a public repo, so real agent-activity data (human intent text, cost figures) must never enter git history.
+- **Files updated:** `CLAUDE.md` (§5 backend rule), `src/docs/lean-prd.md` (§3 Scope Guardrails), `src/docs/app-context-contract.md` (LOCKED banner + §5 Non-Goals), `src/components/AppContext.jsx` (data source), `memory-bank/COMPONENT_MAP.md`, `memory-bank/PROGRESS.md`. New: `scripts/sync-activity-log.mjs`, `scripts/mediator.mjs` (or extended sync script), `src/hooks/useLiveLedgerData.js`, `.gitignore` entry for `public/generated/ledger-state.json`.
+- **Downstream:** `src/data/mockLedgerData.json` is kept, not deleted — remains the public deploy's data source and an offline/demo fixture. The synthetic terminal-log generator in `AppContext.jsx` is removed (superseded by real `terminalLogs` from the live feed). Full implementation plan: see the vault's [[2026-08-15 Action Plan - Apex Logic Live Data Architecture]].
+- **Explicitly not resolved by this decision:** how a real paused `Workflow`/`CronCreate`/`/loop` run notices a mediator resolution event and actually resumes/aborts — flagged as open, separate follow-up work, not designed here.
+- **Status:** LOCKED
+
+---
+
 ## Session 5 — 2026-07-12 (Intro Screen — Parallel Track, Independent of Phase 2 Component Build)
 
 ### DECISION-8 — Intro Screen Copy & Treatment

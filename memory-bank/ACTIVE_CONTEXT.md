@@ -14,9 +14,26 @@ _(none)_
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. `npm run build` + `npm run lint` both clean.
-**Next Phase:** Visual QA in a real browser (automated grep-based QA passed; a human/visual pass against `ui-spec.md` is still recommended before calling the dashboard done) + `AppContext` unit coverage if desired.
-**Last updated:** 2026-07-12
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)** — see below. `npm run build` + `npm run lint` both clean.
+**Next Phase:** Visual QA in a real browser (still the standing recommendation, unaffected by Session 7's data-layer work) + wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything).
+**Last updated:** 2026-08-15
+
+---
+
+## Session 7 — 2026-08-15 (Live Agent-Activity Control Plane — DECISION-9)
+
+**What:** Apex Logic's scope pivoted from a mock-data-only Play/Sandbox demo to a live control panel for real background/scheduled agent work. Full context: `memory-bank/DECISIONS.md` DECISION-9, and the vault's `02 - Active Projects/Apex Logic/2026-08-15 Action Plan - Apex Logic Live Data Architecture.md`.
+
+**Files added:** `scripts/sync-activity-log.mjs`, `scripts/mediator.mjs`, `src/hooks/useLiveLedgerData.js`.
+**Files modified:** `src/components/AppContext.jsx`, `CLAUDE.md` §5, `src/docs/lean-prd.md` §3, `src/docs/app-context-contract.md`, `package.json` (new `watch-activity`/`mediator` scripts), `.gitignore`, `memory-bank/DECISIONS.md`, `memory-bank/COMPONENT_MAP.md`, `memory-bank/PROGRESS.md`.
+
+**Public deployment unaffected:** the live feed only activates in local dev (`import.meta.env.DEV`); `mockLedgerData.json` stays committed and is what `github.com/Natashaow/apex-logic` and the Vercel deployment show. The real feed (`public/generated/ledger-state.json`) is gitignored — confirmed via `git check-ignore`, repo is public, real agent data must never enter git history.
+
+**Two lint fixes worth remembering for future work in this file:** (1) syncing external data into React state via a `useEffect` watching a data dependency trips `react-hooks/set-state-in-effect` — fixed by having the external hook (`useLiveLedgerData`) call an `onSnapshot` callback directly from inside its own fetch handler instead of returning state for a downstream effect to react to. (2) Writing to a ref during render (`ref.current = x` outside an effect/handler) trips a separate ref-write rule — the "keep latest callback in a ref" pattern needs the assignment inside its own `useEffect`.
+
+**Verification:** `npm run lint` and `npm run build` both clean. `scripts/sync-activity-log.mjs` smoke-tested against a synthetic `agent_status → anomaly_trapped → resolution` event chain — output shape verified correct, then reset to empty (real system starts clean, not seeded with test data).
+
+**Explicitly not done:** the mediator only *records* Approve/Reject decisions as resolution events — it does not yet make a real paused `Workflow`/`CronCreate`/`/loop` run notice and act on them. That's separate, unscoped follow-up work.
 
 ---
 
