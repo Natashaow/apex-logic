@@ -9,7 +9,7 @@ Traditional developer logs record the mutation of code state (what changed) but 
 
 ## The Operational Translation Rule
 
-To bridge the deep cognitive translation gap between the rushing Tech Lead, the non-technical operator, and the corporate auditor, the interface completely discards transient raw terminal streams. It establishes a permanent, traceable chain of custody by binding human intent directly to variable infrastructure costs and machine hypotheses.
+To bridge the deep cognitive translation gap between the rushing Tech Lead, the non-technical operator, and the corporate auditor, the interface completely discards transient raw terminal streams. It establishes a permanent, traceable chain of custody by binding human intent directly to variable infrastructure costs and the agent's own declared hypotheses — not a claim of its true internal reasoning.
 
 ---
 
@@ -18,7 +18,7 @@ To bridge the deep cognitive translation gap between the rushing Tech Lead, the 
 | Vector | Description |
 |---|---|
 | **Human Intent Anchor** | The original natural language prompt string typed by the human operator that initiated the downstream workflow execution graph. |
-| **Machine Assumption Log** | A clean, plain-English serialized logic statement detailing the exact hypothesis the agent formulated to justify its chosen execution path. |
+| **Machine Assumption Log** | A clean, plain-English serialized logic statement detailing the hypothesis the agent declared to justify its chosen execution path — the agent's stated assumption, not a verified account of its true internal reasoning. |
 | **Bracketed Technical Trace** | High-precision telemetry data in fixed-width monospace: model tier, token volume, token velocity. |
 | **Real-Time Financial Attribution** | Variable COGS + AER: `AER = Attributed Revenue / Compute Cost` |
 | **Intent Drift Variance (%)** | Structural alert metric tracking how far the agent's sub-task decisions have deviated from the original master intent string over long execution loops. |

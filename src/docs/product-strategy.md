@@ -10,7 +10,7 @@
 ### Core Value Proposition
 Transforming non-deterministic multi-agent unpredictability into a traceable, auditable, and structurally secure operational asset.
 
-Apex Logic provides a high-density operational control plane and contextual translation ledger designed specifically for technical leaders. It eliminates the "rationale void" created by autonomous systems generating code on the fly, intercepts high-variance architectural and financial anomalies in real time, and translates volatile machine metadata into clear plain-English historical narratives.
+Apex Logic provides a high-density operational control plane and contextual translation ledger designed specifically for technical leaders. It closes the "rationale void" created by autonomous systems generating code on the fly — recording each agent's own declared rationale, not a claim of its true internal reasoning — intercepts high-variance architectural and financial anomalies in real time, and translates volatile machine metadata into clear plain-English historical narratives.
 
 ### Formal Business Mission
 To empower engineering architects and corporate teams to scale autonomous agent infrastructure safely by providing the missing governance layer: a centralized observation, financial attribution, and circuit-breaking interface that keeps human intent securely at the apex of autonomous execution.
@@ -34,7 +34,7 @@ The current AI ecosystem is heavily saturated with frameworks designed to make a
 
 ### Strategic Differentiators
 1. **Contextual Intent-to-Asset Mapping** — Permanently binds the original Human Intent prompt to the localized Machine Assumption, specific code modifications, and real-time financial expenditure.
-2. **The Rationale Documentation Ledger** — Captures intent passively at the millisecond of creation, building a living, human-readable historical timeline of the system's evolution.
+2. **The Rationale Documentation Ledger** — Captures the human's intent and the agent's own declared assumption passively at the millisecond of creation, building a living, human-readable historical timeline of the system's evolution.
 3. **Granular Compute-to-Value Costing** — Treats token burn and compute latency as direct variable Cost of Goods Sold (COGS), grouped by agent identity and business outcome.
 
 ---

@@ -42,6 +42,7 @@
 | `src/components/AppContext.jsx` → state shape | Every component using `useContext(AppContext)` — that's all section and ui components | 🔴 HIGH |
 | `src/components/AppContext.jsx` → action handlers (approve/reject/emergency stop) | `AnomalyCard.jsx`, `SystemHeader.jsx` (Emergency Stop button) | 🔴 HIGH |
 | `src/hooks/useLiveLedgerData.js` (DECISION-9) | `AppContext.jsx`'s `applyLiveSnapshot` callback and `isLive` flag — indirectly everything above, only in local dev (`import.meta.env.DEV`) | 🟠 MEDIUM — local-only, no effect on public deployment |
+| `src/components/AppContext.jsx` → `isLive` now exposed on context value (DECISION-10) | `sections/IntentLedger.jsx` → `ui/LedgerRow.jsx` (branches Zone B: risk-primary live layout vs. cost-primary mock layout) | 🟡 LOW — additive field, single consumer chain, public deployment always sees `isLive: false` |
 | External: `scripts/mediator.mjs` running locally on port 4177 | `AppContext.jsx`'s `postResolution()` inside `approveAnomaly`/`rejectAnomaly` — fire-and-forget, failures are silent (mediator not required to be running) | 🟡 LOW |
 
 ---

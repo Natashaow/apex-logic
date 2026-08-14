@@ -141,13 +141,16 @@ export function AppProvider({ children }) {
       );
 
       const { tokens, cogs } = parseEstimatedCost(anomaly.technicalTrace?.estimatedCost);
+      // DECISION-11 — technicalTrace never carried a model field; the real
+      // signal is the agent's own metrics.model, already in agentsRef.
+      const sourceAgent = agentsRef.current.find((a) => a.id === anomaly.agentId);
       const newEntry = {
         id: `tx-${Date.now()}`,
         timestamp: timestampNow(),
         agentId: anomaly.agentId,
         humanIntent: anomaly.humanIntent,
         machineAssumption: anomaly.machineAssumption,
-        technicalMetrics: { model: "—", latencyVariance: "—" },
+        technicalMetrics: { model: sourceAgent?.metrics?.model ?? "—", latencyVariance: "—" },
         financials: { cogs, attributedRevenue: 0, aer: 0 },
         intentDriftVariance: 0,
         contextWindowUsage: 0,
@@ -223,6 +226,7 @@ export function AppProvider({ children }) {
       terminalLogs,
       systemMetrics,
       highestActiveSeverity,
+      isLive,
       approveAnomaly,
       rejectAnomaly,
       emergencyStop,
@@ -235,6 +239,7 @@ export function AppProvider({ children }) {
       terminalLogs,
       systemMetrics,
       highestActiveSeverity,
+      isLive,
       approveAnomaly,
       rejectAnomaly,
       emergencyStop,

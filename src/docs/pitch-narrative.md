@@ -5,7 +5,7 @@
 
 ## 0. Why This Doc Exists
 
-This is the spoken narrative and prototype cue sheet for pitching Apex Logic in under 5 minutes. It is built on the umbrella frame already formalized in `ux-problem-framework.md`: every problem statement (`PS-01`–`PS-06`) is a different facet of the same absence — **The Rationale Void**. Autonomous agents act, and no record of why, how much, or under what authority is ever created. Apex Logic closes that void with a permanent, cost-aware record — **The Intent Ledger** — gated by **The Apex Checkpoint**.
+This is the spoken narrative and prototype cue sheet for pitching Apex Logic in under 5 minutes. It is built on the umbrella frame already formalized in `ux-problem-framework.md`: every problem statement (`PS-01`–`PS-06`) is a different facet of the same absence — **The Rationale Void**. Autonomous agents act, and no record of why, how much, or under what authority is ever created. Apex Logic closes that void with a permanent record of each agent's own declared rationale and estimated cost — **The Intent Ledger** — gated by **The Apex Checkpoint**. (Not a claim of the agent's true internal reasoning — see `rationale-void-review-checklist.md` §Why This Exists.)
 
 This script is a draft in the author's working voice — treat it as a scaffold to deliver in your own words, not a script to read verbatim. Run any revision through `rationale-void-review-checklist.md` before you lock it.
 
@@ -50,7 +50,7 @@ flowchart LR
 
 ### 3. TURN — ~20s
 
-> "Apex Logic doesn't build another agent. It closes the void — a permanent, cost-aware ledger that binds human intent to every agent action, the instant it happens, gated by a human checkpoint the moment it matters."
+> "Apex Logic doesn't build another agent. It closes the void — a permanent ledger of what each agent says it was thinking and what it's estimated to cost, binding human intent to every agent action, the instant it happens, gated by a human checkpoint the moment it matters."
 
 ### 4. WALKTHROUGH — ~2:30, the bulk of the time — "Inside the Intent Ledger" (live)
 

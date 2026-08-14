@@ -131,7 +131,9 @@ function deriveState(events) {
             agentId: anomaly.agentId,
             humanIntent: anomaly.humanIntent,
             machineAssumption: anomaly.machineAssumption,
-            technicalMetrics: { model: anomaly.technicalTrace?.model, latencyVariance: anomaly.technicalTrace?.promptVariance },
+            // DECISION-11 — technicalTrace never carried a model field; the
+            // real signal is the source agent's own metrics.model.
+            technicalMetrics: { model: agent?.metrics?.model ?? '—', latencyVariance: anomaly.technicalTrace?.promptVariance },
             financials: { cogs: cost, attributedRevenue: 0, aer: 0 },
             intentDriftVariance: 0,
             contextWindowUsage: 0,

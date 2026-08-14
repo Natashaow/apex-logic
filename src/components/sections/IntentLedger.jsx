@@ -5,7 +5,7 @@ import LedgerRow from "../ui/LedgerRow";
 import { layout, type } from "../../tokens/theme";
 
 export default function IntentLedger() {
-  const { ledgerEntries } = useAppContext();
+  const { ledgerEntries, isLive } = useAppContext();
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -14,7 +14,7 @@ export default function IntentLedger() {
       </div>
       <div className={`min-h-0 flex-1 divide-y divide-neutral-900 ${layout.scrollArea}`}>
         {ledgerEntries.map((entry) => (
-          <LedgerRow key={entry.id} entry={entry} />
+          <LedgerRow key={entry.id} entry={entry} isLive={isLive} />
         ))}
       </div>
     </div>

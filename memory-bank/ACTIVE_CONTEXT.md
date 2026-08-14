@@ -14,9 +14,35 @@ _(none)_
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)** — see below. `npm run build` + `npm run lint` both clean.
-**Next Phase:** Visual QA in a real browser (still the standing recommendation, unaffected by Session 7's data-layer work) + wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything).
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)**. **Session 8 (2026-08-15): Intent Ledger copy split by track for OPC submission (DECISION-10)**. **Session 9 (2026-08-15): real-entry `technicalMetrics.model` fixed (DECISION-11)**. **Session 10 (2026-08-15): "why every agent acted" overclaim fixed across 5 `src/docs/` files, by explicit one-time user override of `CLAUDE.md` §5 (DECISION-12)** — see below. `npm run build` + `npm run lint` both clean (Session 10 was doc-only, no code touched).
+**Next Phase:** Visual QA in a real browser (still the standing recommendation) + wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything) + a human pass on `src/docs/component-specs.md` SPEC-01 to document the live-track LedgerRow variant (Session 8 — deliberately not edited here, see `CLAUDE.md` §5) + **scope decision (2026-08-15, per Natasha): OPC/personal track is the active build target; B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later** — see `Apex Logic.md` in the vault for the sequencing note.
 **Last updated:** 2026-08-15
+
+---
+
+## Session 9 — 2026-08-15 (Real-Entry Model Field Fix — DECISION-11)
+
+**What:** `technicalMetrics.model` on real `ledgerEntries[]` rows now resolves from the source agent's own `metrics.model` (looked up by `agentId`) instead of a `technicalTrace.model` field that never existed in the `anomaly_trapped` event schema. Fixed in both `AppContext.approveAnomaly` (client-optimistic path) and `scripts/sync-activity-log.mjs` (Node-derived path). Full detail: `memory-bank/DECISIONS.md` DECISION-11.
+
+**Files modified:** `src/components/AppContext.jsx`, `scripts/sync-activity-log.mjs`, `memory-bank/DECISIONS.md`, `memory-bank/ACTIVE_CONTEXT.md`.
+
+**Verification:** `npm run lint` + `npm run build` clean. Smoke-tested the Node path against a synthetic event chain in a throwaway `VAULT_ROOT` — `technicalMetrics.model` resolved to `"Claude-Sonnet-5"` (the test agent's real model) instead of `undefined`. No leftover state — `public/generated/ledger-state.json` reset, throwaway vault dir removed.
+
+**Not touched:** client-optimistic path's `latencyVariance` still hardcodes `"—"` (self-corrects within ~3s on the next live poll) — out of scope, model-only fix.
+
+---
+
+## Session 8 — 2026-08-15 (OPC Track Submission — Intent Ledger Copy Reframe — DECISION-10)
+
+**What:** `ui/LedgerRow.jsx` Zone B now branches on `isLive` (newly exposed on `AppContext`'s value, was already computed internally by `useLiveLedgerData`). Live/OPC track shows `MODEL / RISK AT APPROVAL / EST. COST` (risk-primary, 3 cells); mock/B2B track is unchanged (`MODEL / COGS-AER / LATENCY VAR / DRIFT / CONTEXT`, 5 cells, $ still primary). Full rationale in `memory-bank/DECISIONS.md` DECISION-10.
+
+**Why now:** Checking the product against Natasha's own OPC-track usage (flat-subscription, no marginal cost signal) surfaced that `attributedRevenue`/`aer`/`intentDriftVariance`/`contextWindowUsage` are hardcoded `0` on every real ledger entry from both `AppContext.approveAnomaly` and `scripts/sync-activity-log.mjs` — the old cost-primary layout would show dead zeros to OPC judges.
+
+**Files modified:** `src/components/AppContext.jsx`, `src/components/sections/IntentLedger.jsx`, `src/components/ui/LedgerRow.jsx`, `memory-bank/DECISIONS.md` (DECISION-10), `memory-bank/ACTIVE_CONTEXT.md`, `memory-bank/COMPONENT_MAP.md`.
+
+**Explicitly not done:** `technicalMetrics.model` is also unreliable on real entries (`"—"` or `undefined`) — flagged in DECISION-10, not fixed (would need a data-shape change touching both the client action handler and the Node sync script). `src/docs/component-specs.md` SPEC-01 still only documents the mock 5-cell layout — needs a human edit per `CLAUDE.md` §5, not applied here.
+
+**Verification:** `npm run lint` and `npm run build` both clean.
 
 ---
 

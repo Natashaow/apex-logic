@@ -1,7 +1,7 @@
 # User Architecture, Persona Profiles & Journey Matrix
 > Unified reference — three source documents merged into one canonical file.
 > **Companion doc:** `ux-problem-framework.md` expands every friction point below into a formal POV/HMW problem statement (`PS-01`–`PS-06`) and chains it to the exact component spec that resolves it. This file stays the canonical source for personas and journey; the framework doc is the derived reasoning layer — update here first, then reconcile IDs there.
-> **The one-line version of all of it:** every friction point below is a different facet of the same absence — **The Rationale Void**. Autonomous agents act, and no record of why is ever created. Apex Logic closes that void with **The Intent Ledger**, gated by **The Apex Checkpoint**. See "The Rationale Void — Umbrella Frame" in `ux-problem-framework.md` for the full mapping.
+> **The one-line version of all of it:** every friction point below is a different facet of the same absence — **The Rationale Void**. Autonomous agents act, and no record of why is ever created. Apex Logic closes that void with **The Intent Ledger** — a record of each agent's own declared rationale, not a claim of its true internal reasoning — gated by **The Apex Checkpoint**. See "The Rationale Void — Umbrella Frame" in `ux-problem-framework.md` for the full mapping.
 > **Pitch script:** `pitch-narrative.md` stages this exact journey as a sub-5-minute pitch — the `Pitch Beat` row in the Journey Matrix below maps each phase to its beat (Hook / Pivot / Turn + Walkthrough).
 
 ---
@@ -10,7 +10,7 @@
 
 **The Documentation Tax:** Modern technical environments move too fast for manual documentation. Under high cognitive load, engineers suffer from acute memory fatigue — leaving a critical "rationale void" when autonomous agents run background loops.
 
-**The Translation Trap:** AI systems fail probabilistically, not deterministically. Tech leads need a visual observability system that translates raw model behavior into plain-English reasoning that both senior engineers and non-technical stakeholders can instantly understand.
+**The Translation Trap:** AI systems fail probabilistically, not deterministically. Tech leads need a visual observability system that translates raw model behavior into plain-English summaries of the agent's declared assumptions — not a verified account of its true reasoning — that both senior engineers and non-technical stakeholders can instantly understand.
 
 ---
 
