@@ -14,9 +14,44 @@ _(none)_
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)**. **Session 8 (2026-08-15): Intent Ledger copy split by track for OPC submission (DECISION-10)**. **Session 9 (2026-08-15): real-entry `technicalMetrics.model` fixed (DECISION-11)**. **Session 10 (2026-08-15): "why every agent acted" overclaim fixed across 5 `src/docs/` files, by explicit one-time user override of `CLAUDE.md` §5 (DECISION-12)** — see below. `npm run build` + `npm run lint` both clean (Session 10 was doc-only, no code touched).
-**Next Phase:** Visual QA in a real browser (still the standing recommendation) + wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything) + a human pass on `src/docs/component-specs.md` SPEC-01 to document the live-track LedgerRow variant (Session 8 — deliberately not edited here, see `CLAUDE.md` §5) + **scope decision (2026-08-15, per Natasha): OPC/personal track is the active build target; B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later** — see `Apex Logic.md` in the vault for the sequencing note.
+**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)**. **Session 8 (2026-08-15): Intent Ledger copy split by track for OPC submission (DECISION-10)**. **Session 9 (2026-08-15): real-entry `technicalMetrics.model` fixed (DECISION-11)**. **Session 10 (2026-08-15): "why every agent acted" overclaim fixed across 5 `src/docs/` files, by explicit one-time user override of `CLAUDE.md` §5 (DECISION-12)**. **Session 11 (2026-08-15): Phase 3 Human Visual QA passed in a real browser** — see below. `npm run build` + `npm run lint` both clean.
+**Next Phase:** Wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything) + a human pass on `src/docs/component-specs.md` SPEC-01 to document the live-track LedgerRow variant (Session 8 — deliberately not edited here, see `CLAUDE.md` §5) + **scope decision (2026-08-15, per Natasha): OPC/personal track is the active build target; B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later** — see `Apex Logic.md` in the vault for the sequencing note. Visual QA (previously the standing recommendation) is now done — see Session 11.
 **Last updated:** 2026-08-15
+
+---
+
+## Session 12 — 2026-08-15 (Rationale Gate MVP — Pre-Commitment Log, Same-Day Build)
+
+**What:** New "Rationale Gate — Pre-Commitment Log" strip mounted between `SystemHeader` and `ThreeColumnLayout` — additive, does not touch the locked 25/45/30 grid. Lets an operator log an assumption + rejected alternative + optional success signal *before* a task starts, upstream of Intent Drift (which the Circuit-Breaking Gate already covers during execution). Explicitly scoped as an MVP under same-day deadline pressure — vibe-coded, not fully spec'd against `component-specs.md`/`ui-spec.md` yet.
+
+**Files:**
+- New: `src/components/sections/RationaleGate.jsx` (form + horizontal chip list, reuses existing `theme.js` tokens — no new colors/fonts/radii).
+- `src/data/mockLedgerData.json` — new `preCommitments[]` key, 2 seed entries.
+- `src/components/AppContext.jsx` — `preCommitments` state + `logPreCommitment` action (prepends entry, logs `RATIONALE_LOGGED` to the terminal feed). Local session state only — **not yet wired** into `scripts/sync-activity-log.mjs` or the live-poll snapshot; resets on refresh.
+- `src/App.jsx` — mounts `<RationaleGate />`.
+
+**Verification:** `npm run build` + `npm run lint` both clean. Live browser pass: opened the form, submitted a real entry, chip appeared, `RATIONALE_LOGGED` line appeared in the terminal feed, zero console errors, rest of the dashboard (Circuit-Breaking Gate, Intent Ledger, Approve/Reject) unaffected.
+
+**Explicitly not done (fix later, not blocking):** no `component-specs.md`/`DECISIONS.md`/`COMPONENT_MAP.md` entries yet (locked-doc update skipped under time pressure — flag for a follow-up pass); no wiring into the vault-backed live data pipeline; no unit tests; no visual QA against `ui-spec.md`'s full checklist (only a live smoke test).
+
+---
+
+## Session 11 — 2026-08-15 (Phase 3 Human Visual QA — Live Browser Pass)
+
+**What:** `npm run build` + `npm run lint` verified clean, then `npm run dev` (port 5175 — 5173/5174 already occupied by other processes) opened and driven in a real Chrome tab against `src/docs/branding/ui-spec.md` and the repo's own "Next Step Prompt" checklist.
+
+**Verified clean, no findings requiring a design decision:**
+- IntroScreen: white logo mark, terminal boot-sequence line, locked tagline, cyan `▸ Enter Control Plane` CTA — all render exactly per `Design Decisions`.
+- Column proportions read correctly at 25/45/30 (Audit / Intent / Circuit-Breaker) at a standard viewport.
+- SPEC-07 column-header escalation confirmed live: `CIRCUIT-BREAKING GATE` header shows crimson border + pulsing `● N PENDING`, badge count decremented 2→1 in real time after resolving an anomaly.
+- Expiry countdown timers tick down live (verified two consecutive reads, ~20s apart, both decrementing correctly); terminal feed scrolls continuously with new timestamped entries.
+- `SystemHeader` metric counters (`TOKENS BURNED`, `TOTAL COGS`, `SYSTEM AER`, `LEAKAGE RATE`) animate via `react-countup` on data change.
+- **Live interaction smoke test:** clicked `Approve & Sign` on a trapped anomaly — `LEDGER_COMMIT` entry appeared in the terminal feed, the anomaly cleared from the Circuit-Breaking Gate, a new committed row appeared at the top of the Intent Ledger. Zero console errors/warnings during the full session.
+- Human Intent fields render directly in both the Intent Ledger and Circuit-Breaking Gate — never behind a click. Plain-English `BUSINESS IMPACT` renders above the collapsed `TECHNICAL TRACE` on every anomaly card. No `rounded-*` violations spotted visually (consistent with the Session 4 grep-verified pass).
+
+**Not touched:** `AppContext` unit test coverage — still an optional, not-done follow-up per the repo's own standing recommendation.
+
+**Files modified:** `memory-bank/ACTIVE_CONTEXT.md` only (this entry). No source or doc changes — nothing found required one.
 
 ---
 

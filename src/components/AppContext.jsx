@@ -48,6 +48,7 @@ export function AppProvider({ children }) {
   const [trappedAnomalies, setTrappedAnomalies] = useState(mockData.trappedAnomalies);
   const [terminalLogs, setTerminalLogs] = useState(mockData.terminalLogs);
   const [systemMetrics, setSystemMetrics] = useState(mockData.systemMetrics);
+  const [preCommitments, setPreCommitments] = useState(mockData.preCommitments ?? []);
   const anomaliesRef = useRef(mockData.trappedAnomalies);
 
   // DECISION-9 (2026-08-15) — local-only live feed. See app-context-contract.md
@@ -204,6 +205,30 @@ export function AppProvider({ children }) {
     [prependLog]
   );
 
+  // Rationale Gate (Tier 1, 2026-08-15) — pre-commitment log. Fired before a
+  // task starts, not gated on any agent action. Local-only for this MVP: not
+  // yet wired into scripts/sync-activity-log.mjs or the live-poll snapshot.
+  const logPreCommitment = useCallback(
+    ({ taskLabel, assumption, alternativeRejected, signal }) => {
+      const entry = {
+        id: `pc-${Date.now()}`,
+        timestamp: timestampNow(),
+        taskLabel,
+        assumption,
+        alternativeRejected,
+        signal,
+      };
+      setPreCommitments((prev) => [entry, ...prev]);
+      prependLog({
+        ts: entry.timestamp,
+        agentId: "operator",
+        event: "RATIONALE_LOGGED",
+        detail: `${entry.id} — "${taskLabel}" | assumption logged before execution`,
+      });
+    },
+    [prependLog]
+  );
+
   // app-context-contract.md Section 3 — emergencyStop
   const emergencyStop = useCallback(() => {
     setAgents((prev) => prev.map((agent) => ({ ...agent, status: "halted" })));
@@ -225,11 +250,13 @@ export function AppProvider({ children }) {
       trappedAnomalies,
       terminalLogs,
       systemMetrics,
+      preCommitments,
       highestActiveSeverity,
       isLive,
       approveAnomaly,
       rejectAnomaly,
       emergencyStop,
+      logPreCommitment,
       prependLog,
     }),
     [
@@ -238,11 +265,13 @@ export function AppProvider({ children }) {
       trappedAnomalies,
       terminalLogs,
       systemMetrics,
+      preCommitments,
       highestActiveSeverity,
       isLive,
       approveAnomaly,
       rejectAnomaly,
       emergencyStop,
+      logPreCommitment,
       prependLog,
     ]
   );

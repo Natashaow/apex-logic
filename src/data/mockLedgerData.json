@@ -157,6 +157,24 @@
       "expirySeconds": 287
     }
   ],
+  "preCommitments": [
+    {
+      "id": "pc-001",
+      "timestamp": "11:15:02 AM",
+      "taskLabel": "Rebuild checkout latency probe",
+      "assumption": "A cached route table will cut p95 latency without touching billing logic.",
+      "alternativeRejected": "Full billing-service rewrite — rejected as too high-blast-radius for the actual symptom.",
+      "signal": "p95 latency drops below 200ms without a billing-route regression in the next 48h."
+    },
+    {
+      "id": "pc-002",
+      "timestamp": "10:52:41 AM",
+      "taskLabel": "Weekly revenue attribution report automation",
+      "assumption": "Existing read-scope tables are sufficient — no new PII-adjacent joins needed.",
+      "alternativeRejected": "Requesting broader read-scope upfront — rejected, exactly the kind of scope creep this ledger exists to catch.",
+      "signal": "Report ships without touching user_payment_methods or any billing PII table."
+    }
+  ],
   "terminalLogs": [
     { "ts": "11:23:14", "agentId": "agent-02", "event": "TOOL_CALL", "detail": "route_optimizer.classify() → latency: 45ms | tokens: 312 in / 88 out" },
     { "ts": "11:23:01", "agentId": "agent-01", "event": "CIRCUIT_BREAK", "detail": "HIGH_VARIANCE detected → thread paused | promptVariance: 42.8%" },

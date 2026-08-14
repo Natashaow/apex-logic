@@ -7,6 +7,7 @@ import { AppProvider } from "./components/AppContext";
 import IntroScreen from "./components/screens/IntroScreen";
 import SystemHeader from "./components/layout/SystemHeader";
 import ThreeColumnLayout from "./components/layout/ThreeColumnLayout";
+import RationaleGate from "./components/sections/RationaleGate";
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -18,6 +19,7 @@ function App() {
       ) : (
         <div className="flex h-screen w-screen flex-col bg-neutral-950">
           <SystemHeader />
+          <RationaleGate />
           <ThreeColumnLayout />
         </div>
       )}
