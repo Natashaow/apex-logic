@@ -6,6 +6,27 @@
 
 ---
 
+## Session 13 — 2026-08-15 (Read-First Chain Reduction + Multi-Agent Routing — DECISION-13)
+
+**Why:** An adjacent session ran out of tokens mid-flight. Root cause was fixed per-session overhead, not working style — a flat ~860-line mandatory read chain, plus 18 plugins and 10 MCP servers loading on a no-backend React dashboard.
+
+**Docs restructured (DECISION-13):**
+- New `memory-bank/SESSION_LOG.md` — Sessions 2–12, the archived `PROGRESS.md` detail tables, the 2026-07-12 QA results, and the closed Phase 3 prompt.
+- `ACTIVE_CONTEXT.md` 247 → 60 lines (live state only); `PROGRESS.md` 169 → 60; `DECISIONS.md` +47 (19-row scan Index + DECISION-13).
+- `CLAUDE.md` §1 rewritten as three tiers; §6.3 gained the rotation rule that keeps `ACTIVE_CONTEXT.md` from regrowing; §3 decision count corrected 8 → 19; new §11 Agent Routing.
+- Parity per §10: `AGENTS.md` (Codex), `.cursor/rules/apex-context.mdc` (Cursor), new `GEMINI.md` (Gemini).
+- **Gemini reads only; Codex owns the mechanical lane.** Gemini was scoped read-only, briefly promoted to writing, then demoted on evidence: 0-of-2 on probation (two factual errors, skipped the marker protocol) and a hard free-tier cap measured at 5-of-6 calls throttled. The cap belongs to the Cloud project's billing, not the API key — a key swap changed the string but not the behaviour. Reverses only if billing is enabled **and** two clean tasks land.
+
+**Tooling:** Gemini CLI 0.55.1 installed. Global default model set to Sonnet; Opus is now an explicit `/model` escalation.
+
+**Config trim (corrected in Session 15):** `.claude/settings.local.json` disabled 7 irrelevant plugins. The `disabledMcpServers` key guessed for MCP servers **did not work** — verified via `claude mcp list`, all six still loaded. Replaced with `disableClaudeAiConnectors: true`, which measurably cut 31 servers → 17.
+
+**Measured:** default session read ~860 → ~85 lines.
+
+**Verification:** `npm run lint` and `npm run build` both clean. No source files touched.
+
+---
+
 ## Session 12 — 2026-08-15 (Rationale Gate MVP — Pre-Commitment Log, Same-Day Build)
 
 **What:** New "Rationale Gate — Pre-Commitment Log" strip mounted between `SystemHeader` and `ThreeColumnLayout` — additive, does not touch the locked 25/45/30 grid. Lets an operator log an assumption + rejected alternative + optional success signal *before* a task starts, upstream of Intent Drift (which the Circuit-Breaking Gate already covers during execution). Explicitly scoped as an MVP under same-day deadline pressure — vibe-coded, not fully spec'd against `component-specs.md`/`ui-spec.md` yet.

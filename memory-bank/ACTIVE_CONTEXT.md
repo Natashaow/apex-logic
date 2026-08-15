@@ -25,8 +25,8 @@ _(none)_
 **Next Phase — three open threads:**
 1. Wire a real `Workflow`/`CronCreate`/`/loop` run to *act* on a mediator resolution event. Session 7 only records decisions; nothing resumes or aborts yet.
 2. Human pass on `src/docs/component-specs.md` — SPEC-01 needs the live-track LedgerRow variant (Session 8), and `RationaleGate` needs a SPEC block (Session 12). **Both are user tasks**, not agent tasks — `CLAUDE.md` §5 puts `src/docs/` off-limits to every agent.
-3. **Rationale Gate persistence (DECISION-14 Q2).** Write `preCommitments[]` through the local pipeline so it survives refresh, local-only and gitignored. Touches `AppContext.jsx`, `scripts/sync-activity-log.mjs`, `useLiveLedgerData.js`, `.gitignore` — **>3 files, two 🔴 HIGH**, so it needs explicit §8 go-ahead.
-4. **No test framework exists.** `package.json` has no `test` script and no runner installed. Unit tests for anything require adding `vitest` + `@testing-library/react` — a stack expansion needing §8 sign-off.
+3. **Restart any running mediator** — a pre-`/precommit` instance was found live on port 4177. Until it restarts, Rationale Gate entries won't persist (the POST 404s silently, by design).
+4. **`src/docs/` debt (user tasks, §5):** no `RationaleGate` SPEC block in `component-specs.md`; `app-context-contract.md` documents `applyLiveSnapshot` as 5 keys when it now conditionally applies 6.
 
 **Last updated:** 2026-08-15
 
@@ -46,21 +46,22 @@ Two concurrent sessions edited `App.jsx` with opposing intents; one rebuilt `Com
 
 ---
 
-## Session 13 — 2026-08-15 (Read-First Chain Reduction + Multi-Agent Routing — DECISION-13)
+## Session 15 — 2026-08-15 (Test Framework + Rationale Gate Persistence)
 
-**Why:** An adjacent session ran out of tokens mid-flight. Root cause was fixed per-session overhead, not working style — a flat ~860-line mandatory read chain, plus 18 plugins and 10 MCP servers loading on a no-backend React dashboard.
+**DECISION-15 — test framework (first stack expansion since DECISION-9).** Added `vitest`, `@testing-library/react`/`jest-dom`/`user-event`, `jsdom`, `@vitest/coverage-v8` as devDependencies. New `npm test` / `npm run test:watch`. Test config lives in the existing `vite.config.js` — no second config file, matching why `tailwind.config.js` doesn't exist. Dev-only surface: production bundle unchanged, DECISION-9's client-only constraint untouched. **§7 is unchanged** — `npm run build` + `npm run lint` remain the ground-truth gate; `npm test` is additive.
 
-**Docs restructured (DECISION-13):**
-- New `memory-bank/SESSION_LOG.md` — Sessions 2–12, the archived `PROGRESS.md` detail tables, the 2026-07-12 QA results, and the closed Phase 3 prompt.
-- `ACTIVE_CONTEXT.md` 247 → 60 lines (live state only); `PROGRESS.md` 169 → 60 (summary + stale-content flags); `DECISIONS.md` +47 (19-row scan Index + DECISION-13).
-- `CLAUDE.md` §1 rewritten as three tiers; §6.3 gained the rotation rule that keeps `ACTIVE_CONTEXT.md` from regrowing; §3 decision count corrected 8 → 19; new §11 Agent Routing.
-- Parity per §10: `AGENTS.md` (Codex), `.cursor/rules/apex-context.mdc` (Cursor), new `GEMINI.md` (Gemini).
-- **Gemini reads only; Codex owns the mechanical lane** (settled 2026-08-15). Gemini was scoped read-only, briefly promoted to writing, then demoted on evidence: 0-of-2 on probation (two factual errors, skipped the marker protocol) and a hard free-tier cap measured at 5-of-6 calls throttled. The cap is a property of the Cloud project's billing, not the API key — a key swap changed the string but not the behaviour. Reverses only if billing is enabled **and** two clean tasks land.
+**12 tests, all passing**, over `RationaleGate.jsx` and `AppContext.jsx`. One is an **executable check of §3's Thin-Lines rule** — asserts no `rounded-*` beyond `rounded-none`, no `shadow-`, `bg-gradient-`, or `backdrop-blur` in rendered markup. That converts a constraint previously enforced by remembering to grep into one the suite enforces, which matters now that several agents write here.
 
-**Tooling:** Gemini CLI 0.55.1 installed. `.claude/settings.local.json` (gitignored) disables 7 irrelevant plugins + 6 MCP servers for this repo only — `qmd` and `obsidian-vault` deliberately kept. Global default model set to Sonnet; Opus is now an explicit `/model` escalation.
+**DECISION-14 Q2 — persistence, built with §8 go-ahead.** New `pre_commitment` event type end-to-end:
+- `mediator.mjs` — added `POST /precommit`; routing refactored to a table so a third route doesn't mean a third copy of the transport code. `/resolve` behaviour unchanged.
+- `sync-activity-log.mjs` — folds `pre_commitment` into `preCommitments[]` plus a `RATIONALE_LOGGED` terminal line and an Activity Log section. Deliberately inert: no agent status change, no ledger entry, no `systemMetrics` effect.
+- `AppContext.jsx` — `logPreCommitment` POSTs fire-and-forget; `applyLiveSnapshot` applies `snapshot.preCommitments` **guarded**, so an older `ledger-state.json` can't blank the seed.
+- `.gitignore` needed no change — `public/generated/ledger-state.json` already covered.
 
-**Measured:** default session read ~860 → ~85 lines (`ACTIVE_CONTEXT.md` 60 + DECISIONS Index ~25).
+**Verification:** `npm run lint`, `npm run build`, `npm test` (12/12) all clean. Pipeline smoke-tested end-to-end against a throwaway `VAULT_ROOT` on an isolated port: valid POST recorded, invalid POST rejected with the right message, `/resolve` regression-free, `preCommitments[]` + terminal line + Activity Log section all correct. Then reset — original `ledger-state.json` restored, throwaway vault removed, real vault confirmed untouched at 44 lines.
 
-**Verification:** `npm run lint` and `npm run build` both clean. No source files touched.
+**Caught during that test:** a mediator was already running on port 4177 from an earlier session, so the first POST attempt hit **that** process, which points at the real vault. It 404'd (pre-edit code, no `/precommit` route) and nothing leaked — verified. Re-run on port 4188. **Any running mediator must be restarted** to serve `/precommit`.
 
-**Not done:** the two stale `APEX_LOGIC_PLAN.md` lines are flagged in `PROGRESS.md`, not fixed — they need a founder call per §6.4. The MCP-server half of the config trim uses a `disabledMcpServers` key that could not be confirmed from the CLI bundle; verify with `/mcp` next session and fall back to the `/mcp` UI if it didn't take.
+**Config (corrects Session 13):** the `disabledMcpServers` key was wrong — `claude mcp list` showed all six still loading. Replaced with `disableClaudeAiConnectors: true`, verified 31 → 17 servers. Then per Natasha, six user-scoped servers removed globally (`glif`, `motion`, `motion-plus`, `streamable-mcp-server`, `playwright`, `obsidian-api`), leaving 4: `perplexity`, `firecrawl`, `obsidian-vault`, `qmd`. Definitions backed up to `~/.claude/mcp-servers-backup-2026-08-15.json`.
+
+**Not done, flagged per §5:** `src/docs/component-specs.md` still has no `RationaleGate` SPEC block, and `src/docs/app-context-contract.md` now understates `applyLiveSnapshot` (documents 5 keys; it conditionally applies a 6th). Both are user tasks. `scripts/*.mjs` remain unit-untestable due to module-level side effects — covered by smoke test, not refactored.

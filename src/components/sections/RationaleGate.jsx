@@ -1,9 +1,13 @@
-// RATIONALE GATE (Tier 1, 2026-08-15) — Pre-Commitment Log.
+// RATIONALE GATE (DECISION-14, 2026-08-15) — Pre-Commitment Log.
 // Sits between SystemHeader and the locked 3-column grid — additive, does not
-// touch the 25/45/30 layout. Logs the assumption behind a task BEFORE it
-// starts, upstream of Intent Drift (which the Circuit-Breaking Gate already
-// covers during execution). MVP: local session state only, not yet wired
-// into the live vault-backed sync script.
+// touch the 25/45/30 layout (DECISION-0C intact). Logs the assumption behind a
+// task BEFORE it starts, upstream of Intent Drift (which the Circuit-Breaking
+// Gate already covers during execution).
+// DECISION-14 Q1: the strip stays full-width and always visible — a
+// pre-commitment behind a click would reopen the void it exists to close.
+// DECISION-14 Q2: entries persist via the mediator (POST /precommit) and the
+// local sync pipeline; local-only and gitignored, so the public deployment
+// still shows only mockLedgerData.json's seed entries.
 
 import { useState } from "react";
 import { Plus, X } from "lucide-react";

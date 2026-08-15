@@ -25,6 +25,7 @@
 | Components (`src/components/`) | ✅ DONE — 11 components + `RationaleGate` (Session 12) |
 | Screens (`src/components/screens/`) | ✅ DONE — `IntroScreen.jsx`, wired via `showIntro` |
 | Interactions | ✅ DONE — all 6 wired and browser-verified (Session 11) |
+| Tests (`vitest`) | ✅ DONE — DECISION-15. `npm test` / `npm run test:watch`. 12 tests over `RationaleGate.jsx` + `AppContext.jsx`, incl. an executable §3 Thin-Lines check. Scripts in `scripts/` are not unit-testable (module-level side effects) — covered by smoke test instead. |
 
 **Only non-DONE item:** `src/docs/business-model.md` — ⚠️ DECISIONS PENDING. Revenue streams + sustainability plan drafted for a competition application. Grounded in the locked personas, but tiers/price points are PROPOSED, not founder-locked — see the provenance note in the doc.
 

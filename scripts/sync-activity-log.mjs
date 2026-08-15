@@ -16,6 +16,10 @@
 //   { ts, type: "anomaly_trapped", id, agentId, severity, title, humanIntent, machineAssumption, technicalTrace, businessImpact, expirySeconds }
 //   { ts, type: "resolution", anomalyId, outcome: "approved"|"rejected", reason? }
 //     — written by scripts/mediator.mjs when a local Approve & Sign / Reject & Kill POST lands.
+//   { ts, type: "pre_commitment", id, taskLabel, assumption, alternativeRejected?, signal? }
+//     — DECISION-14 Q2. Written by scripts/mediator.mjs on a Rationale Gate POST /precommit.
+//       Unlike every other event here, this one records an operator decision made
+//       BEFORE a task runs, so it has no agentId and never mutates agent state.
 // First version — expect this schema to evolve as real usage shows what's missing.
 //
 // Read-only against the vault except for the Activity Log.md mirror it regenerates.
@@ -64,6 +68,7 @@ function deriveState(events) {
   const ledgerEntries = []
   const trappedAnomalies = new Map()
   const terminalLogs = []
+  const preCommitments = []
   const systemMetrics = {
     totalTokensBurned: 0,
     totalCogs: 0,
@@ -149,6 +154,29 @@ function deriveState(events) {
         break
       }
 
+      // DECISION-14 Q2 — pre-commitments are operator decisions logged before
+      // a task runs. Newest-first to match how AppContext prepends them, and
+      // deliberately inert: no agent status change, no ledger entry, no
+      // systemMetrics effect. The RATIONALE_LOGGED terminal line mirrors what
+      // AppContext.logPreCommitment emits optimistically, so the feed reads the
+      // same whether the entry came from local state or a poll.
+      case 'pre_commitment':
+        preCommitments.unshift({
+          id: ev.id ?? `pc-${ev.ts}`,
+          timestamp: ev.ts,
+          taskLabel: ev.taskLabel,
+          assumption: ev.assumption,
+          alternativeRejected: ev.alternativeRejected,
+          signal: ev.signal,
+        })
+        terminalLogs.unshift({
+          ts: ev.ts,
+          agentId: 'operator',
+          event: 'RATIONALE_LOGGED',
+          detail: `${ev.id ?? 'pc'} — "${ev.taskLabel}" | assumption logged before execution`,
+        })
+        break
+
       default:
         console.warn(`Unknown event type in events.jsonl: ${ev.type}`)
     }
@@ -165,6 +193,7 @@ function deriveState(events) {
     trappedAnomalies: [...trappedAnomalies.values()],
     terminalLogs,
     systemMetrics,
+    preCommitments,
   }
 }
 
@@ -197,6 +226,9 @@ function renderActivityLogMarkdown(state, eventCount) {
     `## Ledger Entries (${state.ledgerEntries.length})`,
     ...state.ledgerEntries.slice(0, 20).map(e => `- \`${e.id}\` — ${e.humanIntent}`),
     '',
+    `## Pre-Commitments (${state.preCommitments.length})`,
+    ...state.preCommitments.slice(0, 20).map(p => `- \`${p.id}\` — **${p.taskLabel}**: ${p.assumption}`),
+    '',
     '## Related',
     '- [[Apex Logic]] — the control panel this feeds',
     '- [[2026-08-15 Decision - Apex Logic Agent Architecture]] — the architecture decision this implements',
@@ -212,7 +244,7 @@ function sync() {
   mkdirSync(outDir, { recursive: true })
   writeFileSync(outPath, JSON.stringify(state, null, 2), 'utf-8')
   writeFileSync(activityLogPath, renderActivityLogMarkdown(state, events.length), 'utf-8')
-  console.log(`Synced ${events.length} events → ${state.agents.length} agents, ${state.trappedAnomalies.length} trapped anomalies, ${state.ledgerEntries.length} ledger entries`)
+  console.log(`Synced ${events.length} events → ${state.agents.length} agents, ${state.trappedAnomalies.length} trapped anomalies, ${state.ledgerEntries.length} ledger entries, ${state.preCommitments.length} pre-commitments`)
 }
 
 sync()

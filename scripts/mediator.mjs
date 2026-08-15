@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // DECISION-9 (2026-08-15) — local-only mediator.
 //
-// Minimal HTTP listener (Node's built-in `http`, no framework) exposing one
-// endpoint: POST /resolve. AppContext.jsx's approveAnomaly/rejectAnomaly fire
-// a request here (fire-and-forget — they don't wait for this to gate the
-// optimistic UI update). This appends a "resolution" event to the vault's
-// events.jsonl; scripts/sync-activity-log.mjs --watch picks it up and folds
-// it into the next ledger-state.json.
+// Minimal HTTP listener (Node's built-in `http`, no framework) exposing two
+// endpoints:
+//   POST /resolve   — AppContext.jsx's approveAnomaly/rejectAnomaly
+//   POST /precommit — AppContext.jsx's logPreCommitment (DECISION-14 Q2)
+// All callers fire-and-forget: they don't wait for this to gate the optimistic
+// UI update. Each appends an event to the vault's events.jsonl;
+// scripts/sync-activity-log.mjs --watch picks it up and folds it into the next
+// ledger-state.json.
 //
 // NOT YET IMPLEMENTED, explicitly flagged (per DECISION-9 and the action
 // plan): how a real paused Workflow/CronCreate/loop run actually notices this
@@ -32,8 +34,51 @@ function appendEvent(event) {
   appendFileSync(eventsPath, JSON.stringify(event) + '\n')
 }
 
+// Each route validates its payload and returns the event to append, or an
+// error string. Adding a route means adding an entry here — the transport
+// handling below stays shared.
+const routes = {
+  '/resolve': (payload) => {
+    if (!payload.anomalyId || !['approved', 'rejected'].includes(payload.outcome)) {
+      return { error: 'expected { anomalyId, outcome: "approved"|"rejected", reason? }' }
+    }
+    return {
+      event: {
+        ts: new Date().toISOString(),
+        type: 'resolution',
+        anomalyId: payload.anomalyId,
+        outcome: payload.outcome,
+        reason: payload.reason,
+      },
+    }
+  },
+
+  // DECISION-14 Q2 (2026-08-15) — Rationale Gate pre-commitments persist
+  // through this same pipeline rather than living only in React state.
+  // taskLabel + assumption are the load-bearing pair; the other two are
+  // optional by design (the form allows logging an assumption without yet
+  // knowing the success signal).
+  '/precommit': (payload) => {
+    if (!payload.taskLabel || !payload.assumption) {
+      return { error: 'expected { taskLabel, assumption, alternativeRejected?, signal? }' }
+    }
+    return {
+      event: {
+        ts: new Date().toISOString(),
+        type: 'pre_commitment',
+        id: payload.id,
+        taskLabel: payload.taskLabel,
+        assumption: payload.assumption,
+        alternativeRejected: payload.alternativeRejected,
+        signal: payload.signal,
+      },
+    }
+  },
+}
+
 const server = createServer((req, res) => {
-  if (req.method !== 'POST' || req.url !== '/resolve') {
+  const handler = req.method === 'POST' ? routes[req.url] : undefined
+  if (!handler) {
     res.writeHead(404).end()
     return
   }
@@ -48,17 +93,12 @@ const server = createServer((req, res) => {
       res.writeHead(400).end('invalid JSON')
       return
     }
-    if (!payload.anomalyId || !['approved', 'rejected'].includes(payload.outcome)) {
-      res.writeHead(400).end('expected { anomalyId, outcome: "approved"|"rejected", reason? }')
+    const { event, error } = handler(payload)
+    if (error) {
+      res.writeHead(400).end(error)
       return
     }
-    appendEvent({
-      ts: new Date().toISOString(),
-      type: 'resolution',
-      anomalyId: payload.anomalyId,
-      outcome: payload.outcome,
-      reason: payload.reason,
-    })
+    appendEvent(event)
     // Recording only — see file header. Does not yet resume/abort a real
     // paused Workflow/CronCreate/loop run.
     res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ recorded: true }))
@@ -66,5 +106,5 @@ const server = createServer((req, res) => {
 })
 
 server.listen(PORT, () => {
-  console.log(`Mediator listening on http://localhost:${PORT}/resolve (recording only — see file header)`)
+  console.log(`Mediator listening on http://localhost:${PORT} — POST /resolve, /precommit (recording only — see file header)`)
 })

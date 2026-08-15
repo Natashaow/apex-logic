@@ -46,7 +46,9 @@
 | External: `scripts/mediator.mjs` running locally on port 4177 | `AppContext.jsx`'s `postResolution()` inside `approveAnomaly`/`rejectAnomaly` — fire-and-forget, failures are silent (mediator not required to be running) | 🟡 LOW |
 | `src/components/AppContext.jsx` → `preCommitments[]` state + `logPreCommitment` action (DECISION-14) | `sections/RationaleGate.jsx` (sole consumer) + `ui/TerminalLog.jsx` indirectly (the action emits a `RATIONALE_LOGGED` line). Seeded from `mockLedgerData.json` → `preCommitments[]`. | 🟡 LOW — additive key, single consumer |
 | `src/data/mockLedgerData.json` → `preCommitments[]` (DECISION-14) | `AppContext.jsx` init → `sections/RationaleGate.jsx` chip list. This is what the **public deployment** shows. | 🟠 MEDIUM — data-shape key, public-facing |
-| **Not yet built (DECISION-14 Q2):** persisting `preCommitments[]` through the local pipeline | Will touch `scripts/sync-activity-log.mjs`, `useLiveLedgerData.js`, `AppContext.jsx`, `.gitignore` — **>3 files, two 🔴 HIGH.** Needs §8 go-ahead. | 🔴 HIGH when built |
+| `AppContext.jsx` → `applyLiveSnapshot` now applies a 6th key, `preCommitments` (DECISION-14 Q2) | `sections/RationaleGate.jsx`. **Guarded** — applied only when the snapshot carries the key, so a `ledger-state.json` generated before DECISION-14 cannot blank the seeded list. Covered by `AppContext.test.jsx`. | 🟠 MEDIUM — local dev only, public deployment never polls |
+| `scripts/mediator.mjs` → route table (`/resolve`, `/precommit`) | `AppContext.jsx`'s `postResolution` + `postPreCommitment`. Both fire-and-forget — a mediator that isn't running never blocks the optimistic UI update. Adding a route means one table entry, not new transport code. | 🟡 LOW |
+| `scripts/sync-activity-log.mjs` → `pre_commitment` event type | `preCommitments[]` + a `RATIONALE_LOGGED` terminal line in `ledger-state.json`, plus a Pre-Commitments section in the vault's `Activity Log.md`. Inert by design: no agent status change, no ledger entry, no `systemMetrics` effect. | 🟠 MEDIUM |
 
 ---
 

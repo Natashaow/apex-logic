@@ -5,12 +5,13 @@
 
 ---
 
-## Index — 20 Locked Decisions
+## Index — 21 Locked Decisions
 
 Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your change actually touches.
 
 | ID | Decision | Domain |
 |---|---|---|
+| DECISION-15 | Vitest + Testing Library added — first stack expansion since DECISION-9 | Stack |
 | DECISION-14 | Rationale Gate as a full-width pre-commitment strip; persists local-only | Component |
 | DECISION-13 | Read-first chain tiered; session history split to `SESSION_LOG.md` | Process |
 | DECISION-12 | `src/docs/` edited directly — one-time §5 override, not standing | Process |
@@ -31,6 +32,22 @@ Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your chang
 | DECISION-0C | Layout architecture — 25/45/30, locked | Layout |
 | DECISION-0B | Status color system — emerald/amber/crimson | Visual |
 | DECISION-0A | Canvas color — `bg-neutral-950` | Visual |
+
+---
+
+## Session 15 — 2026-08-15 (Test Framework)
+
+### DECISION-15 — Vitest + Testing Library Added to the Stack
+- **Date:** 2026-08-15
+- **Status:** LOCKED (approved by Natasha, 2026-08-15)
+- **Problem:** the repo had **no test story at all** — no runner, no `test` script, no assertion library. `CLAUDE.md` §7 named `npm run build` and `npm run lint` as the ground-truth check, which catches syntax and lint violations but nothing behavioural. Every "add tests" instruction was therefore blocked behind a stack expansion, which §8 requires escalating. This blocked the whole Codex mechanical lane set up in §11.
+- **Resolved:** added `vitest`, `@vitest/coverage-v8`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom` as devDependencies. New scripts: `npm test` (`vitest run`) and `npm run test:watch`.
+- **Why Vitest and not Jest:** the project is already on Vite 8 with `@vitejs/plugin-react`. Vitest reuses that exact transform pipeline and config, so there is no second build toolchain to keep in sync — Jest would need its own transformer and module-resolution setup for the same result.
+- **Config placement:** the `test` block lives inside the existing `vite.config.js` rather than a separate `vitest.config.js`, matching the repo's deliberate no-extra-config-files posture (the same reasoning that keeps `tailwind.config.js` from existing, per §5).
+- **Scope boundary:** this expands the **dev**-dependency surface only. No runtime dependency was added, the production bundle is unchanged (verified: `npm run build` output identical in size), and the client-only constraint of DECISION-9 is untouched.
+- **`npm run build` + `npm run lint` remain the ground-truth gate.** `npm test` is additive, not a replacement — §7 is unchanged.
+- **What is covered so far:** 12 tests over `RationaleGate.jsx` and `AppContext.jsx`, including an executable check of §3's Thin-Lines rule (asserting no `rounded-*` beyond `rounded-none`, no `shadow-`, no `bg-gradient-`, no `backdrop-blur` in rendered markup). That last one turns a constraint previously enforced by remembering to grep into one the suite enforces — directly relevant now that multiple agents write here.
+- **Not covered:** `scripts/sync-activity-log.mjs` and `scripts/mediator.mjs` have module-level side effects (they call `sync()` / `listen()` on import and `process.exit` without `VAULT_ROOT`), so they are not importable under test without a refactor. Deliberately not refactored — that is a load-bearing script change needing its own decision. They are covered by the end-to-end smoke test instead.
 
 ---
 
@@ -59,8 +76,9 @@ Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your chang
 
 **Outstanding follow-ups now that this is LOCKED:**
 1. ✅ `COMPONENT_MAP.md` row added (Context Layer + dependency tree).
-2. 🔲 **Persistence implementation (Q2).** Not built. Touches `AppContext.jsx`, `scripts/sync-activity-log.mjs`, `src/hooks/useLiveLedgerData.js`, `.gitignore`, and possibly `mockLedgerData.json` — **more than 3 files including two 🔴 HIGH-severity ones**, so it needs explicit go-ahead per `CLAUDE.md` §8 rather than being folded into routine work.
+2. ✅ **Persistence implemented (Q2, 2026-08-15)** with explicit §8 go-ahead. New `pre_commitment` event type; `mediator.mjs` gained `POST /precommit` (routing refactored to a table so a third route doesn't mean a third copy of the transport code); `sync-activity-log.mjs` folds it into `preCommitments[]` plus a `RATIONALE_LOGGED` terminal line and an Activity Log section; `AppContext.logPreCommitment` POSTs fire-and-forget; `applyLiveSnapshot` applies `snapshot.preCommitments` **guarded** — an older `ledger-state.json` without the key must not blank the seed. `.gitignore` needed no change; `public/generated/ledger-state.json` was already covered. Verified end-to-end against a throwaway `VAULT_ROOT`, then reset.
 3. 🔲 **`src/docs/component-specs.md` SPEC block.** A user task — `src/docs/` is off-limits to every agent per §5.
+4. 🔲 **`src/docs/app-context-contract.md` is now out of date** — it documents `applyLiveSnapshot` as overwriting five keys; it now conditionally applies a sixth (`preCommitments`). Also a user task per §5. Flagged, not edited.
 
 ---
 

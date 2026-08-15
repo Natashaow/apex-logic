@@ -11,17 +11,28 @@ const AppContext = createContext(null);
 // DECISION-9 (2026-08-15) — fire-and-forget POST to the local mediator.
 // Never awaited by callers, never gates the optimistic local state update —
 // see approveAnomaly/rejectAnomaly below and app-context-contract.md §3.
-const MEDIATOR_URL = "http://localhost:4177/resolve";
-function postResolution(anomalyId, outcome, reason) {
+const MEDIATOR_ORIGIN = "http://localhost:4177";
+function postToMediator(path, body) {
   if (!import.meta.env.DEV) return;
-  fetch(MEDIATOR_URL, {
+  fetch(`${MEDIATOR_ORIGIN}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ anomalyId, outcome, reason }),
+    body: JSON.stringify(body),
   }).catch(() => {
     // Mediator not running — expected if `npm run mediator` hasn't been
     // started locally. Not an error the UI needs to surface.
   });
+}
+
+function postResolution(anomalyId, outcome, reason) {
+  postToMediator("/resolve", { anomalyId, outcome, reason });
+}
+
+// DECISION-14 Q2 (2026-08-15) — pre-commitments persist through the same
+// local pipeline. Fire-and-forget on the same terms as postResolution: the
+// optimistic local entry below is never gated on this landing.
+function postPreCommitment(entry) {
+  postToMediator("/precommit", entry);
 }
 
 function timestampNow() {
@@ -63,6 +74,9 @@ export function AppProvider({ children }) {
     anomaliesRef.current = snapshot.trappedAnomalies;
     setTerminalLogs(snapshot.terminalLogs);
     setSystemMetrics(snapshot.systemMetrics);
+    // DECISION-14 Q2 — guarded: a ledger-state.json generated before
+    // pre-commitments existed has no such key, and must not blank the seed.
+    if (snapshot.preCommitments) setPreCommitments(snapshot.preCommitments);
   }, []);
   const { isLive } = useLiveLedgerData(applyLiveSnapshot);
 
@@ -205,9 +219,11 @@ export function AppProvider({ children }) {
     [prependLog]
   );
 
-  // Rationale Gate (Tier 1, 2026-08-15) — pre-commitment log. Fired before a
-  // task starts, not gated on any agent action. Local-only for this MVP: not
-  // yet wired into scripts/sync-activity-log.mjs or the live-poll snapshot.
+  // Rationale Gate (DECISION-14) — pre-commitment log. Fired before a task
+  // starts, not gated on any agent action. DECISION-14 Q2 (2026-08-15):
+  // persists through the local pipeline via the mediator, so it survives a
+  // refresh. Local-only and gitignored — the public deployment still shows
+  // only mockLedgerData.json's seed entries.
   const logPreCommitment = useCallback(
     ({ taskLabel, assumption, alternativeRejected, signal }) => {
       const entry = {
@@ -219,6 +235,7 @@ export function AppProvider({ children }) {
         signal,
       };
       setPreCommitments((prev) => [entry, ...prev]);
+      postPreCommitment(entry);
       prependLog({
         ts: entry.timestamp,
         agentId: "operator",
