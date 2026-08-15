@@ -44,6 +44,9 @@
 | `src/hooks/useLiveLedgerData.js` (DECISION-9) | `AppContext.jsx`'s `applyLiveSnapshot` callback and `isLive` flag — indirectly everything above, only in local dev (`import.meta.env.DEV`) | 🟠 MEDIUM — local-only, no effect on public deployment |
 | `src/components/AppContext.jsx` → `isLive` now exposed on context value (DECISION-10) | `sections/IntentLedger.jsx` → `ui/LedgerRow.jsx` (branches Zone B: risk-primary live layout vs. cost-primary mock layout) | 🟡 LOW — additive field, single consumer chain, public deployment always sees `isLive: false` |
 | External: `scripts/mediator.mjs` running locally on port 4177 | `AppContext.jsx`'s `postResolution()` inside `approveAnomaly`/`rejectAnomaly` — fire-and-forget, failures are silent (mediator not required to be running) | 🟡 LOW |
+| `src/components/AppContext.jsx` → `preCommitments[]` state + `logPreCommitment` action (DECISION-14) | `sections/RationaleGate.jsx` (sole consumer) + `ui/TerminalLog.jsx` indirectly (the action emits a `RATIONALE_LOGGED` line). Seeded from `mockLedgerData.json` → `preCommitments[]`. | 🟡 LOW — additive key, single consumer |
+| `src/data/mockLedgerData.json` → `preCommitments[]` (DECISION-14) | `AppContext.jsx` init → `sections/RationaleGate.jsx` chip list. This is what the **public deployment** shows. | 🟠 MEDIUM — data-shape key, public-facing |
+| **Not yet built (DECISION-14 Q2):** persisting `preCommitments[]` through the local pipeline | Will touch `scripts/sync-activity-log.mjs`, `useLiveLedgerData.js`, `AppContext.jsx`, `.gitignore` — **>3 files, two 🔴 HIGH.** Needs §8 go-ahead. | 🔴 HIGH when built |
 
 ---
 
@@ -63,6 +66,8 @@ App.jsx
 ├── AppContext.jsx (provides state to all below)
 ├── layout/SystemHeader.jsx
 │   └── reads: systemMetrics{} from mockLedgerData via AppContext
+├── sections/RationaleGate.jsx (DECISION-14 — full-width strip, above the grid)
+│   └── reads/writes: preCommitments[] + logPreCommitment via AppContext
 ├── layout/ThreeColumnLayout.jsx
 │   ├── sections/AuditStream.jsx
 │   │   ├── ui/AgentBlock.jsx  ← reads agents[] from AppContext

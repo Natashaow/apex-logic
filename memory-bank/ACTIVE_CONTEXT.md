@@ -25,7 +25,8 @@ _(none)_
 **Next Phase — three open threads:**
 1. Wire a real `Workflow`/`CronCreate`/`/loop` run to *act* on a mediator resolution event. Session 7 only records decisions; nothing resumes or aborts yet.
 2. Human pass on `src/docs/component-specs.md` — SPEC-01 needs the live-track LedgerRow variant (Session 8), and `RationaleGate` needs a SPEC block (Session 12). **Both are user tasks**, not agent tasks — `CLAUDE.md` §5 puts `src/docs/` off-limits to every agent.
-3. Session 12 follow-ups: `COMPONENT_MAP.md` entry for `RationaleGate`, live-pipeline wiring, unit tests.
+3. **Rationale Gate persistence (DECISION-14 Q2).** Write `preCommitments[]` through the local pipeline so it survives refresh, local-only and gitignored. Touches `AppContext.jsx`, `scripts/sync-activity-log.mjs`, `useLiveLedgerData.js`, `.gitignore` — **>3 files, two 🔴 HIGH**, so it needs explicit §8 go-ahead.
+4. **No test framework exists.** `package.json` has no `test` script and no runner installed. Unit tests for anything require adding `vitest` + `@testing-library/react` — a stack expansion needing §8 sign-off.
 
 **Last updated:** 2026-08-15
 
@@ -33,9 +34,9 @@ _(none)_
 
 ## Open Decisions
 
-**None.** All visual, brand, UX-framing, and information-architecture decisions are locked — 19 entries, indexed at the top of `memory-bank/DECISIONS.md`.
+**None.** All visual, brand, UX-framing, and information-architecture decisions are locked — 20 entries, indexed at the top of `memory-bank/DECISIONS.md`.
 
-One process debt: `RationaleGate` (Session 12) shipped without a DECISIONS entry, against §5's "log the decision before the code lands." Needs a drafted entry for founder approval — not an agent deciding retroactively.
+The Session 12 process debt is closed: **DECISION-14 is signed off (2026-08-15)**. Rationale Gate keeps its full-width strip above the grid, persists local-only and gitignored, and is OPC-track scope. `COMPONENT_MAP.md` rows added. Two follow-ups remain — see Next Phase.
 
 ---
 

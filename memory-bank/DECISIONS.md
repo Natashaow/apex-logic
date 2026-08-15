@@ -5,13 +5,13 @@
 
 ---
 
-## Index — 19 Locked Decisions + 1 Draft
+## Index — 20 Locked Decisions
 
 Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your change actually touches.
 
 | ID | Decision | Domain |
 |---|---|---|
-| DECISION-14 | **DRAFT — NOT LOCKED.** Rationale Gate as a pre-commitment log strip | Component |
+| DECISION-14 | Rationale Gate as a full-width pre-commitment strip; persists local-only | Component |
 | DECISION-13 | Read-first chain tiered; session history split to `SESSION_LOG.md` | Process |
 | DECISION-12 | `src/docs/` edited directly — one-time §5 override, not standing | Process |
 | DECISION-11 | `technicalMetrics.model` resolves from source agent, not `technicalTrace` | Data |
@@ -37,11 +37,11 @@ Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your chang
 ## Session 14 — 2026-08-15 (Rationale Gate — Retroactive Entry)
 
 ### DECISION-14 — Rationale Gate Mounted as a Pre-Commitment Log Strip
-> 🟡 **DRAFT — NOT LOCKED. Drafted by Claude, requires founder sign-off before it becomes binding.**
-> Per `CLAUDE.md` §5 an agent may draft a decision but never author one. This exists because `RationaleGate.jsx` shipped in Session 12 *before* any decision was logged — inverting the "log the decision before the code lands" rule. It is written to close that debt, not to ratify it after the fact.
+> Drafted by Claude, **signed off by Natasha 2026-08-15**. Per `CLAUDE.md` §5 an agent drafts but never authors a decision. This exists because `RationaleGate.jsx` shipped in Session 12 *before* any decision was logged — inverting the "log the decision before the code lands" rule. It closes that debt.
 
 - **Date drafted:** 2026-08-15
-- **Status:** DRAFT — pending founder sign-off
+- **Date locked:** 2026-08-15
+- **Status:** LOCKED
 - **Context:** Session 12 shipped `src/components/sections/RationaleGate.jsx` under same-day deadline pressure. The code is live and browser-verified, but has no DECISIONS entry, no `component-specs.md` SPEC block, and no `COMPONENT_MAP.md` row.
 - **What was decided in practice (by the code, not by a logged decision):**
   1. A "Rationale Gate — Pre-Commitment Log" strip mounts **between `SystemHeader` and `ThreeColumnLayout`**, as an additive horizontal band. It does **not** touch the locked 25/45/30 grid, so DECISION-0C is intact.
@@ -51,14 +51,16 @@ Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your chang
 - **Constraint compliance (verified):** reuses existing `theme.js` tokens only — no new colors, fonts, or radii introduced. §3 constraints hold.
 - **Narrative fit:** it closes a distinct piece of the Rationale Void. The Intent Ledger records what an agent *declared* after acting; the Rationale Gate records what the *operator* committed to before acting. Those are different absences, and neither substitutes for the other.
 
-**Open questions the founder must settle before this can be LOCKED:**
-1. **Is a fourth surface justified?** The dashboard is a locked three-column argument. This adds a band above it. Does it earn the vertical space, or does it dilute the 25/45/30 read?
-2. **Should it persist?** Resetting on refresh makes it a demo affordance, not a ledger. Persisting it means extending the DECISION-9 local-data scope to a second write path.
-3. **Does it belong in the OPC-track pitch narrative,** or is it B2B-track scope deferred under the current "OPC first, de-Natasha-ify later" call?
+**Open questions — all settled by Natasha, 2026-08-15:**
+1. ~~**Is a fourth surface justified?**~~ **RESOLVED: keep the full-width strip**, as built. The pre-commitment act stays fully visible above the grid rather than collapsing behind a trigger or moving into the 45% column. Consistent with `humanIntent-always-visible` — a pre-commitment hidden behind a click would reopen the same void the rule exists to close. DECISION-0C is untouched: the 25/45/30 grid keeps its proportions; this band sits above it.
+2. ~~**Should it persist?**~~ **RESOLVED: persist, local-only and gitignored.** Pre-commitments write through the same local pipeline as every other event and survive refresh, but never enter git — matching how `public/generated/ledger-state.json` is already handled. This **extends DECISION-9's deliberately narrow local-data scope to a second write path**, which is stated here explicitly rather than assumed. The public deployment continues to show `mockLedgerData.json`'s seed entries only.
+3. ~~**Does it belong in the OPC-track pitch narrative,** or is it B2B-track scope deferred under the current "OPC first, de-Natasha-ify later" call?~~
+   **RESOLVED (Natasha, 2026-08-15):** OPC-track. The Rationale Gate works for the personal/OPC track as well, and is not held back by the B2B deferral — B2B enterprise scope stays deferred until the de-Natasha-ify generalization pass, unchanged. Q1 and Q2 remain open; this entry stays DRAFT until they are settled.
 
-**If approved,** three follow-ups land: a `COMPONENT_MAP.md` row, a `component-specs.md` SPEC block (**a user task — `src/docs/` is off-limits to agents**), and this entry flipped to LOCKED.
-
-**If rejected,** the component comes out of `App.jsx` and this entry records the removal.
+**Outstanding follow-ups now that this is LOCKED:**
+1. ✅ `COMPONENT_MAP.md` row added (Context Layer + dependency tree).
+2. 🔲 **Persistence implementation (Q2).** Not built. Touches `AppContext.jsx`, `scripts/sync-activity-log.mjs`, `src/hooks/useLiveLedgerData.js`, `.gitignore`, and possibly `mockLedgerData.json` — **more than 3 files including two 🔴 HIGH-severity ones**, so it needs explicit go-ahead per `CLAUDE.md` §8 rather than being folded into routine work.
+3. 🔲 **`src/docs/component-specs.md` SPEC block.** A user task — `src/docs/` is off-limits to every agent per §5.
 
 ---
 
