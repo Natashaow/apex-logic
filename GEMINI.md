@@ -12,24 +12,29 @@ This project's working rules for AI coding agents live in **`CLAUDE.md`** at the
 
 **Tier 3 — on demand only:** `memory-bank/SESSION_LOG.md`, `memory-bank/PROGRESS.md`, `APEX_LOGIC_PLAN.md`.
 
-## Gemini's role
+## Gemini's role — READ ONLY
 
-See `CLAUDE.md` §11 (Agent Routing). Two jobs:
+See `CLAUDE.md` §11 (Agent Routing). **You do not write in this repo.**
 
-1. **Read-heavy sweeps** — dependency tracing, "where is X used", cross-file consistency checks. Your large context makes you the default for this.
-2. **Fully-specified single-file mechanical work** — unit tests, lint fixes, mechanical refactors. Same class as Codex.
+Your job is read-heavy work, where your large context is a genuine advantage: dependency tracing, "where is X used", cross-file consistency checks, locating code, summarising how a subsystem fits together.
 
-Architecture, cascading changes (`src/tokens/theme.js`, `src/components/AppContext.jsx`, `src/data/mockLedgerData.json`), and new DECISIONS entries go to Claude on Opus — not you.
+**Do not** edit files, create files, or run `npm run build` / `npm run lint` / any deploy command. If a task seems to require an edit, report what needs changing and stop — the edit goes to Codex or to Claude.
 
-## Rules that are easy to drop when work is delegated
+Because you don't write, you never need a session marker in `memory-bank/ACTIVE_CONTEXT.md`.
 
-- **`src/docs/` is off-limits.** Report needed changes; don't apply them. Applies to every agent.
-- **Add a session marker** to `memory-bank/ACTIVE_CONTEXT.md` naming yourself (`gemini`) before your first edit; remove it when done. One writing agent at a time per file — if another agent's marker claims your file, stop and ask.
-- **`npm run build` and `npm run lint` must exit clean** when you finish.
-- **The §3 design constraints bind you.** `rounded-none` (only `rounded-full` on status dots, `rounded-sm` max elsewhere), `tabular-nums` on stacking numeric columns, cyan as the only interactive accent, exactly two font families, no shadows / gradients / glass / backdrop-blur. Do not add a `tailwind.config.js` — this is Tailwind v4 with CSS-first `@theme` in `src/index.css`.
+## Why (decided 2026-08-15, on evidence)
 
-## Probation (as of 2026-08-15)
+You briefly held the write lane and were demoted after one trial:
 
-You write, but haven't yet been shown to hold the constraints above under edit pressure in this repo. Until that's proven: run under `--approval-mode default` (prompt before each edit), take single-file specified work only, and expect every diff to be checked for corner-radius / shadow / gradient violations before it's accepted. Two clean tasks retires this.
+- On a single mechanical task you scoped correctly but produced two factual errors — attributing the `@theme` font vars to `theme.js` instead of `src/index.css`, and inventing a wrong description for `RationaleGate` on a row nobody asked you to add — and you skipped the session-marker protocol this file required.
+- A hard free-tier cap (5 of 6 rapid calls throttled, ~70s backoff) makes you unsuitable for volume work here.
 
-**Do not** propose or apply changes before reading `CLAUDE.md`.
+This is recorded so it isn't relitigated from intuition. It reverses only if billing is enabled on the key's Cloud project **and** two clean constraint-respecting tasks land.
+
+## Still binding on anything you report
+
+- **`src/docs/` is off-limits** to every agent — report needed changes, never apply them.
+- **The §3 design constraints** govern any recommendation you make: `rounded-none` (only `rounded-full` on status dots, `rounded-sm` max elsewhere), `tabular-nums` on stacking numeric columns, cyan as the only interactive accent, exactly two font families, no shadows / gradients / glass / backdrop-blur. Never suggest adding a `tailwind.config.js` — this is Tailwind v4 with CSS-first `@theme` in `src/index.css`.
+- **Never author or draft a DECISIONS entry.** Those are founder-signed.
+
+**Do not** propose changes before reading `CLAUDE.md`.

@@ -14,7 +14,11 @@ This project's working rules for AI coding agents live in **`CLAUDE.md`** at the
 
 ## Codex's role
 
-See `CLAUDE.md` §11 (Agent Routing). Codex owns **fully-specified single-file mechanical work** — unit tests, lint/build fixes, drafting memory-bank entries from a spec. Architecture, cascading changes, and new DECISIONS entries go to Claude on Opus.
+See `CLAUDE.md` §11 (Agent Routing). **Codex owns the mechanical lane** — it is the default destination for any work specified enough to hand off: lint/build fixes, mechanical refactors, drafting memory-bank entries from a spec, and tests once a runner exists. Gemini reads only (demoted 2026-08-15 on quality and rate-limit evidence), so this lane does not get split.
+
+Architecture, cascading changes (`src/tokens/theme.js`, `src/components/AppContext.jsx`, `src/data/mockLedgerData.json`), and new DECISIONS entries go to Claude on Opus — not you.
+
+**Note:** this repo has **no test framework** — no runner, no `test` script in `package.json`. Adding `vitest`/`@testing-library/react` is a stack expansion requiring founder sign-off per §8. Do not install it on your own initiative.
 
 Three rules that are easy to drop when work is delegated:
 

@@ -55,7 +55,7 @@ Two concurrent sessions edited `App.jsx` with opposing intents; one rebuilt `Com
 - `ACTIVE_CONTEXT.md` 247 → 60 lines (live state only); `PROGRESS.md` 169 → 60 (summary + stale-content flags); `DECISIONS.md` +47 (19-row scan Index + DECISION-13).
 - `CLAUDE.md` §1 rewritten as three tiers; §6.3 gained the rotation rule that keeps `ACTIVE_CONTEXT.md` from regrowing; §3 decision count corrected 8 → 19; new §11 Agent Routing.
 - Parity per §10: `AGENTS.md` (Codex), `.cursor/rules/apex-context.mdc` (Cursor), new `GEMINI.md` (Gemini).
-- **Gemini writes** — initially scoped read-only, corrected same session. It has full write capability (`--approval-mode default/auto_edit/yolo`; `plan` is the read-only mode) and free-tier capacity, so restricting it to lookups while paying Opus for mechanical edits was backwards. On probation per §11 until it's shown to hold the §3 constraints under edit pressure.
+- **Gemini reads only; Codex owns the mechanical lane** (settled 2026-08-15). Gemini was scoped read-only, briefly promoted to writing, then demoted on evidence: 0-of-2 on probation (two factual errors, skipped the marker protocol) and a hard free-tier cap measured at 5-of-6 calls throttled. The cap is a property of the Cloud project's billing, not the API key — a key swap changed the string but not the behaviour. Reverses only if billing is enabled **and** two clean tasks land.
 
 **Tooling:** Gemini CLI 0.55.1 installed. `.claude/settings.local.json` (gitignored) disables 7 irrelevant plugins + 6 MCP servers for this repo only — `qmd` and `obsidian-vault` deliberately kept. Global default model set to Sonnet; Opus is now an explicit `/model` escalation.
 

@@ -137,9 +137,9 @@ Four agents work this repo. Route by difficulty, not convenience — Opus is the
 |---|---|
 | **Claude (Opus — `/model opus`)** | `src/tokens/theme.js`, `src/components/AppContext.jsx`, `src/data/mockLedgerData.json` — anything cascading per `COMPONENT_MAP.md`. New `DECISIONS.md` entries. The mediator-resolution wiring. Vault/QMD work. Any §8 escalation. |
 | **Claude (Sonnet — default)** | Routine multi-file edits inside settled specs; session bookkeeping in `ACTIVE_CONTEXT.md` / `SESSION_LOG.md`. |
-| **Codex** | Fully-specified single-file mechanical work: unit tests, lint/build fixes, drafting memory-bank entries from a spec handed to it. |
+| **Codex** | **Owns the mechanical lane.** Fully-specified single-file work: lint/build fixes, mechanical refactors, drafting memory-bank entries from a spec, and tests once a runner exists. Default destination for anything specified enough to hand off. |
 | **Cursor** | In-editor component tweaks with the dev server live — Tailwind class work, visual iteration against `ui-spec.md`. |
-| **Gemini** | Repo sweeps, dependency tracing, "where is X used", cross-file consistency checks — its large free context makes it the default for read-heavy work. **Also writes**, same class as Codex: fully-specified single-file mechanical work. On probation until proven against §3 (see below). |
+| **Gemini** | **Reads only.** Repo sweeps, dependency tracing, "where is X used", cross-file consistency checks. Never writes, never runs build/lint/deploy. Demoted from the write lane on 2026-08-15 — see below. |
 
 **Rules that survive the hand-off.** A second agent is exactly where these get dropped:
 
@@ -150,17 +150,15 @@ Four agents work this repo. Route by difficulty, not convenience — Opus is the
 
 **Collision safety (§6 applies with more force here).** Codex, Cursor, and Gemini cannot see each other's edits, and Session 6 already cost a manual resolution with only two agents.
 
-- Every *writing* agent adds a marker to `ACTIVE_CONTEXT.md` naming itself (`claude` / `codex` / `cursor` / `gemini`) before its first edit, and removes it when done.
+- Every *writing* agent adds a marker to `ACTIVE_CONTEXT.md` naming itself (`claude` / `codex` / `cursor`) before its first edit, and removes it when done.
 - **One writing agent at a time per file.** If a marker claims the file you're about to touch, stop and ask the user.
-- Read-only sweeps need no marker, whichever agent runs them.
+- Gemini reads only, so it never needs a marker. Read-only sweeps need no marker whichever agent runs them.
 
-**Gemini probation (added 2026-08-15).** Gemini writes, but hasn't yet been shown to hold §3's constraints under edit pressure — `rounded-none`, `tabular-nums`, cyan-only accent, two font families, no shadows/gradients. Until it clears that bar:
+**Why Gemini reads only (decided 2026-08-15).** It was briefly given the write lane, then demoted on evidence from a single trial. Recorded so this isn't relitigated from intuition:
 
-- Run it with `--approval-mode default` (prompts before each edit). Not `yolo`, not `auto_edit`.
-- Give it **single-file, fully-specified** work only. Never the cascade files (`theme.js`, `AppContext.jsx`, `mockLedgerData.json`), never `src/docs/`, never a DECISIONS entry.
-- After any Gemini edit, grep the diff for `rounded-(md|lg|xl|2xl|3xl)`, `shadow-`, `bg-gradient-`, `backdrop-blur-` before accepting it, and confirm `npm run build` + `npm run lint` are clean.
-- Two clean, constraint-respecting tasks retires the probation — delete this block and treat it as Codex's peer.
+- **Quality — 0 of 2 on probation.** Its one task (`APEX_LOGIC_PLAN.md` stale-status fix) scoped correctly — one file, no collateral, all five instructed changes, options-history preserved — but it attributed the `@theme` font vars to `theme.js` instead of `src/index.css`, invented a wrong description for `RationaleGate` on a table row nobody asked it to add, and **skipped the session-marker protocol** that `GEMINI.md` explicitly requires. Both factual errors were caught only because the diff was reviewed.
+- **Capacity — hard free-tier cap.** Measured: 5 of 6 rapid calls throttled on `generate_content_free_tier_requests` (`limit: 5`), with ~70s backoff mid-task. Note this is a property of the **Google Cloud project's billing, not the API key** — rotating keys does nothing. Confirmed empirically after a key swap changed the string but not the behaviour.
 
-**Probation log:**
-- **Task 1 (2026-08-15) — `APEX_LOGIC_PLAN.md` stale-status fix. NOT CLEAN, does not count.** Scoping was good: one file, no collateral, all five instructed changes made, options-history preserved as asked. But it (a) attributed the `@theme` font vars to `theme.js` instead of `src/index.css`, (b) invented a wrong description for `RationaleGate` ("review gate for agent-declared model assumptions" — it is a *pre-commitment* log) on an unrequested table row, and (c) **skipped the session-marker protocol entirely** despite `GEMINI.md` requiring it. Both factual errors were caught in diff review and corrected by Claude. Probation stands at 0 of 2.
-- **Capacity note:** the free tier is far tighter than assumed — task 1 hit `generate_content_free_tier_requests, limit: 5` on `gemini-3.5-flash` and had to back off ~70s mid-run. Gemini is not a high-volume workhorse on this plan. Route accordingly, or attach billing.
+**What would reverse this:** billing enabled on the key's Cloud project (lifting the cap), *and* two clean constraint-respecting tasks under `--approval-mode default`. Both, not either.
+
+Its large context still makes it the best choice for read-heavy sweeps — that's a real strength, and why it stays in the table rather than being dropped.
