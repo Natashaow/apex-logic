@@ -1,12 +1,13 @@
 # ACTIVE CONTEXT
-> This file is updated after every work session. Read it first to know where we are.
+> Live state only. **Tier 1 — read this every session** (see `CLAUDE.md` §1).
+> Historical session narrative lives in `memory-bank/SESSION_LOG.md` (Tier 3) per DECISION-13.
 
 ---
 
 ## In Progress (session markers)
-<!-- Concurrent-session collision safety — see CLAUDE.md §6 and Session 6 note below. -->
-<!-- Before editing a file, add a marker: -->
-<!--   - [YYYY-MM-DD HH:MM] <agent> — editing <file paths> — <1-line intent> -->
+<!-- Concurrent-session collision safety — see CLAUDE.md §6 and the Session 6 note below. -->
+<!-- Before editing a file, add a marker naming your agent: -->
+<!--   - [YYYY-MM-DD HH:MM] <claude|codex|cursor> — editing <file paths> — <1-line intent> -->
 <!-- Remove your marker when done. Empty is the default state. -->
 
 _(none)_
@@ -14,234 +15,51 @@ _(none)_
 ---
 
 ## Current Status
-**Phase:** Phase 0 COMPLETE. Phase 1 COMPLETE (retroactively verified). Phase 2 — Component Build COMPLETE: `IntroScreen.jsx` wired into `App.jsx` (Session 6). `ComplianceBadgeStrip` is retired — see Session 6 note below and `component-specs.md` SPEC-06. **Session 7 (2026-08-15): live agent-activity data layer built (DECISION-9)**. **Session 8 (2026-08-15): Intent Ledger copy split by track for OPC submission (DECISION-10)**. **Session 9 (2026-08-15): real-entry `technicalMetrics.model` fixed (DECISION-11)**. **Session 10 (2026-08-15): "why every agent acted" overclaim fixed across 5 `src/docs/` files, by explicit one-time user override of `CLAUDE.md` §5 (DECISION-12)**. **Session 11 (2026-08-15): Phase 3 Human Visual QA passed in a real browser** — see below. `npm run build` + `npm run lint` both clean.
-**Next Phase:** Wiring a real `Workflow`/`CronCreate`/`/loop` run to actually act on a mediator resolution event (Session 7 only records decisions, doesn't yet resume/abort anything) + a human pass on `src/docs/component-specs.md` SPEC-01 to document the live-track LedgerRow variant (Session 8 — deliberately not edited here, see `CLAUDE.md` §5) + **scope decision (2026-08-15, per Natasha): OPC/personal track is the active build target; B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later** — see `Apex Logic.md` in the vault for the sequencing note. Visual QA (previously the standing recommendation) is now done — see Session 11.
+
+**Phase:** Phases 0–3 COMPLETE. All 11 components built, all 6 interactions wired, Phase 3 human visual QA passed in a real browser (Session 11, zero findings). `npm run build` + `npm run lint` both clean.
+
+**Live vs. mock:** DECISION-9 unlocked a local-only live data layer — `scripts/sync-activity-log.mjs` + `scripts/mediator.mjs` + `src/hooks/useLiveLedgerData.js`. Active in local dev only; `mockLedgerData.json` remains the public deployment's sole data source and the real feed is gitignored (public repo).
+
+**Active scope (per Natasha, 2026-08-15):** OPC/personal track is the build target. B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later — see `Apex Logic.md` in the vault.
+
+**Next Phase — three open threads:**
+1. Wire a real `Workflow`/`CronCreate`/`/loop` run to *act* on a mediator resolution event. Session 7 only records decisions; nothing resumes or aborts yet.
+2. Human pass on `src/docs/component-specs.md` — SPEC-01 needs the live-track LedgerRow variant (Session 8), and `RationaleGate` needs a SPEC block (Session 12). **Both are user tasks**, not agent tasks — `CLAUDE.md` §5 puts `src/docs/` off-limits to every agent.
+3. Session 12 follow-ups: `COMPONENT_MAP.md` entry for `RationaleGate`, live-pipeline wiring, unit tests.
+
 **Last updated:** 2026-08-15
 
 ---
 
-## Session 12 — 2026-08-15 (Rationale Gate MVP — Pre-Commitment Log, Same-Day Build)
-
-**What:** New "Rationale Gate — Pre-Commitment Log" strip mounted between `SystemHeader` and `ThreeColumnLayout` — additive, does not touch the locked 25/45/30 grid. Lets an operator log an assumption + rejected alternative + optional success signal *before* a task starts, upstream of Intent Drift (which the Circuit-Breaking Gate already covers during execution). Explicitly scoped as an MVP under same-day deadline pressure — vibe-coded, not fully spec'd against `component-specs.md`/`ui-spec.md` yet.
-
-**Files:**
-- New: `src/components/sections/RationaleGate.jsx` (form + horizontal chip list, reuses existing `theme.js` tokens — no new colors/fonts/radii).
-- `src/data/mockLedgerData.json` — new `preCommitments[]` key, 2 seed entries.
-- `src/components/AppContext.jsx` — `preCommitments` state + `logPreCommitment` action (prepends entry, logs `RATIONALE_LOGGED` to the terminal feed). Local session state only — **not yet wired** into `scripts/sync-activity-log.mjs` or the live-poll snapshot; resets on refresh.
-- `src/App.jsx` — mounts `<RationaleGate />`.
-
-**Verification:** `npm run build` + `npm run lint` both clean. Live browser pass: opened the form, submitted a real entry, chip appeared, `RATIONALE_LOGGED` line appeared in the terminal feed, zero console errors, rest of the dashboard (Circuit-Breaking Gate, Intent Ledger, Approve/Reject) unaffected.
-
-**Explicitly not done (fix later, not blocking):** no `component-specs.md`/`DECISIONS.md`/`COMPONENT_MAP.md` entries yet (locked-doc update skipped under time pressure — flag for a follow-up pass); no wiring into the vault-backed live data pipeline; no unit tests; no visual QA against `ui-spec.md`'s full checklist (only a live smoke test).
-
----
-
-## Session 11 — 2026-08-15 (Phase 3 Human Visual QA — Live Browser Pass)
-
-**What:** `npm run build` + `npm run lint` verified clean, then `npm run dev` (port 5175 — 5173/5174 already occupied by other processes) opened and driven in a real Chrome tab against `src/docs/branding/ui-spec.md` and the repo's own "Next Step Prompt" checklist.
-
-**Verified clean, no findings requiring a design decision:**
-- IntroScreen: white logo mark, terminal boot-sequence line, locked tagline, cyan `▸ Enter Control Plane` CTA — all render exactly per `Design Decisions`.
-- Column proportions read correctly at 25/45/30 (Audit / Intent / Circuit-Breaker) at a standard viewport.
-- SPEC-07 column-header escalation confirmed live: `CIRCUIT-BREAKING GATE` header shows crimson border + pulsing `● N PENDING`, badge count decremented 2→1 in real time after resolving an anomaly.
-- Expiry countdown timers tick down live (verified two consecutive reads, ~20s apart, both decrementing correctly); terminal feed scrolls continuously with new timestamped entries.
-- `SystemHeader` metric counters (`TOKENS BURNED`, `TOTAL COGS`, `SYSTEM AER`, `LEAKAGE RATE`) animate via `react-countup` on data change.
-- **Live interaction smoke test:** clicked `Approve & Sign` on a trapped anomaly — `LEDGER_COMMIT` entry appeared in the terminal feed, the anomaly cleared from the Circuit-Breaking Gate, a new committed row appeared at the top of the Intent Ledger. Zero console errors/warnings during the full session.
-- Human Intent fields render directly in both the Intent Ledger and Circuit-Breaking Gate — never behind a click. Plain-English `BUSINESS IMPACT` renders above the collapsed `TECHNICAL TRACE` on every anomaly card. No `rounded-*` violations spotted visually (consistent with the Session 4 grep-verified pass).
-
-**Not touched:** `AppContext` unit test coverage — still an optional, not-done follow-up per the repo's own standing recommendation.
-
-**Files modified:** `memory-bank/ACTIVE_CONTEXT.md` only (this entry). No source or doc changes — nothing found required one.
-
----
-
-## Session 9 — 2026-08-15 (Real-Entry Model Field Fix — DECISION-11)
-
-**What:** `technicalMetrics.model` on real `ledgerEntries[]` rows now resolves from the source agent's own `metrics.model` (looked up by `agentId`) instead of a `technicalTrace.model` field that never existed in the `anomaly_trapped` event schema. Fixed in both `AppContext.approveAnomaly` (client-optimistic path) and `scripts/sync-activity-log.mjs` (Node-derived path). Full detail: `memory-bank/DECISIONS.md` DECISION-11.
-
-**Files modified:** `src/components/AppContext.jsx`, `scripts/sync-activity-log.mjs`, `memory-bank/DECISIONS.md`, `memory-bank/ACTIVE_CONTEXT.md`.
-
-**Verification:** `npm run lint` + `npm run build` clean. Smoke-tested the Node path against a synthetic event chain in a throwaway `VAULT_ROOT` — `technicalMetrics.model` resolved to `"Claude-Sonnet-5"` (the test agent's real model) instead of `undefined`. No leftover state — `public/generated/ledger-state.json` reset, throwaway vault dir removed.
-
-**Not touched:** client-optimistic path's `latencyVariance` still hardcodes `"—"` (self-corrects within ~3s on the next live poll) — out of scope, model-only fix.
-
----
-
-## Session 8 — 2026-08-15 (OPC Track Submission — Intent Ledger Copy Reframe — DECISION-10)
-
-**What:** `ui/LedgerRow.jsx` Zone B now branches on `isLive` (newly exposed on `AppContext`'s value, was already computed internally by `useLiveLedgerData`). Live/OPC track shows `MODEL / RISK AT APPROVAL / EST. COST` (risk-primary, 3 cells); mock/B2B track is unchanged (`MODEL / COGS-AER / LATENCY VAR / DRIFT / CONTEXT`, 5 cells, $ still primary). Full rationale in `memory-bank/DECISIONS.md` DECISION-10.
-
-**Why now:** Checking the product against Natasha's own OPC-track usage (flat-subscription, no marginal cost signal) surfaced that `attributedRevenue`/`aer`/`intentDriftVariance`/`contextWindowUsage` are hardcoded `0` on every real ledger entry from both `AppContext.approveAnomaly` and `scripts/sync-activity-log.mjs` — the old cost-primary layout would show dead zeros to OPC judges.
-
-**Files modified:** `src/components/AppContext.jsx`, `src/components/sections/IntentLedger.jsx`, `src/components/ui/LedgerRow.jsx`, `memory-bank/DECISIONS.md` (DECISION-10), `memory-bank/ACTIVE_CONTEXT.md`, `memory-bank/COMPONENT_MAP.md`.
-
-**Explicitly not done:** `technicalMetrics.model` is also unreliable on real entries (`"—"` or `undefined`) — flagged in DECISION-10, not fixed (would need a data-shape change touching both the client action handler and the Node sync script). `src/docs/component-specs.md` SPEC-01 still only documents the mock 5-cell layout — needs a human edit per `CLAUDE.md` §5, not applied here.
-
-**Verification:** `npm run lint` and `npm run build` both clean.
-
----
-
-## Session 7 — 2026-08-15 (Live Agent-Activity Control Plane — DECISION-9)
-
-**What:** Apex Logic's scope pivoted from a mock-data-only Play/Sandbox demo to a live control panel for real background/scheduled agent work. Full context: `memory-bank/DECISIONS.md` DECISION-9, and the vault's `02 - Active Projects/Apex Logic/2026-08-15 Action Plan - Apex Logic Live Data Architecture.md`.
-
-**Files added:** `scripts/sync-activity-log.mjs`, `scripts/mediator.mjs`, `src/hooks/useLiveLedgerData.js`.
-**Files modified:** `src/components/AppContext.jsx`, `CLAUDE.md` §5, `src/docs/lean-prd.md` §3, `src/docs/app-context-contract.md`, `package.json` (new `watch-activity`/`mediator` scripts), `.gitignore`, `memory-bank/DECISIONS.md`, `memory-bank/COMPONENT_MAP.md`, `memory-bank/PROGRESS.md`.
-
-**Public deployment unaffected:** the live feed only activates in local dev (`import.meta.env.DEV`); `mockLedgerData.json` stays committed and is what `github.com/Natashaow/apex-logic` and the Vercel deployment show. The real feed (`public/generated/ledger-state.json`) is gitignored — confirmed via `git check-ignore`, repo is public, real agent data must never enter git history.
-
-**Two lint fixes worth remembering for future work in this file:** (1) syncing external data into React state via a `useEffect` watching a data dependency trips `react-hooks/set-state-in-effect` — fixed by having the external hook (`useLiveLedgerData`) call an `onSnapshot` callback directly from inside its own fetch handler instead of returning state for a downstream effect to react to. (2) Writing to a ref during render (`ref.current = x` outside an effect/handler) trips a separate ref-write rule — the "keep latest callback in a ref" pattern needs the assignment inside its own `useEffect`.
-
-**Verification:** `npm run lint` and `npm run build` both clean. `scripts/sync-activity-log.mjs` smoke-tested against a synthetic `agent_status → anomaly_trapped → resolution` event chain — output shape verified correct, then reset to empty (real system starts clean, not seeded with test data).
-
-**Explicitly not done:** the mediator only *records* Approve/Reject decisions as resolution events — it does not yet make a real paused `Workflow`/`CronCreate`/`/loop` run notice and act on them. That's separate, unscoped follow-up work.
-
----
-
-## Session 6 — Concurrent-Session Collision on ComplianceBadgeStrip (Important — read before touching App.jsx)
-
-**What happened:** Two sessions were working on this repo at the same time. One session (with the founder, in a UX-coaching capacity) made a deliberate product decision to cut `ComplianceBadgeStrip` from the live dashboard entirely — it competed with the header for attention without earning it visually, and the IMDA regulatory framing was reclassified as pitch/docs narrative (`product-strategy.md`, `strategic-assumptions.md`), not a rendered component. That session retired `SPEC-06` in `component-specs.md`, updated `dashboard-information-architecture.md`, `ux-problem-framework.md`, `APEX_LOGIC_PLAN.md`, and `COMPONENT_MAP.md`, deleted `ComplianceBadgeStrip.jsx`, and removed it from `App.jsx`.
-
-A second, concurrent session was independently continuing the *original* Phase 2 build sequence, working from state that predated that decision. It rebuilt `ComplianceBadgeStrip.jsx` from scratch, re-added it to `App.jsx`, and — reasonably, from its own vantage point — logged the cut as a "tracking error" and marked it done again in `PROGRESS.md` / `COMPONENT_MAP.md`.
-
-**Resolution:** The founder's decision stands. `ComplianceBadgeStrip.jsx` has been deleted again and removed from `App.jsx` a second time. **Do not rebuild it** without a new decision entry in `memory-bank/DECISIONS.md` explicitly reversing this. If a status table anywhere says this component is DONE or pending, that table is wrong — trust `component-specs.md` SPEC-06 (marked retired) and the absence of the file in `src/components/layout/`.
-
-**What legitimately shipped this session (kept):** `src/App.jsx` final assembly — added a `showIntro` boolean state (`useState(true)`). `AppProvider` now wraps a ternary: `IntroScreen` (with `onEnter` collapsing to `false`) when `showIntro`, otherwise `SystemHeader` → `ThreeColumnLayout`. This was the deferred follow-up noted in Session 5 for `IntroScreen.jsx` (DECISION-8).
-
-**Verification:** `npm run lint` and `npm run build` both clean.
-
-**Files modified:** `src/App.jsx`, `memory-bank/PROGRESS.md`, `memory-bank/COMPONENT_MAP.md`, `memory-bank/ACTIVE_CONTEXT.md`. `src/components/layout/ComplianceBadgeStrip.jsx` created then deleted again — net no file.
-**Decision logged:** No new decision needed for `IntroScreen` wiring (completes DECISION-8, already logged Session 5). The `ComplianceBadgeStrip` cut is the founder's existing decision, not a new one — see the other session's notes in `component-specs.md` for the rationale.
-
----
-
-## Session 5 — Intro Screen (Parallel Track)
-
-**What:** Built `src/components/screens/IntroScreen.jsx` — a standalone intro/splash screen (logo mark + locked `brand.tagline` + new plain-English descriptor + animated boot-sequence fade-in + `[Enter Control Plane]` CTA).
-**Files modified:** `src/components/screens/IntroScreen.jsx` (new), `memory-bank/DECISIONS.md` (DECISION-8), `memory-bank/COMPONENT_MAP.md`, `memory-bank/PROGRESS.md`.
-**Downstream impact:** None yet — deliberately NOT wired into `App.jsx`, since Phase 2's component build (`AppContext.jsx` → `SystemHeader.jsx` → `ThreeColumnLayout.jsx`) is actively in progress on that file. This was worked as an explicitly parallel, non-blocking track per founder request ("let's work on other things while Phase 2 builds").
-**Decision logged:** Yes — DECISION-8 in `memory-bank/DECISIONS.md`.
-
-**Next step for this track:** When Phase 2's `App.jsx` reaches final assembly (Step 9 in the Build Sequence), add a `showIntro` boolean state and conditionally render `<IntroScreen onEnter={() => setShowIntro(false)} />` before the dashboard tree. Do not do this preemptively — wait until `App.jsx` is no longer mid-build to avoid merge conflicts with the active Phase 2 session.
-
----
-
-## Session 4 — Correction + Phase 2 Kickoff
-
-**Tracker correction:** This file and `PROGRESS.md` previously said Phase 1 — Token Resolution was not started. That was stale. On inspection, the code already had it done: `src/tokens/theme.js` has no PENDING comments and cyan is the live accent; `index.html` already loads the combined JetBrains Mono + Space Grotesk Google Fonts link; `src/index.css` already defines `--font-sans` / `--font-mono` in a Tailwind v4 `@theme` block. **Note:** this project uses Tailwind v4's CSS-first theming — there is no `tailwind.config.js`, so the old Phase 1 checklist item to "extend `tailwind.config.js` fontFamily" does not apply; the equivalent work already lives in `index.css`.
-
-**New reference doc added:** `src/docs/app-context-contract.md` — the state/action contract for `AppContext.jsx` (state shape, derived `highestActiveSeverity`, and the three action handlers), written before any component code so the first file in the build order has an explicit spec rather than an improvised one.
-
-**Phase 2 build proceeded** per the sequence below, content layered in by **Tier** (per `dashboard-information-architecture.md`) rather than strictly by component: empty 3-column shell first, then Tier 0/1 fields across all columns, then Tier 2, then Tier 3, then interaction wiring, then QA. **All steps complete.**
-
-**Pre-existing bug found and fixed:** `postcss.config.js` used Tailwind v3's PostCSS plugin syntax, incompatible with the Tailwind v4 already installed — this would have broken `npm run build` regardless of any dashboard work. Fixed by adding `@tailwindcss/vite` to `vite.config.js` and deleting the now-unnecessary `postcss.config.js`.
-
-**What got built (all 11 components in `src/components/`):** `AppContext.jsx` (full state + 3 action handlers + terminal-scroll effect), `layout/SystemHeader.jsx` (animated `react-countup` metrics + Emergency Stop), `layout/ComplianceBadgeStrip.jsx`, `layout/ThreeColumnLayout.jsx` (25/45/30 shell), `sections/AuditStream.jsx`, `sections/IntentLedger.jsx`, `sections/CircuitBreakerGate.jsx` (SPEC-07 escalation), `ui/AgentBlock.jsx`, `ui/TerminalLog.jsx`, `ui/LedgerRow.jsx`, `ui/AnomalyCard.jsx` (live countdown + auto-abort + collapsible diff drawer). `App.jsx` wires all of it under `AppProvider`.
-
-**QA pass:** `npm run build` and `npm run lint` both clean. Grepped for Thin-Lines rule violations (rounded corners beyond `rounded-full` on status dots, shadows, gradients) — none found. Full detail in `memory-bank/PROGRESS.md` QA Pass Results section.
-
-**Not yet done — flagged, not forgotten:** no human has looked at this in an actual browser yet. A dev server was run and confirmed serving without server-side errors, but this is not a substitute for a real visual pass (spacing feel, does the countdown/terminal scroll actually read correctly at a glance, etc.).
-
----
-
-## What Was Just Done (Session 3 — UX Problem Framework & Information Architecture)
-
-### New Reference Docs
-- `src/docs/ux-problem-framework.md` — POV/HMW problem statements `PS-01`–`PS-06`, condensed persona snapshots, Architect-Governor journey overlay, lighter Sovereign Operator / Compliance Controller treatment, and a `Problem → Persona → Journey Moment → Design Opportunity → Component Spec` traceability matrix.
-- `src/docs/dashboard-information-architecture.md` — Visual Hierarchy Tiers (0–3) mapping every data field to a priority tier, a Cross-Column Attention Model (steady-state vs. interrupt-state scan order), and a master Progressive Disclosure Matrix.
-
-### Canonical Source Updated
-- `src/docs/user-architecture.md` — now carries inline `PS-01`–`PS-06` tags cross-referencing `ux-problem-framework.md`. Remains the canonical source for personas/friction/journey; update there first, then reconcile IDs in the framework doc.
-
-### New Decision: DECISION-6 — Cross-Column Attention Model
-- **Resolved:** Circuit-Breaking Gate column header escalates (border → `tokens.amber.border` / `tokens.crimson.border` + pulsing `● N PENDING` badge) when `trappedAnomalies.length > 0`. Reverts to neutral when clear. No new colors — reuses existing severity tokens and `animate-pulse`.
-- **Logged in:** `memory-bank/DECISIONS.md` (Session 3)
-- **Spec added:** `SPEC-07: ColumnAttentionState` in `src/docs/component-specs.md`
-- **UI rule added:** "Cross-Column Attention State" section in `src/docs/branding/ui-spec.md`
-- **Downstream impact:** `AppContext.jsx` (not yet built) must expose a derived `highestActiveSeverity` value computed from `trappedAnomalies[]`; consumed by `sections/CircuitBreakerGate.jsx` column header. See updated `memory-bank/COMPONENT_MAP.md` cascade row. No component code exists yet, so nothing is currently out of sync — this is captured ahead of Phase 2 build.
-
-### Tracking Docs Updated
-- `APEX_LOGIC_PLAN.md` and `memory-bank/PROGRESS.md` — both new docs registered; `component-specs.md` and `ui-spec.md` status notes updated to mention SPEC-07 / DECISION-6.
-- `memory-bank/COMPONENT_MAP.md` — new cascade row (`trappedAnomalies[]` volume → `CircuitBreakerGate.jsx` header), new SPEC-07 → component cross-reference row, both new docs added to Reference Docs table.
-
-### Follow-up: The Rationale Void → The Intent Ledger Symbol + Pitch Narrative
-- **Umbrella frame formalized, then corrected:** `ux-problem-framework.md` briefly opened with a "Black Box → Command Centre" umbrella; this was replaced with "The Rationale Void — Umbrella Frame," naming every `PS-01`–`PS-06` as a facet of the same absence, with The Intent Ledger (gated by The Apex Checkpoint) as the one-line resolution. This reuses vocabulary already locked in `brand-identity.md` rather than inventing new terms, and avoids implying model-interpretability claims Apex Logic doesn't make. Cross-referenced from `user-architecture.md`'s companion note.
-- **New doc — `src/docs/rationale-void-review-checklist.md`** (supersedes the deleted `black-box-review-checklist.md`): a 6-question standing rubric (does this close a piece of the void, which PS does it resolve, would cutting it reopen a piece of the void, etc.) to test any future decision against, plus a pasteable review-sub-agent prompt.
-- **New doc — `src/docs/pitch-narrative.md`:** sub-5-minute pitch script (Hook ~25s / Pivot ~40s / Turn ~20s / Walkthrough ~2:30 / Close ~20s, total ~4:15), built entirely on The Rationale Void → The Intent Ledger symbol, replaying one Monday-morning incident twice (without / with Apex Logic). Closes on the already-approved headline "Human Intent. Permanently Bound." Includes a literal component screen map (`AgentBlock` paused badge → `AnomalyCard` Zone 1 + Approve & Sign → `LedgerRow` committed entry) for whoever drives the prototype live.
-- **Journey map tagged:** `user-architecture.md` Section III journey matrix now has a `Pitch Beat` row mapping Phase 1 → Hook, Phase 2/3 → Pivot, Phase 4 → Turn + Walkthrough.
-- **Deferred, explicitly noted (not started):** an HTML pitch deck reusing `theme.js` tokens and the 25/45/30 column system, to be built only after the script above is confirmed in the presenter's own voice.
-
----
-
-## What Was Done Earlier (Session 2)
-
-### Memory Bank System (installed)
-- `.cursor/rules/apex-context.mdc` — auto-inject context into every agent chat
-- `.cursor/rules/change-protocol.mdc` — cascade awareness protocol
-- `memory-bank/` folder — all 4 files active and pre-populated
-
-### Brand Strategy (Phase 0 — complete)
-- Created `src/docs/branding/BRAND_STRATEGY.md` — upstream brand document (all visual decisions reference this)
-- **Brand Archetype locked:** The Ruler
-- **Visual Theme confirmed:** Cyberpunk Bloomberg Terminal
-- **Emotional Territory:** Command
-- **Only We Statement:** "Only Apex Logic permanently binds the original human intent to every agent action..."
-- **Brand Vocabulary:** 8 owned terms documented and systematized
-- **Brand Voice rules:** Authoritative, precise, declarative — documented with examples
-
-### All 5 Visual Decisions Locked
-| Decision | Resolved Value |
-|---|---|
-| D-1 Accent Color | Cyan — `text-cyan-400` / `border-cyan-500` / `bg-cyan-950/30` |
-| D-2 Logo Mark Color | White — `text-neutral-100` (already in theme.js) |
-| D-3 Monospace Font | JetBrains Mono (Google Fonts, 400 + 600) |
-| D-4 Header Surface | `bg-neutral-900` (already in theme.js) |
-| D-5 Sans-serif Font | Space Grotesk (Google Fonts, 400 + 500 + 600) |
-
-### Updated Brand Docs
-- `src/docs/branding/BRAND_STRATEGY.md` — NEW, upstream source of truth
-- `src/docs/branding/brand-identity.md` — updated with archetype, personality stack, Only We, vocabulary
-- `src/docs/branding/color-palette.md` — all decisions LOCKED
-- `src/docs/branding/type-system.md` — both fonts LOCKED with import instructions
-- `src/docs/branding/ui-spec.md` — D-4 LOCKED
-- `src/docs/visual-identity.md` — expanded with full brand strategy + all visual decision summary
-
----
-
-## Where We Are in the Build Sequence
-
-```
-[✅ DONE]   Phase 0 → Brand Foundation (archetype, theme, all visual decisions)
-[✅ DONE]   Phase 1 → Token Resolution (retroactively verified, Session 4)
-[✅ DONE]   Phase 2 → Component Build (Session 4 — all 11 components, all 6 interactions)
-[ ]         Phase 3 → Human visual QA in a real browser (not yet done — see Session 4 note above)
-```
-
-### Phase 1 Checklist (Retroactively Verified Complete)
-1. `src/tokens/theme.js` — ✅ no PENDING comments, accent is `text-cyan-400`
-2. `index.html` — ✅ combined Google Fonts link present (JetBrains Mono 400+600 + Space Grotesk 400+500+600)
-3. `src/index.css` — ✅ `@theme` block sets `--font-sans` / `--font-mono` (Tailwind v4 CSS-first theming — no `tailwind.config.js` exists or is needed in this project)
-4. All 4 branding docs — ✅ locked, no PENDING flags remain
-
-### Phase 2 Build Sequence (Tier-Layered — Current)
-```
-Step 1  → src/docs/app-context-contract.md (state/action contract — new reference doc)
-Step 2  → AppContext.jsx (React state engine — exposes highestActiveSeverity per DECISION-6)
-Step 3  → SystemHeader.jsx + ThreeColumnLayout.jsx as an EMPTY 25/45/30 shell (no row/card content yet)
-Step 4  → Tier 0/1 content across all 3 columns (status badges, human intent, anomaly titles + actions)
-Step 5  → Tier 2 content (metrics strips, terminal log, agent metrics) then Tier 3 (collapsible diff drawer)
-Step 6  → Wire interactions: Approve & Sign, Reject & Kill, Emergency Stop, expiry countdown, terminal
-          continuous scroll, animated metric counters
-Step 7  → QA pass against `ui-spec.md` Thin-Lines rule + `rationale-void-review-checklist.md`
-```
-
----
-
 ## Open Decisions
-**None.** All visual, brand, UX-framing, and information-architecture decisions are locked (including `DECISION-6` and `DECISION-8`). Phase 2 build is complete — see Session 4 note above. `IntroScreen.jsx` (Session 5, DECISION-8) is intentionally not yet wired into `App.jsx` — that's a deliberate follow-up, not an open decision.
+
+**None.** All visual, brand, UX-framing, and information-architecture decisions are locked — 19 entries, indexed at the top of `memory-bank/DECISIONS.md`.
+
+One process debt: `RationaleGate` (Session 12) shipped without a DECISIONS entry, against §5's "log the decision before the code lands." Needs a drafted entry for founder approval — not an agent deciding retroactively.
 
 ---
 
-## Next Step Prompt (Use This to Start Phase 3 — Human Visual QA)
+## Session 6 — Collision Incident (pointer)
 
-> "Read `memory-bank/ACTIVE_CONTEXT.md` and `memory-bank/PROGRESS.md` first. Phase 2 (Component Build) is complete — all 11 components exist and `npm run build` / `npm run lint` are both clean. Run `npm run dev`, open the dashboard in a real browser, and visually verify against `src/docs/branding/ui-spec.md`: column proportions feel right at 25/45/30, the countdown timers and terminal scroll are legible at a glance, the SPEC-07 column-header escalation is visually obvious when anomalies are trapped, and nothing violates the Thin-Lines rule. Log findings as new entries, not silent edits, if anything requires a design decision rather than a straightforward bug fix."
+Two concurrent sessions edited `App.jsx` with opposing intents; one rebuilt `ComplianceBadgeStrip` after the other had deliberately cut it, and it took manual resolution. **`ComplianceBadgeStrip` is retired — do not rebuild it** without a new DECISIONS entry reversing the cut. Full narrative: `memory-bank/SESSION_LOG.md` → Session 6. This incident is why `CLAUDE.md` §6 exists.
+
+---
+
+## Session 13 — 2026-08-15 (Read-First Chain Reduction + Multi-Agent Routing — DECISION-13)
+
+**Why:** An adjacent session ran out of tokens mid-flight. Root cause was fixed per-session overhead, not working style — a flat ~860-line mandatory read chain, plus 18 plugins and 10 MCP servers loading on a no-backend React dashboard.
+
+**Docs restructured (DECISION-13):**
+- New `memory-bank/SESSION_LOG.md` — Sessions 2–12, the archived `PROGRESS.md` detail tables, the 2026-07-12 QA results, and the closed Phase 3 prompt.
+- `ACTIVE_CONTEXT.md` 247 → 60 lines (live state only); `PROGRESS.md` 169 → 60 (summary + stale-content flags); `DECISIONS.md` +47 (19-row scan Index + DECISION-13).
+- `CLAUDE.md` §1 rewritten as three tiers; §6.3 gained the rotation rule that keeps `ACTIVE_CONTEXT.md` from regrowing; §3 decision count corrected 8 → 19; new §11 Agent Routing.
+- Parity per §10: `AGENTS.md` (Codex), `.cursor/rules/apex-context.mdc` (Cursor), new `GEMINI.md` (Gemini).
+- **Gemini writes** — initially scoped read-only, corrected same session. It has full write capability (`--approval-mode default/auto_edit/yolo`; `plan` is the read-only mode) and free-tier capacity, so restricting it to lookups while paying Opus for mechanical edits was backwards. On probation per §11 until it's shown to hold the §3 constraints under edit pressure.
+
+**Tooling:** Gemini CLI 0.55.1 installed. `.claude/settings.local.json` (gitignored) disables 7 irrelevant plugins + 6 MCP servers for this repo only — `qmd` and `obsidian-vault` deliberately kept. Global default model set to Sonnet; Opus is now an explicit `/model` escalation.
+
+**Measured:** default session read ~860 → ~85 lines (`ACTIVE_CONTEXT.md` 60 + DECISIONS Index ~25).
+
+**Verification:** `npm run lint` and `npm run build` both clean. No source files touched.
+
+**Not done:** the two stale `APEX_LOGIC_PLAN.md` lines are flagged in `PROGRESS.md`, not fixed — they need a founder call per §6.4. The MCP-server half of the config trim uses a `disabledMcpServers` key that could not be confirmed from the CLI bundle; verify with `/mcp` next session and fall back to the `/mcp` UI if it didn't take.

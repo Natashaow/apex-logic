@@ -18,6 +18,9 @@ dist-ssr
 # what the public deployment shows.
 public/generated/ledger-state.json
 
+# Machine-local agent tuning (plugin/MCP trim) — not a project contract
+.claude/settings.local.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

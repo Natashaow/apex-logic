@@ -5,6 +5,53 @@
 
 ---
 
+## Index — 19 Locked Decisions
+
+Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your change actually touches.
+
+| ID | Decision | Domain |
+|---|---|---|
+| DECISION-13 | Read-first chain tiered; session history split to `SESSION_LOG.md` | Process |
+| DECISION-12 | `src/docs/` edited directly — one-time §5 override, not standing | Process |
+| DECISION-11 | `technicalMetrics.model` resolves from source agent, not `technicalTrace` | Data |
+| DECISION-10 | LedgerRow Zone B splits by track — risk-primary (live) vs cost-primary (mock) | Component |
+| DECISION-9 | Client-only constraint unlocked, scoped to local sync + mediator only | Architecture |
+| DECISION-8 | Intro Screen copy & treatment | Component |
+| DECISION-7 | The Rationale Void as core narrative symbol | Narrative |
+| DECISION-6 | Cross-column attention model (SPEC-07 escalation) | Component |
+| DECISION-5 | Sans-serif font — Space Grotesk | Type |
+| DECISION-4 | Header surface treatment — `bg-neutral-900` | Visual |
+| DECISION-3 | Monospace font — JetBrains Mono | Type |
+| DECISION-2 | Logo mark color — white `text-neutral-100` | Visual |
+| DECISION-1 | Interactive accent — cyan only | Visual |
+| DECISION-0F | Visual theme — Cyberpunk Bloomberg Terminal | Brand |
+| DECISION-0E | Brand archetype — The Ruler | Brand |
+| DECISION-0D | No rounded corners (`rounded-none`; `rounded-sm` max) | Visual |
+| DECISION-0C | Layout architecture — 25/45/30, locked | Layout |
+| DECISION-0B | Status color system — emerald/amber/crimson | Visual |
+| DECISION-0A | Canvas color — `bg-neutral-950` | Visual |
+
+---
+
+## Session 13 — 2026-08-15 (Read-First Chain Reduction + Multi-Agent Routing)
+
+### DECISION-13 — Read-First Chain Is Tiered; Session History Splits to `SESSION_LOG.md`
+- **Date:** 2026-08-15
+- **Problem:** `CLAUDE.md` §1 mandated reading five files (~860 lines) before *any* proposed change. That cost was paid in full on every session regardless of task size, and it materially contributed to running out of tokens mid-session on adjacent work. The chain was also self-defeating: ~80% of `ACTIVE_CONTEXT.md` was historical session narrative that no current decision depends on, and `PROGRESS.md` duplicated several of those same session blocks.
+- **Resolved:** The read-first sequence becomes **three tiers** rather than one flat mandatory list:
+  - **Tier 1 (every session, ~66 lines):** `memory-bank/ACTIVE_CONTEXT.md` (trimmed to live state) + the `DECISIONS.md` Index above.
+  - **Tier 2 (before editing any component or token):** `memory-bank/COMPONENT_MAP.md` + the full text of any DECISION entry the change touches.
+  - **Tier 3 (on demand only):** `APEX_LOGIC_PLAN.md`, `memory-bank/PROGRESS.md`, `memory-bank/SESSION_LOG.md`.
+- **Split, not summarized.** Deliberately rejected the alternative of a condensed `BRIEF.md` living alongside the full files: two descriptions of the same state drift within a session or two, and a stale brief is worse than a long one. Instead, historical content **moves** to the new `memory-bank/SESSION_LOG.md`. Nothing is deleted.
+- **What moved:** `ACTIVE_CONTEXT.md` Sessions 2–11 and the stale Phase 3 "Next Step Prompt" (closed by Session 11); `PROGRESS.md`'s Session 7/11 narratives and the 2026-07-12 QA Pass Results. `ACTIVE_CONTEXT.md` keeps `In Progress`, `Current Status`, `Open Decisions`, and the newest session block only.
+- **Session 6 carve-out:** the concurrent-session collision incident is referenced directly by `CLAUDE.md` §6, so a 2-line summary plus a pointer stays in `ACTIVE_CONTEXT.md` — only the full narrative archives.
+- **Session-close protocol changes (`CLAUDE.md` §6.3):** new session blocks are appended to `SESSION_LOG.md`; `ACTIVE_CONTEXT.md` gets only its `Current Status` updated and the newest block rotated in. Without this, `ACTIVE_CONTEXT.md` regrows to 247 lines within a few sessions and the saving evaporates.
+- **Downstream impact:** `CLAUDE.md` §1 and §6.3 rewritten; `AGENTS.md` and `.cursor/rules/apex-context.mdc` updated for §10 parity so Codex and Cursor read the same tiers. No source code touched — zero `npm run build` / `npm run lint` impact.
+- **Measured effect:** default session read ~860 → ~66 lines; ~200 lines when actually editing code.
+- **Status:** LOCKED
+
+---
+
 ## Session 10 — 2026-08-15 ("Why Every Agent Acted" Overclaim Fix — Explicit `src/docs/` Override)
 
 ### DECISION-12 — `src/docs/` Edited Directly, By Explicit One-Time User Override of `CLAUDE.md` §5

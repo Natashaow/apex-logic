@@ -1,5 +1,5 @@
 # PROGRESS TRACKER
-> Updated after every work session. The single source of truth for build status.
+> Build status. **Tier 3 — read on demand** (see `CLAUDE.md` §1). Session narrative lives in `memory-bank/SESSION_LOG.md`.
 
 ---
 
@@ -12,158 +12,49 @@
 
 ---
 
-## Infrastructure
+## Status Summary
 
-| Item | Status | Notes |
-|---|---|---|
-| `.cursor/rules/apex-context.mdc` | ✅ DONE | Auto-injects context into every agent chat |
-| `.cursor/rules/change-protocol.mdc` | ✅ DONE | Cascade awareness protocol |
-| `memory-bank/ACTIVE_CONTEXT.md` | ✅ DONE | Updated after each session |
-| `memory-bank/DECISIONS.md` | ✅ DONE | Immutable decision log |
-| `memory-bank/COMPONENT_MAP.md` | ✅ DONE | Change cascade tracker |
-| `memory-bank/PROGRESS.md` | ✅ DONE | This file |
+| Layer | Status |
+|---|---|
+| Infrastructure (`.cursor/rules/`, `memory-bank/`) | ✅ DONE — 5 files, incl. `SESSION_LOG.md` (DECISION-13) |
+| Reference Docs (`src/docs/`) | ✅ DONE — 12 files, one exception below |
+| Branding Docs (`src/docs/branding/`) | ✅ DONE — 6 files, all decisions LOCKED |
+| Data Layer (`src/data/`) | ✅ DONE — `strategy.js`, `assumptions.js`, `users.js`, `mockLedgerData.json` |
+| Token Layer (`src/tokens/theme.js`) | ✅ DONE — no PENDING comments, cyan accent live |
+| Application Code (`src/`) | ✅ DONE — `main.jsx` (untouched), `index.css`, `App.jsx` |
+| Components (`src/components/`) | ✅ DONE — 11 components + `RationaleGate` (Session 12) |
+| Screens (`src/components/screens/`) | ✅ DONE — `IntroScreen.jsx`, wired via `showIntro` |
+| Interactions | ✅ DONE — all 6 wired and browser-verified (Session 11) |
 
----
-
-## Reference Docs (`src/docs/`)
-
-| File | Status | Notes |
-|---|---|---|
-| `product-strategy.md` | ✅ DONE | Brand, mission, personas, intercept protocol, metrics framework |
-| `strategic-assumptions.md` | ✅ DONE | 5 architectural assumptions, compliance alignment matrix |
-| `lean-prd.md` | ✅ DONE | 3-column architecture, feature specs, scope guardrails |
-| `user-architecture.md` | ✅ DONE | 3 personas, friction points, journey matrix |
-| `ledger-spec.md` | ✅ DONE | Intent Ledger rationale, 6 vectors, 3 intercept controls |
-| `component-specs.md` | ✅ DONE | SPEC-01 through SPEC-07 (SPEC-07 added for cross-column attention state) |
-| `ux-problem-framework.md` | ✅ DONE | NEW — POV/HMW problem statements (PS-01–06), persona snapshots, journey-problem overlay, traceability matrix to component specs |
-| `dashboard-information-architecture.md` | ✅ DONE | NEW — visual hierarchy tiers (0–3), cross-column attention model, progressive disclosure matrix — feeds SPEC-07 |
-| `rationale-void-review-checklist.md` | ✅ DONE | NEW — 6-question standing rubric to test decisions against the Rationale Void → Intent Ledger problem |
-| `pitch-narrative.md` | ✅ DONE | NEW — sub-5-minute pitch script (Hook/Pivot/Turn/Walkthrough/Close), The Rationale Void → The Intent Ledger symbolism, live screen map |
-| `app-context-contract.md` | ✅ DONE | NEW — Session 4 — state shape, derived `highestActiveSeverity`, 3 action handlers, and background effects for `AppContext.jsx`, written before the component itself |
-| `business-model.md` | ⚠️ DECISIONS PENDING | NEW — revenue streams + sustainability plan drafted for a competition application. Grounded in the locked personas, but tiers/price points are PROPOSED, not founder-locked — see the provenance note in the doc. |
+**Only non-DONE item:** `src/docs/business-model.md` — ⚠️ DECISIONS PENDING. Revenue streams + sustainability plan drafted for a competition application. Grounded in the locked personas, but tiers/price points are PROPOSED, not founder-locked — see the provenance note in the doc.
 
 ---
 
-## Branding Docs (`src/docs/branding/`)
+## Components — Tracking Notes
 
-| File | Status | Notes |
-|---|---|---|
-| `BRAND_STRATEGY.md` | ✅ DONE | NEW — upstream brand document, all decisions reference this |
-| `brand-identity.md` | ✅ DONE | Updated: archetype, personality stack, Only We, vocabulary |
-| `color-palette.md` | ✅ DONE | All decisions LOCKED including D-1 (cyan) |
-| `type-system.md` | ✅ DONE | D-3 (JetBrains Mono) + D-5 (Space Grotesk) LOCKED with import instructions |
-| `ui-spec.md` | ✅ DONE | D-4 (neutral-900) LOCKED + DECISION-6 Cross-Column Attention State added |
-| `visual-identity.md` | ✅ DONE | Expanded with full brand strategy + all visual decision summary |
+All 11 Phase 2 components are built, plus `sections/RationaleGate.jsx` (Session 12). Two carry standing notes:
 
----
-
-## Data Layer (`src/data/`)
-
-| File | Status | Notes |
-|---|---|---|
-| `strategy.js` | ✅ DONE | brand, valueProps, personas, interceptProtocol |
-| `assumptions.js` | ✅ DONE | assumptions[], complianceMatrix, humanGateGuardrail |
-| `users.js` | ✅ DONE | landscapeHeadlines, personas[], journeyPhases[] |
-| `mockLedgerData.json` | ✅ DONE | agents[], ledgerEntries[], trappedAnomalies[], terminalLogs[], systemMetrics{} |
-
----
-
-## Token Layer (`src/tokens/`)
-
-| File | Status | Notes |
-|---|---|---|
-| `theme.js` | ✅ DONE | Retroactively verified 2026-07-12 — no PENDING comments remain, cyan accent live. Project uses Tailwind v4 (CSS-first `@theme`), so there is no `tailwind.config.js` — font family vars live in `index.css` instead. |
-
----
-
-## Application Code (`src/`)
-
-| File | Status | Notes |
-|---|---|---|
-| `main.jsx` | ✅ UNTOUCHED | Entry point — do not modify |
-| `index.css` | ✅ DONE | Retroactively verified 2026-07-12 — `@theme` block sets `--font-sans` (Space Grotesk) and `--font-mono` (JetBrains Mono), no conflicting imports. Fonts load via `index.html` Google Fonts link tag. |
-| `App.jsx` | ✅ DONE | Session 6 — now wires `showIntro` state: renders `IntroScreen` first, then `SystemHeader` + `ThreeColumnLayout` on Enter. All under one `AppProvider`. `ComplianceBadgeStrip` is NOT part of this tree — retired, see Session 6 note in `ACTIVE_CONTEXT.md`. |
-
----
-
-## Components (`src/components/`)
-
-Build order is enforced — do not skip steps.
-
-| Component | Priority | Status | Blocked By |
-|---|---|---|---|
-| `AppContext.jsx` | 1st | ✅ DONE | Full state + 3 action handlers per `app-context-contract.md`. Background effects (terminal interval, expiry auto-abort wiring) still pending. |
-| `layout/SystemHeader.jsx` | 2nd | ✅ DONE | Logo, system state badge, 4 metrics (static values), Emergency Stop wired. Animated counters (`react-countup`) pending. |
-| `layout/ThreeColumnLayout.jsx` | 3rd | ✅ DONE | 25/45/30 shell, `gap-px` border-as-divider |
-| `sections/AuditStream.jsx` | 4th | ✅ DONE | Renders `AgentBlock` stack + `TerminalLog` |
-| `sections/IntentLedger.jsx` | 5th | ✅ DONE | Renders full `LedgerRow` stack (Zone A + Zone B) |
-| `sections/CircuitBreakerGate.jsx` | 6th | ✅ DONE | Renders `AnomalyCard` stack + SPEC-07 column header escalation |
-| `ui/AgentBlock.jsx` | 7th | ✅ DONE | Full — name, status badge, role, model/latency/token velocity |
-| `ui/TerminalLog.jsx` | 8th | ✅ DONE | Color-coded by event type. Continuous-scroll interval (SPEC-04) still pending in AppContext. |
-| `ui/LedgerRow.jsx` | 9th | ✅ DONE | Full — Zone A + Zone B metrics strip with amber/crimson drift + context thresholds |
-| `ui/AnomalyCard.jsx` | 10th | ✅ DONE | Full — Zone 1 + live buttons + Zone 2 collapsible diff drawer. Live countdown ticking + auto-abort trigger still pending. |
-
-**`layout/ComplianceBadgeStrip.jsx` — retired, not in this list on purpose.** Cut from the live dashboard per an explicit product decision (see `ACTIVE_CONTEXT.md` Session 6 and `component-specs.md` SPEC-06). A concurrent session briefly rebuilt it under the impression its absence was a tracking bug — it was not; do not re-add without a new entry in `memory-bank/DECISIONS.md`.
-
----
-
-## Screens (`src/components/screens/`) — Parallel Track
-
-| Component | Status | Notes |
-|---|---|---|
-| `IntroScreen.jsx` | ✅ DONE | Brand-forward logo + locked tagline + new descriptor line, animated boot-sequence fade-in, `[Enter Control Plane]` CTA. See DECISION-8. **Session 6:** wired into `App.jsx` via `showIntro` state — now the first thing rendered on load. |
-
----
-
-## Interactions to Test (Step 10)
-
-| Interaction | Status | Notes |
-|---|---|---|
-| Approve & Sign (AnomalyCard) | ✅ DONE | Commits ledger entry, returns agent to `processing`, logs `LEDGER_COMMIT`, increments header COGS/tokens |
-| Reject & Kill (AnomalyCard) | ✅ DONE | Sets agent to `halted`, logs `CRITICAL_HALT` |
-| Emergency Stop (SystemHeader) | ✅ DONE | Halts all agents, clears all trapped anomalies, logs `GLOBAL_KILL_SWITCH_ACTIVATED` |
-| Expiry Timer countdown | ✅ DONE | Live per-card 1s tick; auto-fires `rejectAnomaly(id, "AUTO_ABORT_EXPIRY")` at 0:00 |
-| Terminal log continuous scroll | ✅ DONE | Random 3–5s interval, `TOOL_CALL`/`STATE_CHANGE` synthetic lines, prepended newest-first |
-| Animated metric counters | ✅ DONE | `react-countup` on all 4 `SystemHeader` metrics, `preserveValue` so live increments animate from the prior value |
-
----
-
-## Session 11 — 2026-08-15 (Phase 3 Human Visual QA — Live Browser Pass)
-
-**Result:** ✅ PASSED, zero findings requiring a design decision. Full detail in `ACTIVE_CONTEXT.md` Session 11. Driven live in Chrome against `ui-spec.md` + the repo's standing Next Step Prompt: intro screen, 25/45/30 layout, SPEC-07 escalation (live 2→1 badge decrement), expiry countdowns, terminal scroll, animated metric counters, and a live `Approve & Sign` interaction (ledger commit, anomaly clear, zero console errors) all verified working. This was the repo's standing "actual next gate" — now closed.
-
----
-
-## Session 7 — 2026-08-15 (Live Agent-Activity Control Plane, DECISION-9)
-
-**What shipped:** Apex Logic's scope pivoted from mock-data-only Play/Sandbox demo to a live control panel for real background/scheduled agent work (see `memory-bank/DECISIONS.md` DECISION-9, and the vault's `02 - Active Projects/Apex Logic/2026-08-15 Action Plan - Apex Logic Live Data Architecture.md`).
-
-- New `scripts/sync-activity-log.mjs` — reads the vault's `work/agent-activity/events.jsonl` (append-only, source of truth), derives the same 5-key shape as `mockLedgerData.json`, writes `public/generated/ledger-state.json` (gitignored — repo is public, real data never committed) and regenerates the vault's `work/agent-activity/Activity Log.md` mirror. Supports `--watch`. Smoke-tested end-to-end (agent_status → anomaly_trapped → resolution event chain) — output verified correct.
-- New `scripts/mediator.mjs` — local-only HTTP listener, `POST /resolve`, records Approve/Reject decisions as resolution events. **Explicitly unimplemented:** actually resuming/aborting a real paused `Workflow`/`CronCreate`/`/loop` run — recording only, flagged as future work.
-- `src/hooks/useLiveLedgerData.js` (new) — polls `/generated/ledger-state.json` every 3s, local dev only (`import.meta.env.DEV` — production build unaffected).
-- `AppContext.jsx` — added `applyLiveSnapshot` callback wired to the new hook (avoids the derived-state-in-effect anti-pattern flagged by `react-hooks/set-state-in-effect` — callback fires from inside the poll, not a downstream effect); `approveAnomaly`/`rejectAnomaly` now fire-and-forget POST to the mediator; synthetic terminal-log generator now skips when `isLive`. `mockLedgerData.json` import unchanged — still the init source and the public deployment's only data source.
-- Amended (per DECISION-9's authorization): `CLAUDE.md` §5, `src/docs/lean-prd.md` §3, `src/docs/app-context-contract.md` (LOCKED banner, §1, §3, §4, §5).
-- `.gitignore` — added `public/generated/ledger-state.json`. Confirmed via `git check-ignore` — not tracked, not staged.
-
-**Verification:** `npm run lint` — clean (after fixing two React Compiler lint violations: derived-state-in-effect, and a ref-write-during-render — both fixed by restructuring `useLiveLedgerData` to take an `onSnapshot` callback rather than returning state for a separate syncing effect). `npm run build` — clean, 99ms.
-
-**Not done this session:** wiring a real `Workflow`/`CronCreate`/`/loop` run to notice and act on a mediator resolution event. Zanshin/`second-brain-preview`'s own internal debt — out of scope, untouched.
+- **`sections/RationaleGate.jsx`** — built Session 12 under deadline as an explicit MVP. **Not yet tracked** in `COMPONENT_MAP.md`, not spec'd in `component-specs.md`, no DECISIONS entry, no unit tests, no full `ui-spec.md` visual QA. Local session state only — resets on refresh, not wired into the live pipeline.
+- **`layout/ComplianceBadgeStrip.jsx` — RETIRED, deliberately absent.** Cut from the live dashboard per an explicit product decision (see `SESSION_LOG.md` Session 6 and `component-specs.md` SPEC-06). A concurrent session once rebuilt it under the impression its absence was a tracking bug — it was not. **Do not re-add** without a new entry in `memory-bank/DECISIONS.md`.
 
 ---
 
 ## Next Gate
-**Phase 1 — Token Resolution: ✅ COMPLETE (retroactively verified 2026-07-12).** `theme.js` has no PENDING comments and cyan is the live accent, `index.html` loads both Google Fonts, and `index.css` wires them into Tailwind v4's `@theme` block (this project has no `tailwind.config.js` — v4 uses CSS-first theming). This tracker previously said Phase 1 was not started; that was stale and has been corrected.
 
-**Phase 2 — Component Build: ✅ COMPLETE (2026-07-12).** All 11 components built, all 6 interactions wired, QA pass clean (`npm run build` + `npm run lint` both pass with zero errors). See the QA Pass Results section below and `ACTIVE_CONTEXT.md` Session 4 for full detail.
+Phases 0–3 are complete and closed. Session 11 ran the standing Phase 3 human visual QA gate in a real browser and passed with zero findings requiring a design decision.
 
-**One pre-existing bug fixed along the way:** `postcss.config.js` used the Tailwind v3 PostCSS plugin syntax (`tailwindcss: {}` as a direct PostCSS plugin), which is incompatible with the Tailwind v4 already in `package.json` and would have broken `npm run build` regardless of any dashboard work. Fixed by installing `@tailwindcss/vite` and registering it in `vite.config.js`; `postcss.config.js` was deleted (no longer needed — Tailwind v4's Vite plugin handles this natively).
+The three open threads are tracked in `ACTIVE_CONTEXT.md` → **Next Phase**:
+1. Wire a real `Workflow`/`CronCreate`/`/loop` run to act on a mediator resolution event (Session 7 records only).
+2. `src/docs/component-specs.md` — SPEC-01 live-track variant + a `RationaleGate` SPEC block. **User tasks**, not agent tasks (`CLAUDE.md` §5).
+3. Session 12 follow-ups — `COMPONENT_MAP.md` entry, live-pipeline wiring, unit tests.
 
 ---
 
-## QA Pass Results (2026-07-12)
+## Known Stale Content — flagged, not silently reconciled
 
-- `npm run build` — ✅ clean, no errors.
-- `npm run lint` — ✅ clean, zero errors (one `react-refresh/only-export-components` finding on `AppContext.jsx`'s `useAppContext` hook was resolved with a scoped `eslint-disable` — a hook living beside its provider in the same file is the intended pattern here, not a real fast-refresh risk).
-- **Thin-Lines rule** (`ui-spec.md`) — grepped all of `src/components/` for `rounded-md/lg/xl/2xl/3xl/full`, `shadow`, `gradient`. Zero violations on cards/panels/buttons. The only `rounded-full` hits are the small status/severity indicator dots (`AgentBlock`, `CircuitBreakerGate` header badge, `SystemHeader` system-state badge) — dots are supposed to be circular per the existing `tokens.*.dot` token design; this is not a corner-radius violation.
-- **SPEC-07 escalation** — verified the Circuit-Breaking Gate column header renders `2 PENDING` with a crimson border on initial load (mock data starts with 1 critical + 1 high anomaly trapped), and would revert to a neutral border with no badge once both are cleared.
-- **Rationale Void alignment** (`rationale-void-review-checklist.md`) — every field rendered traces to a row in `ux-problem-framework.md` Section 6; nothing was added that isn't already in a spec.
+Per `CLAUDE.md` §6.4, these contradict disk state and need a founder call rather than a quiet fix:
+
+- **`APEX_LOGIC_PLAN.md` line 62** — `📁 src/components/ — UI Components (ALL NOT STARTED)`. Every component is built and shipped.
+- **`APEX_LOGIC_PLAN.md` "Pending Decisions (Must Resolve Before Building)"** — all four were resolved as DECISION-1 through DECISION-4 in Session 2.
+
+Both are why `APEX_LOGIC_PLAN.md` is Tier 3 under DECISION-13 — it is now largely a historical planning artifact.

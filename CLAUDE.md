@@ -4,17 +4,25 @@
 
 ---
 
-## 1. Read-first sequence (mandatory, in order)
+## 1. Read-first sequence (tiered — DECISION-13)
 
-Before *any* response that proposes a change, read these files:
+Read by tier, not all at once. This replaced a flat 5-file / ~860-line mandatory chain that was paid in full on every session regardless of task size.
 
-1. `APEX_LOGIC_PLAN.md` — master plan, stack, file map, build sequence
-2. `memory-bank/ACTIVE_CONTEXT.md` — current phase, recent decisions, and the **In Progress** section (concurrent-session markers)
-3. `memory-bank/PROGRESS.md` — what is done / not started / blocked
-4. `memory-bank/DECISIONS.md` — 8 locked decisions with rationale (DECISION-0A through DECISION-8). Do not contradict any of these.
-5. `memory-bank/COMPONENT_MAP.md` — cascade tracker. Mandatory before editing any component or token.
+**Tier 1 — every session, before any response that proposes a change (~66 lines):**
+1. `memory-bank/ACTIVE_CONTEXT.md` — live state: the **In Progress** section (concurrent-session markers), Current Status, Open Decisions, newest session block.
+2. `memory-bank/DECISIONS.md` — **the Index table at the top only.** 19 locked decisions. Do not contradict any of them.
 
-If your change touches a spec: also read the relevant `src/docs/component-specs.md` SPEC block. If it touches a data shape: also read `src/docs/app-context-contract.md`.
+**Tier 2 — before editing any component, token, or data shape:**
+3. `memory-bank/COMPONENT_MAP.md` — cascade tracker. Mandatory before touching any component or token.
+4. The **full text** of any DECISION entry your change touches — scan the Tier 1 Index to find which.
+5. If your change touches a spec: the relevant `src/docs/component-specs.md` SPEC block. If it touches a data shape: `src/docs/app-context-contract.md`.
+
+**Tier 3 — on demand only, not by default:**
+- `memory-bank/SESSION_LOG.md` — historical session narrative. Read when you need the *why* behind a past change.
+- `memory-bank/PROGRESS.md` — build status. Mostly ✅; read when you need to confirm what exists.
+- `APEX_LOGIC_PLAN.md` — original master plan. **Largely a historical artifact now** — it contains known-stale status lines (see `PROGRESS.md` → Known Stale Content). Trust disk state over it.
+
+If Tier 1 doesn't tell you what you need, escalate a tier. Don't skip Tier 2 before editing code.
 
 ---
 
@@ -39,7 +47,7 @@ Apex Logic is a client-side dashboard (React 19 + Vite + Tailwind 4, no backend)
 | Paused state | `paused-state-must-pulse` — Amber PAUSED badge uses `animate-pulse`. | Static amber badge on a paused agent = violation of SPEC-02. |
 | Plain-English first | `plainenglish-before-diff` — business risk summary always renders above the code diff in `AnomalyCard`. | Diff-first layout = violation of SPEC-03. |
 
-The 8 locked DECISIONS live in `memory-bank/DECISIONS.md` — read the rationale there before proposing any change that touches these.
+The 19 locked DECISIONS live in `memory-bank/DECISIONS.md` — scan the Index table, then read the rationale for any entry your change touches before proposing it.
 
 ---
 
@@ -76,7 +84,7 @@ Session 6 in `ACTIVE_CONTEXT.md` documents a real incident: two concurrent sessi
 1. **Before editing any file**, read the `## In Progress (session markers)` section at the top of `memory-bank/ACTIVE_CONTEXT.md`. If another session has claimed the file you're about to touch, **pause and ask the user** before proceeding.
 2. **When starting non-trivial work**, register yourself by adding a marker line under that section:
    `- [YYYY-MM-DD HH:MM] claude — editing [file paths] — [1-line intent]`
-3. **When finishing**, remove your marker and append the change summary to the appropriate session block (following the format used in Sessions 3–6).
+3. **When finishing**, remove your marker, then: append your session block to `memory-bank/SESSION_LOG.md` (newest first), rotate the previous newest block out of `ACTIVE_CONTEXT.md`, and update only `Current Status` / `Open Decisions` there. `ACTIVE_CONTEXT.md` carries **one** session block, never a growing stack — without this it regrows past 200 lines within a few sessions and DECISION-13's saving evaporates.
 4. **If a status table in `PROGRESS.md` or `COMPONENT_MAP.md` contradicts what you see on disk**, trust the disk state and `DECISIONS.md`, then flag the mismatch to the user. Do not silently reconcile.
 
 ---
@@ -117,4 +125,38 @@ Escalation is cheap. Silent reconciliation is expensive.
 
 ## 10. Cursor parity
 
-`.cursor/rules/apex-context.mdc` and `.cursor/rules/change-protocol.mdc` encode the same intent for Cursor sessions. If either of those files diverges from this one, the Cursor rules are the source of truth for context loading; this file is the source of truth for Claude-specific escalation and session-collision safety. Reconcile drift by editing both.
+`.cursor/rules/apex-context.mdc` and `.cursor/rules/change-protocol.mdc` encode the same intent for Cursor sessions. `AGENTS.md` does the same for Codex, `GEMINI.md` for Gemini. If any of those diverges from this one, the Cursor rules are the source of truth for context loading; this file is the source of truth for escalation, routing, and session-collision safety. Reconcile drift by editing all of them.
+
+---
+
+## 11. Agent routing (multi-agent — read before delegating)
+
+Four agents work this repo. Route by difficulty, not convenience — Opus is the scarce resource.
+
+| Agent | Owns |
+|---|---|
+| **Claude (Opus — `/model opus`)** | `src/tokens/theme.js`, `src/components/AppContext.jsx`, `src/data/mockLedgerData.json` — anything cascading per `COMPONENT_MAP.md`. New `DECISIONS.md` entries. The mediator-resolution wiring. Vault/QMD work. Any §8 escalation. |
+| **Claude (Sonnet — default)** | Routine multi-file edits inside settled specs; session bookkeeping in `ACTIVE_CONTEXT.md` / `SESSION_LOG.md`. |
+| **Codex** | Fully-specified single-file mechanical work: unit tests, lint/build fixes, drafting memory-bank entries from a spec handed to it. |
+| **Cursor** | In-editor component tweaks with the dev server live — Tailwind class work, visual iteration against `ui-spec.md`. |
+| **Gemini** | Repo sweeps, dependency tracing, "where is X used", cross-file consistency checks — its large free context makes it the default for read-heavy work. **Also writes**, same class as Codex: fully-specified single-file mechanical work. On probation until proven against §3 (see below). |
+
+**Rules that survive the hand-off.** A second agent is exactly where these get dropped:
+
+- **`src/docs/` is off-limits to every agent, not just Claude** (§5). Delegating a `src/docs/` edit to Codex or Cursor launders the rule, it doesn't satisfy it. Those changes are the user's to make.
+- **`DECISIONS.md` entries are drafted by an agent, authored by the founder.** No agent decides retroactively to justify code that already landed. (Session 12's `RationaleGate` did exactly this — it's outstanding debt, not precedent.)
+- **Every locked constraint in §3 binds every agent.** `rounded-none`, `tabular-nums`, cyan-only accent, no shadows/gradients/glass, no third font, no `tailwind.config.js`.
+- **`npm run build` + `npm run lint` must exit clean** after any agent's work (§7). Same gate, no exceptions.
+
+**Collision safety (§6 applies with more force here).** Codex, Cursor, and Gemini cannot see each other's edits, and Session 6 already cost a manual resolution with only two agents.
+
+- Every *writing* agent adds a marker to `ACTIVE_CONTEXT.md` naming itself (`claude` / `codex` / `cursor` / `gemini`) before its first edit, and removes it when done.
+- **One writing agent at a time per file.** If a marker claims the file you're about to touch, stop and ask the user.
+- Read-only sweeps need no marker, whichever agent runs them.
+
+**Gemini probation (added 2026-08-15).** Gemini writes, but hasn't yet been shown to hold §3's constraints under edit pressure — `rounded-none`, `tabular-nums`, cyan-only accent, two font families, no shadows/gradients. Until it clears that bar:
+
+- Run it with `--approval-mode default` (prompts before each edit). Not `yolo`, not `auto_edit`.
+- Give it **single-file, fully-specified** work only. Never the cascade files (`theme.js`, `AppContext.jsx`, `mockLedgerData.json`), never `src/docs/`, never a DECISIONS entry.
+- After any Gemini edit, grep the diff for `rounded-(md|lg|xl|2xl|3xl)`, `shadow-`, `bg-gradient-`, `backdrop-blur-` before accepting it, and confirm `npm run build` + `npm run lint` are clean.
+- Two clean, constraint-respecting tasks retires the probation — delete this block and treat it as Codex's peer.

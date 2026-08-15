@@ -5,38 +5,44 @@ alwaysApply: true
 
 # APEX LOGIC — Context Protocol
 
-**Before doing anything**, read these files in order:
+`CLAUDE.md` at the repo root is the full ruleset. This file mirrors it for Cursor sessions.
 
-1. `APEX_LOGIC_PLAN.md` — master plan, stack, file map, design constraints, build sequence
-2. `memory-bank/ACTIVE_CONTEXT.md` — what is being worked on RIGHT NOW, recent decisions, current blockers
-3. `memory-bank/PROGRESS.md` — what is done, what is not started, what is blocked
+**Read by tier — not all at once** (see `CLAUDE.md` §1, DECISION-13):
 
-If you are making ANY code change, also read:
-4. `memory-bank/COMPONENT_MAP.md` — to understand what other files your change may break
+**Tier 1 — every session:**
+1. `memory-bank/ACTIVE_CONTEXT.md` — live state: In Progress markers, Current Status, Open Decisions, newest session block
+2. `memory-bank/DECISIONS.md` — the **Index table at the top only** (19 locked decisions)
 
-If you are making a decision (brand, color, font, layout, component behavior):
-5. `memory-bank/DECISIONS.md` — to see if this was already decided and what it downstream affects
+**Tier 2 — before ANY code change:**
+3. `memory-bank/COMPONENT_MAP.md` — what else your change may break
+4. The full text of any DECISION entry your change touches
 
-## Non-Negotiable Design Constraints (from the plan — always enforce)
-- `rounded-none` everywhere — no consumer rounded corners
-- `tabular-nums` on all numeric columns
-- `font-mono` — monospace throughout
+**Tier 3 — on demand only:** `memory-bank/SESSION_LOG.md` (session history), `memory-bank/PROGRESS.md` (build status), `APEX_LOGIC_PLAN.md` (historical plan — contains known-stale status lines; trust disk state over it).
+
+## Non-Negotiable Design Constraints (always enforce)
+- `rounded-none` everywhere — `rounded-full` only on status dots, `rounded-sm` is the absolute max elsewhere
+- `tabular-nums` on all stacking numeric columns
+- `font-mono` (JetBrains Mono) for data/terminal/micro-labels; `font-sans` (Space Grotesk) for headings and plain-English copy — no third family
+- Cyan is the only interactive accent — no blue, violet, or new color variables
 - `humanIntent-always-visible` — Human Intent never hidden behind a click
 - `terminal-continuous-scroll` — Terminal log animates continuously
 - `paused-state-must-pulse` — Amber PAUSED badge uses `animate-pulse`
 - `plainenglish-before-diff` — Business risk summary always above code diff
-- Aesthetic: **Cyberpunk Bloomberg Terminal** — `bg-neutral-950`, thin borders, no softness
+- Aesthetic: **Cyberpunk Bloomberg Terminal** — `bg-neutral-950`, thin borders, no shadows/gradients/glass
 
 ## Stack (never deviate)
 - React 19 + Vite
-- Tailwind CSS 4
+- Tailwind CSS 4 — CSS-first `@theme` in `src/index.css`. **There is no `tailwind.config.js`; do not add one.**
 - Lucide React (icons)
 - react-countup (animated counters)
-- React Context + useState (no backend, no database)
+- React Context + useState — client-only by default. **Narrow exception:** DECISION-9 permits a local-only data layer (`scripts/sync-activity-log.mjs`, `scripts/mediator.mjs`, `src/hooks/useLiveLedgerData.js`) in dev. No hosted server, no database engine, no redux/zustand/tanstack-query.
+
+## Cursor's role (CLAUDE.md §11)
+In-editor component tweaks with the dev server live — Tailwind class work, visual iteration against `ui-spec.md`. Architecture, cascading changes to `theme.js`/`AppContext.jsx`/`mockLedgerData.json`, and new DECISIONS entries go to Claude on Opus.
+
+- **`src/docs/` is off-limits to every agent.** Report needed changes; don't apply them.
+- **Add a session marker** to `memory-bank/ACTIVE_CONTEXT.md` naming yourself (`cursor`) before your first edit; remove it when done. **One writing agent at a time per file** — if another agent's marker claims your file, stop and ask.
+- **`npm run build` and `npm run lint` must exit clean** when you finish.
 
 ## After completing any task
-Update `memory-bank/ACTIVE_CONTEXT.md` with:
-- What you just did
-- Any decisions made
-- What the next step is
-- Any new blockers discovered
+Append your session block to `memory-bank/SESSION_LOG.md` (newest first), then update only `Current Status` / `Open Decisions` in `memory-bank/ACTIVE_CONTEXT.md` and rotate the previous newest block out. `ACTIVE_CONTEXT.md` carries **one** session block, never a growing stack.
