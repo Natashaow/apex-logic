@@ -160,3 +160,7 @@ Four agents work this repo. Route by difficulty, not convenience — Opus is the
 - Give it **single-file, fully-specified** work only. Never the cascade files (`theme.js`, `AppContext.jsx`, `mockLedgerData.json`), never `src/docs/`, never a DECISIONS entry.
 - After any Gemini edit, grep the diff for `rounded-(md|lg|xl|2xl|3xl)`, `shadow-`, `bg-gradient-`, `backdrop-blur-` before accepting it, and confirm `npm run build` + `npm run lint` are clean.
 - Two clean, constraint-respecting tasks retires the probation — delete this block and treat it as Codex's peer.
+
+**Probation log:**
+- **Task 1 (2026-08-15) — `APEX_LOGIC_PLAN.md` stale-status fix. NOT CLEAN, does not count.** Scoping was good: one file, no collateral, all five instructed changes made, options-history preserved as asked. But it (a) attributed the `@theme` font vars to `theme.js` instead of `src/index.css`, (b) invented a wrong description for `RationaleGate` ("review gate for agent-declared model assumptions" — it is a *pre-commitment* log) on an unrequested table row, and (c) **skipped the session-marker protocol entirely** despite `GEMINI.md` requiring it. Both factual errors were caught in diff review and corrected by Claude. Probation stands at 0 of 2.
+- **Capacity note:** the free tier is far tighter than assumed — task 1 hit `generate_content_free_tier_requests, limit: 5` on `gemini-3.5-flash` and had to back off ~70s mid-run. Gemini is not a high-volume workhorse on this plan. Route accordingly, or attach billing.

@@ -1,4 +1,5 @@
 # APEX LOGIC — Master Execution Plan
+> **HISTORICAL ARCHIVE:** This file is classified as a Tier 3 resource per `DECISION-13` and serves as a historical record of the initial build sequence. For actual active implementation status, refer to `memory-bank/ACTIVE_CONTEXT.md` and trust the disk state.
 > **Do not paste this manually anymore.** Cursor rules in `.cursor/rules/` auto-inject this context into every agent.
 > For live status, read `memory-bank/ACTIVE_CONTEXT.md`. For build progress, read `memory-bank/PROGRESS.md`.
 > Status: Updated after Session 2 — Memory Bank system installed.
@@ -55,12 +56,12 @@
 ### 📁 src/ — Application Code
 | File | Status | Contents |
 |---|---|---|
-| `App.jsx` | 🔲 NOT STARTED | Root component — wire up context + layout |
+| `App.jsx` | ✅ COMPLETE | Root component — wires showIntro state, IntroScreen then SystemHeader + ThreeColumnLayout, all under AppProvider |
 | `main.jsx` | ✅ UNTOUCHED | Entry point — do not modify |
-| `index.css` | 🔲 NEEDS FONT IMPORT | Add monospace font @import once font is decided |
+| `index.css` | ✅ COMPLETE | Its own Tailwind v4 `@theme` block sets `--font-sans` / `--font-mono`; fonts load via the `index.html` Google Fonts link |
 
-### 📁 src/components/ — UI Components (ALL NOT STARTED)
-| Component | Spec | Priority |
+### 📁 src/components/ — UI Components (ALL COMPLETE)
+| Component | Spec | Priority (Historical Build Order) |
 |---|---|---|
 | `AppContext.jsx` | React Context — agents, ledger, anomalies, terminal state | 1st |
 | `layout/SystemHeader.jsx` | SPEC-05 — logo, 4 metrics, Emergency Stop button | 2nd |
@@ -72,12 +73,15 @@
 | `ui/TerminalLog.jsx` | SPEC-04 — rolling terminal feed | 8th |
 | `ui/LedgerRow.jsx` | SPEC-01 — intent + metrics row | 9th |
 | `ui/AnomalyCard.jsx` | SPEC-03 — human gate card | 10th |
+| `sections/RationaleGate.jsx` | **No SPEC yet** — pre-commitment log: operator records an assumption + rejected alternative *before* a task starts, upstream of Intent Drift | 11th (Session 12) |
 
 ---
 
-## Pending Decisions (Must Resolve Before Building)
+## Decisions (All Resolved)
 
 ### Decision 1 — Interactive Accent Color
+**Resolution:** Locked as cyan (`DECISION-1`).
+
 **File to update:** `src/tokens/theme.js` (add `tokens.accent`), `src/docs/branding/color-palette.md`
 **Options:**
 - `cyan` → `text-cyan-400` — terminal hacker feel
@@ -88,14 +92,20 @@
 **What it gates:** hover states, selected row highlight, active column border, logo mark color, button focus rings.
 
 ### Decision 2 — Logo Triangle Mark Color
+**Resolution:** Locked as white neutral-100 (`DECISION-2`).
+
 **File to update:** `src/tokens/theme.js` (`brand.logoMarkColor`), `src/docs/branding/color-palette.md`
 **Options:** Accent color / `neutral-100` white / `emerald-400`
 
 ### Decision 3 — Monospace Font
-**File to update:** `src/index.css` or `index.html`, `tailwind.config.js`
+**Resolution:** Locked as JetBrains Mono (`DECISION-3`).
+
+**File to update:** `src/index.css` or `index.html`
 **Options:** JetBrains Mono / IBM Plex Mono / Geist Mono / System default
 
 ### Decision 4 — Header Surface Treatment
+**Resolution:** Locked as neutral-900 (`DECISION-4`).
+
 **File to update:** `src/tokens/theme.js` (`canvas.header`), `src/docs/branding/ui-spec.md`
 **Options:** Border only (`neutral-950`) / Slightly lighter (`neutral-900`) / Dark contrast (`neutral-800/40`)
 

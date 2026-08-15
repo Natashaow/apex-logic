@@ -5,12 +5,13 @@
 
 ---
 
-## Index — 19 Locked Decisions
+## Index — 19 Locked Decisions + 1 Draft
 
 Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your change actually touches.
 
 | ID | Decision | Domain |
 |---|---|---|
+| DECISION-14 | **DRAFT — NOT LOCKED.** Rationale Gate as a pre-commitment log strip | Component |
 | DECISION-13 | Read-first chain tiered; session history split to `SESSION_LOG.md` | Process |
 | DECISION-12 | `src/docs/` edited directly — one-time §5 override, not standing | Process |
 | DECISION-11 | `technicalMetrics.model` resolves from source agent, not `technicalTrace` | Data |
@@ -30,6 +31,34 @@ Scan this in Tier 1 (see `CLAUDE.md` §1). Deep-read only the entries your chang
 | DECISION-0C | Layout architecture — 25/45/30, locked | Layout |
 | DECISION-0B | Status color system — emerald/amber/crimson | Visual |
 | DECISION-0A | Canvas color — `bg-neutral-950` | Visual |
+
+---
+
+## Session 14 — 2026-08-15 (Rationale Gate — Retroactive Entry)
+
+### DECISION-14 — Rationale Gate Mounted as a Pre-Commitment Log Strip
+> 🟡 **DRAFT — NOT LOCKED. Drafted by Claude, requires founder sign-off before it becomes binding.**
+> Per `CLAUDE.md` §5 an agent may draft a decision but never author one. This exists because `RationaleGate.jsx` shipped in Session 12 *before* any decision was logged — inverting the "log the decision before the code lands" rule. It is written to close that debt, not to ratify it after the fact.
+
+- **Date drafted:** 2026-08-15
+- **Status:** DRAFT — pending founder sign-off
+- **Context:** Session 12 shipped `src/components/sections/RationaleGate.jsx` under same-day deadline pressure. The code is live and browser-verified, but has no DECISIONS entry, no `component-specs.md` SPEC block, and no `COMPONENT_MAP.md` row.
+- **What was decided in practice (by the code, not by a logged decision):**
+  1. A "Rationale Gate — Pre-Commitment Log" strip mounts **between `SystemHeader` and `ThreeColumnLayout`**, as an additive horizontal band. It does **not** touch the locked 25/45/30 grid, so DECISION-0C is intact.
+  2. It captures operator intent *before* a task starts — an assumption, a rejected alternative, and an optional success signal — placing it **upstream of Intent Drift**, which the Circuit-Breaking Gate already covers during execution.
+  3. State is `preCommitments[]` on `AppContext`, seeded from `mockLedgerData.json`, with a `logPreCommitment` action that prepends an entry and emits `RATIONALE_LOGGED` to the terminal feed.
+  4. Local session state only — not wired into `scripts/sync-activity-log.mjs` or the live-poll snapshot. **It resets on refresh.**
+- **Constraint compliance (verified):** reuses existing `theme.js` tokens only — no new colors, fonts, or radii introduced. §3 constraints hold.
+- **Narrative fit:** it closes a distinct piece of the Rationale Void. The Intent Ledger records what an agent *declared* after acting; the Rationale Gate records what the *operator* committed to before acting. Those are different absences, and neither substitutes for the other.
+
+**Open questions the founder must settle before this can be LOCKED:**
+1. **Is a fourth surface justified?** The dashboard is a locked three-column argument. This adds a band above it. Does it earn the vertical space, or does it dilute the 25/45/30 read?
+2. **Should it persist?** Resetting on refresh makes it a demo affordance, not a ledger. Persisting it means extending the DECISION-9 local-data scope to a second write path.
+3. **Does it belong in the OPC-track pitch narrative,** or is it B2B-track scope deferred under the current "OPC first, de-Natasha-ify later" call?
+
+**If approved,** three follow-ups land: a `COMPONENT_MAP.md` row, a `component-specs.md` SPEC block (**a user task — `src/docs/` is off-limits to agents**), and this entry flipped to LOCKED.
+
+**If rejected,** the component comes out of `App.jsx` and this entry records the removal.
 
 ---
 
