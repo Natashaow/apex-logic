@@ -22,21 +22,36 @@ _(none)_
 
 **Active scope (per Natasha, 2026-08-15):** OPC/personal track is the build target. B2B enterprise track is deferred until a "de-Natasha-ify" generalization pass later — see `Apex Logic.md` in the vault.
 
-**Next Phase — three open threads:**
-1. Wire a real `Workflow`/`CronCreate`/`/loop` run to *act* on a mediator resolution event. Session 7 only records decisions; nothing resumes or aborts yet.
-2. Human pass on `src/docs/component-specs.md` — SPEC-01 needs the live-track LedgerRow variant (Session 8), and `RationaleGate` needs a SPEC block (Session 12). **Both are user tasks**, not agent tasks — `CLAUDE.md` §5 puts `src/docs/` off-limits to every agent.
-3. **Restart any running mediator** — a pre-`/precommit` instance was found live on port 4177. Until it restarts, Rationale Gate entries won't persist (the POST 404s silently, by design).
-4. **`src/docs/` debt (user tasks, §5):** no `RationaleGate` SPEC block in `component-specs.md`; `app-context-contract.md` documents `applyLiveSnapshot` as 5 keys when it now conditionally applies 6.
+**Last updated:** 2026-08-16
 
-**Last updated:** 2026-08-15
+---
+
+## Open Loops
+
+Everything outstanding, newest concern first. Nothing here is blocking a build — `npm run build`, `npm run lint`, and `npm test` (12/12) are all clean.
+
+**Needs Natasha — cannot be delegated to any agent**
+1. **`src/docs/` debt (§5 puts it off-limits to every agent).** Three edits: a `RationaleGate` SPEC block in `component-specs.md`; SPEC-01's live-track `LedgerRow` variant, still undocumented since Session 8; and `app-context-contract.md`, which describes `applyLiveSnapshot` as overwriting five keys when it now conditionally applies a sixth (`preCommitments`).
+
+**Unverified — built but never exercised for real**
+2. **Rationale Gate persistence has not been confirmed in the running app.** DECISION-14 Q2 is built, unit-tested, and smoke-tested against a throwaway vault, but nobody has run `npm run dev` + `npm run watch-activity`, logged an entry, and refreshed. Until that happens, "it persists" is an inference, not an observation.
+
+**Known gaps, deliberately not fixed**
+3. **Mediator resolution events still don't *act*.** Open since Session 7 — `POST /resolve` records an Approve/Reject decision, but no paused `Workflow`/`CronCreate`/`/loop` run notices or resumes. The control plane records; it does not yet control.
+4. **The mediator is unsupervised.** If the process dies, pre-commitments stop persisting **silently** — the POST is fire-and-forget by design, so nothing surfaces in the UI. A launchd agent or a `.zshrc` line would fix it; that's a new decision, not a slip-in. Currently running as PID 84315 (restarted 2026-08-16).
+5. **`scripts/*.mjs` are not unit-testable.** Both call `sync()`/`listen()` at import and `process.exit` without `VAULT_ROOT`, so they can't be imported under test. Covered by the end-to-end smoke test instead. Making them testable is a load-bearing refactor needing its own entry.
+
+**Tooling decisions parked**
+6. **Gemini is read-only** until billing is enabled on its Cloud project **and** two clean constraint-respecting tasks land. See `CLAUDE.md` §11 for the evidence.
+7. **Six MCP servers were removed from user scope globally** (`glif`, `motion`, `motion-plus`, `streamable-mcp-server`, `playwright`, `obsidian-api`). If anything elsewhere depended on them, definitions are at `~/.claude/mcp-servers-backup-2026-08-15.json`.
 
 ---
 
 ## Open Decisions
 
-**None.** All visual, brand, UX-framing, and information-architecture decisions are locked — 20 entries, indexed at the top of `memory-bank/DECISIONS.md`.
+**None.** All visual, brand, UX-framing, and information-architecture decisions are locked — 21 entries, indexed at the top of `memory-bank/DECISIONS.md`.
 
-The Session 12 process debt is closed: **DECISION-14 is signed off (2026-08-15)**. Rationale Gate keeps its full-width strip above the grid, persists local-only and gitignored, and is OPC-track scope. `COMPONENT_MAP.md` rows added. Two follow-ups remain — see Next Phase.
+The Session 12 process debt is closed: **DECISION-14 is signed off (2026-08-15)** — full-width strip retained, entries persist local-only and gitignored, OPC-track scope. **DECISION-15** added the test framework. Remaining work is execution and documentation, not decisions — see Open Loops.
 
 ---
 
